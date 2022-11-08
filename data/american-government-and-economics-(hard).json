@@ -1,0 +1,847 @@
+[
+  {
+    "id": 4042,
+    "definition": "Name these amendments to the U.S. Constitution. This amendment forbids the quartering of soldiers in private residences during times of peace without the consent of the owner.",
+    "term": "Third Amendment [or Amendment 3]"
+  },
+  {
+    "id": 4043,
+    "definition": "Name these amendments to the U.S. Constitution. This amendment officially established the procedure for filling vacancies in the Presidency or Vice-Presidency.",
+    "term": "Twenty-Fifth Amendment [or Amendment 25]"
+  },
+  {
+    "id": 4044,
+    "definition": "Name these amendments to the U.S. Constitution. The Supreme Court's majority opinion from a recent case noted that the prefatory clause of this amendment ˈˈdoes not limit the [operative clause] grammatically, but rather announces a purpose.ˈˈ In addition to the First Amendment, the 1875 case U.S. v. Cruikshank (ˈˈCROOK-shankˈˈ) focused on this amendment, which was applied to the states in the 2010 case McDonald v. Chicago. In 2008, the court ruled in District of Columbia v. Heller that this amendment conferred the right to self-defense. A ˈˈwell regulated militiaˈˈ is mentioned in the text of what amendment that protects the right to bear arms?",
+    "term": "Second Amendment [or Amendment 2]"
+  },
+  {
+    "id": 4045,
+    "definition": "Name these actions utilized by high-level government officials. One manner by which the President may ensure that a bill does not become law is by utilizing this action, in which he does not sign the bill but is not able to return it to Congress within ten days because they are not in session.",
+    "term": "Pocket veto [prompt on ˈˈvetoˈˈ]"
+  },
+  {
+    "id": 4046,
+    "definition": "Name these actions utilized by high-level government officials. A three-fifths vote of approval from the U.S. Senate must be achieved before utilizing this procedure, which is used to end a filibuster.",
+    "term": "Cloture (KLOHT-chur)"
+  },
+  {
+    "id": 4047,
+    "definition": "Name these actions utilized by high-level government officials. The Supreme Court affirmed the right to deny this action in the cases U.S. v. Wilson and Burdick v. U.S. In February 2001, an investigation was initiated to review one of these actions that benefitted Marc Rich. Article 2, Section 2 of the U.S. Constitution gives the president the power to perform this action ˈˈexcept in cases of impeachment.ˈˈ George H.W. Bush applied this action to six men involved in the Iran-Contra affair, and Bill Clinton performed this action over one hundred times on his last day in office. Name this presidential action that Gerald Ford applied to Richard Nixon to prevent him from receiving criminal charges.",
+    "term": "Presidential pardon [accept word forms; prompt on ˈˈclemencyˈˈ]"
+  },
+  {
+    "id": 4048,
+    "definition": "Answer some questions about economic goods. These goods experience a positive cross elasticity of demand as demand for one increases with the price of the other. An example of these goods may include coffee and tea or margarine and butter.",
+    "term": "Substitute good"
+  },
+  {
+    "id": 4049,
+    "definition": "Answer some questions about economic goods. This type of good violates the Law of Demand, as demand for it increases with its price. Examples of this type of good, which are often used as status symbols, include wine and expensive cars.",
+    "term": "Luxury good [accept Veblen good]"
+  },
+  {
+    "id": 4050,
+    "definition": "Answer some questions about economic goods. Although not externalities, Ronald Coase proposed that if transaction costs are low, this type of good could be produced efficiently. These goods are often underproduced because of their overconsumption by non-payers, an issue known as the free rider problem. Producing these goods at market equilibrium is difficult because they are both non-rival and non-excludable, and examples of them include national defense and lighthouses. Name this type of good that is often provided by the government and can be contrasted with a private good.",
+    "term": "Public good [do NOT accept ˈˈcommon goodˈˈ]"
+  },
+  {
+    "id": 4051,
+    "definition": "Name the following related to the early government of the United States. Britain's passage of the Intolerable Acts prompted the September 1774 assembly of this delegation, which adopted its ˈˈDeclaration and Resolvesˈˈ that included a boycott of British goods.",
+    "term": "First Continental Congress [prompt on ˈˈContinental Congressˈˈ; do not prompt on ˈˈCongressˈˈ]"
+  },
+  {
+    "id": 4052,
+    "definition": "Name the following related to the early government of the United States. A variety of issues that remained unresolved since the end of the Revolutionary War were addressed in this 1794 treaty with Great Britain, which was chiefly negotiated by the man who went on to become New York's second governor.",
+    "term": "Jay's Treaty [accept Treaty of Amity, Commerce, and Navigation; prompt on ˈˈTreaty of Londonˈˈ]"
+  },
+  {
+    "id": 4053,
+    "definition": "Name the following related to the early government of the United States. This man described a federal government as ˈˈthe proper antidote for the diseases of factionˈˈ in an essay that addressed ˈˈobjections to the proposed Constitution from extent of territory.ˈˈ During the Constitutional Convention, this man and Edmund Randolph formulated the ˈˈVirginia Planˈˈ which proposed a legislature based on state populations. The Bill of Rights was largely the brainchild of this man, who teamed with John Jay and Alexander Hamilton to author the Federalist Papers. Name this ˈˈFather of the Constitutionˈˈ who served as the fourth U.S. President between 1809 and 1817.",
+    "term": "James Madison"
+  },
+  {
+    "id": 4054,
+    "definition": "Name these twentieth century politicians. This former U.S. Senator from Connecticut was the running mate of Al Gore in the presidential election of 2000.",
+    "term": "Joseph Isadore ˈˈJoeˈˈ Lieberman"
+  },
+  {
+    "id": 4055,
+    "definition": "Name these twentieth century politicians. This former U.S. Senator from Minnesota was the sitting vice president when he lost the presidential election of 1968 to Richard Nixon.",
+    "term": "Hubert Horatio Humphrey Jr."
+  },
+  {
+    "id": 4056,
+    "definition": "Name these twentieth century politicians. This politician referred to a group of critics as ˈˈSnow White and the Six Dwarvesˈˈ in response to a speech titled Declaration of Conscience. The Tydings Committee was established in response to a speech given by this man in Wheeling, West Virginia. Senator Margaret Chase Smith and journalist Edward R. Murrow were vocal critics of this man, who was notably asked during a 1954 Senate hearing ˈˈhave you left no sense of decency?ˈˈ Name this Wisconsin Senator best remembered for leading investigations to find government employees who were Communists.",
+    "term": "Joseph Raymond ˈˈJoeˈˈ McCarthy"
+  },
+  {
+    "id": 4057,
+    "definition": "Name these Supreme Court cases. The unanimous ruling in this 1819 case invalidated a state law that established a tax on the Second Bank of the United States.",
+    "term": "James McCulloch (mik-KULL-uk) v. The State of Maryland"
+  },
+  {
+    "id": 4058,
+    "definition": "Name these Supreme Court cases. FDR's Executive Order 9066 was challenged by the plaintiff of this 1944 case, in which the Supreme Court ruled by a six to three majority that the internment of Japanese Americans during World War II was constitutional.",
+    "term": "Fred Toyosaburo Korematsu (KOR-ah-maht-zoo) v. United States"
+  },
+  {
+    "id": 4059,
+    "definition": "Name these Supreme Court cases. To address one issue at the center of this case, the court's majority opinion referenced William Blackstone's assertion that ˈˈwhere there is a legal right, there is a legal remedy...whenever that right is invaded.ˈˈ Associate Justices Alfred Moore and William Cushing did not participate in this case, which originated in part from the inaction of Levi Lincoln. In a unanimous four to zero opinion, the court ruled that they could not issue a writ of mandamus (man-DAY- muss) because a portion of the Judiciary Act of 1789 was unconstitutional. The failure to deliver a commission to one of the ˈˈmidnight judgesˈˈ of John Adams led to what 1803 case which established the principle of judicial review?",
+    "term": "William Marbury v. James Madison"
+  },
+  {
+    "id": 4060,
+    "definition": "Identify the following Economists. This member of the Chicago school proposed a negative income-tax in his work Capitalism and Freedom, which described his monetarist views of the free market.",
+    "term": "Milton Friedman"
+  },
+  {
+    "id": 4061,
+    "definition": "Identify the following Economists. This British economist and author of Principles of Political Economy and Taxation used the example of Portuguese wine and English cloth to illustrate his idea of comparative advantage.",
+    "term": "David Ricardo"
+  },
+  {
+    "id": 4062,
+    "definition": "Identify the following Economists. In one work, this man argued that many companies were no longer seeking profit-maximization, as shareholders were being replaced by a technostructure. This theorist posited that advertisements created artificial demand, which he termed the ˈˈdependence effectˈˈ in a work that goes on to define the ˈˈNew Classˈˈ of workers. This author of The New Industrial State argued against the use of GDP as a useful economic indicator in his most famous work. Name this economic theorist who coined the term ˈˈconventional wisdomˈˈ in his book The Affluent Society.",
+    "term": "John Kenneth Galbraith"
+  },
+  {
+    "id": 4063,
+    "definition": "Name these men based on positions they held prior to becoming U.S. president. This politician was the only man to have served as the Speaker of the House of Representatives prior to becoming the President.",
+    "term": "James Knox Polk"
+  },
+  {
+    "id": 4064,
+    "definition": "Name these men based on positions they held prior to becoming U.S. president. Prior to becoming President, this mining engineer served as the Secretary of Commerce under each of his two presidential predecessors.",
+    "term": "Herbert Clark Hoover"
+  },
+  {
+    "id": 4065,
+    "definition": "Name these men based on positions they held prior to becoming U.S. president. In the same year that he was appointed as a commissioner of the U.S. Civil Service Commission, this man published the first volume of his six-part historical work The Winning of the West. During his presidency, he increased regulation of the railroads by signing the Hepburn Act. This man was the first of two U.S. presidents to serve as Assistant Secretary of the Navy, a position which he resigned to command a volunteer cavalry unit that fought in the Spanish- American War. Name this leader of the ˈˈRough Ridersˈˈ who became president in 1901 upon the death of William McKinley.",
+    "term": "Theodore Roosevelt [or Teddy Roosevelt; prompt on ˈˈRooseveltˈˈ]"
+  },
+  {
+    "id": 4066,
+    "definition": "Name these former political parties. This short lived party, which sought a compromise on the slavery issue in order to avoid secession, nominated John Bell for president in the election of 1860.",
+    "term": "Constitutional Union Party [answer must be exact]"
+  },
+  {
+    "id": 4067,
+    "definition": "Name these former political parties. This anti-slavery party nominated James Birney for the presidency in both the 1840 and 1844 elections.",
+    "term": "Liberty Party"
+  },
+  {
+    "id": 4068,
+    "definition": "Name these former political parties. One early leader of this party was Morris Hillquit. This party was represented in Congress by Meyer London and Victor Berger. Emil Seidel was the first of three Milwaukee mayors who were members of this party, which nominated Norman Thomas for the presidency six times between 1928 and 1948. The best known leader of this party was imprisoned for his violation of the Espionage Act of 1917; although, while in jail, he still received nearly one million votes during the election of 1920. Eugene V. Debs was a member of what political party, a portion of which split in 1919 to form the Communist Party?",
+    "term": "Socialist Party of America"
+  },
+  {
+    "id": 4069,
+    "definition": "Identify these important economic theorists. This Austrian economist wrote that central planning leads to totalitarianism in his The Road to Serfdom.",
+    "term": "Friedrich August von Hayek"
+  },
+  {
+    "id": 4070,
+    "definition": "Identify these important economic theorists. In his most famous work, this Indian welfare theorist and 1998 Nobel Prize winner showed that poor distribution rather than shortages were the cause of the title Poverty and Famines.",
+    "term": "Amartya Sen"
+  },
+  {
+    "id": 4071,
+    "definition": "Identify these important economic theorists. This man divided the elite into ˈlions' who defend the status quo and ˈfoxes' who promote change in one work. This theorist names a logarithmic distribution used to estimate income distribution, in addition to a principle that states for most events, eighty percent of the effects are a result of twenty percent of the causes. If two indifference curves intersect, then they are experiencing a condition named for this author of The Mind and Society, in which neither of the involved parties can be made better off without harming the other. Name this Italian economist who is perhaps best known for that aforementioned ˈˈoptimality.ˈˈ",
+    "term": "Vilfredo Pareto"
+  },
+  {
+    "id": 4072,
+    "definition": "Give these surnames that have been shared by multiple politicians. This surname identifies an early U.S. Senator from Kentucky who also served as Attorney General under Thomas Jefferson, in addition to that man's grandson, who was the sitting vice president when he finished second in the presidential election of 1860.",
+    "term": "Breckinridge [accept John Breckinridge or John Cabell Breckinridge]"
+  },
+  {
+    "id": 4073,
+    "definition": "Give these surnames that have been shared by multiple politicians. This surname identifies a U.S. Senator from Iowa who was the father-in-law of Robert Todd Lincoln, in addition to a Supreme Court justice perhaps best known for being the lone dissenter in Plessy v. Ferguson, which helped lead to his nickname of ˈˈThe Great Dissenter.ˈˈ",
+    "term": "Harlan [accept James Harlan or John Marshall Harlan]"
+  },
+  {
+    "id": 4074,
+    "definition": "Give these surnames that have been shared by multiple politicians. Along with Robert Carter, one man with this surname helped his client gain admission to the University of Texas law school by successfully arguing the Supreme Court case Sweatt v. Painter. Another man with this surname was replaced by Dean Atchison upon retiring as Secretary of State, and his work while in that position led to him receiving the 1953 Nobel Peace Prize. A Thomas with this surname served as vice president under Woodrow Wilson. A John with this surname preceded Roger B. Taney (TAW-nee) as Supreme Court Chief Justice and served from 1801 to 1835. Give this surname of the first African-American member of the Supreme Court, whose first name was Thurgood.",
+    "term": "Marshall [accept Thurgood Marshall or George Catlett Marshall Jr. or Thomas Riley Marshall or John Marshall]"
+  },
+  {
+    "id": 4075,
+    "definition": "Name these presidential elections. James Weaver won five states as the nominee of the Populist Party in this election, in which the winning vice presidential candidate was Adlai Stevenson I.",
+    "term": "Presidential election of 1892"
+  },
+  {
+    "id": 4076,
+    "definition": "Name these presidential elections. This was the most recent election in which the winning candidate effectively ran unopposed. The winning vice presidential candidate was Daniel Tompkins.",
+    "term": "Presidential election of 1820"
+  },
+  {
+    "id": 4077,
+    "definition": "Name these presidential elections. One candidate in this election originally announced his candidacy by exclaiming ˈˈmy hat is in the ring, the fight is on and I am stripped to the buff!ˈˈ Eight electoral votes for vice president were given to Nicholas Butler because of the death of James Sherman less than one week before this election. One candidate was shot in the chest by John Schrank in the month prior to this election, which was won by a man who espoused a ˈˈNew Freedomˈˈ platform. The incumbent president finished third in this election, in which the second place finisher was the Bull Moose Party candidate, Theodore Roosevelt. Name this presidential election, the first of two won by Woodrow Wilson.",
+    "term": "Presidential election of 1912"
+  },
+  {
+    "id": 4078,
+    "definition": "Name these men who served non-consecutive terms as a U.S. Senator. This Ohioan served as the Secretary of Treasury under Rutherford B. Hayes prior to his second stint in the Senate, during which he sponsored a ˈˈSilver Purchase Actˈˈ requiring the U.S. government to buy an increased quantity of the precious metal.",
+    "term": "John Sherman"
+  },
+  {
+    "id": 4079,
+    "definition": "Name these men who served non-consecutive terms as a U.S. Senator. This man from Massachusetts ran as Nixon's Vice Presidential candidate in 1960, and his grandfather successfully stopped the United Stated from entering the League of Nations following World War I.",
+    "term": "Henry Cabot Lodge, Jr."
+  },
+  {
+    "id": 4080,
+    "definition": "Name these men who served non-consecutive terms as a U.S. Senator. This politician noted that ˈˈthe imprisoned winds are let looseˈˈ before imploring listeners to ˈˈhear me for my causeˈˈ near the beginning of his Seventh of March speech. This man successfully prevented his alma mater from being converted into a public school by successfully arguing the Supreme Court case Dartmouth College v. Woodward. He negotiated the treaty ending the Aroostook (uh-ROOSS-tuk) War while serving as Secretary of State, a position that he held under presidents William Henry Harrison, John Tyler, and Millard Fillmore. He was part of the ˈˈGreat Triumvirateˈˈ of Senators that also included John C. Calhoun and Henry Clay. Name this noted orator from Massachusetts.",
+    "term": "Daniel Webster"
+  },
+  {
+    "id": 4081,
+    "definition": "Answer these questions about important economic models. What graph plots unemployment against job vacancy rate? Its namesake authored a famous ˈˈReportˈˈ that initiated the British welfare state following World War II.",
+    "term": "Beveridge Curve"
+  },
+  {
+    "id": 4082,
+    "definition": "Answer these questions about important economic models. What graph created by John Hicks plots GDP against interest rate and can be used to identify the concurrent equilibrium of the interest and asset markets?",
+    "term": "IS-LM model [or Investment Saving - Liquidity Preference Money Supply model]"
+  },
+  {
+    "id": 4083,
+    "definition": "Answer these questions about important economic models. Paul Samuelson argued that this phenomenon will result in factor price equalization, and economic mass appears in the numerator of Jan Tinbergen's gravity model of this phenomenon. Leontief's paradox cites the U.S. as a violator of a popular model of this phenomenon, and that model of this activity applies comparative advantage to it to predict that nations will engage in this activity depending on the intensity of their use of abundant and scarce factors. Name this activity described by the Heckscher-Ohlin model, in which nations import and export goods in order to expand beyond their production-possibility frontier.",
+    "term": "Economic trade [accept international trade]"
+  },
+  {
+    "id": 4084,
+    "definition": "Name these pieces of federal legislation. This 1862 legislation provided land grants to each state for the purpose of establishing colleges with an agricultural and mechanical focus.",
+    "term": "Morrill Land-Grant Act of 1862"
+  },
+  {
+    "id": 4085,
+    "definition": "Name these pieces of federal legislation. The Anti-Injunction Act was another name for this 1932 legislation that banned the use of yellow-dog contracts and prohibited federal courts from issuing injunctions against nonviolent strikers. The second namesake of this law was a Mayor of New York City who now lends his name to an airport.",
+    "term": "Norris-LaGuardia Act"
+  },
+  {
+    "id": 4086,
+    "definition": "Name these pieces of federal legislation. Opposition to this law resulted in the execution of a jailbreak known as the ˈˈJerry Rescue.ˈˈ This law was passed to close a legal loophole identified by the Supreme Court in Prigg v. Pennsylvania. This act strengthened a similarly named law passed in 1793. Many states passed ˈˈpersonal liberty lawsˈˈ to combat this act, which opponents derisively nicknamed ˈˈThe Bloodhound Law.ˈˈ It was passed as part of a larger piece of legislation that admitted California as a free state. The Compromise of 1850 included what law that required Northern states to return certain escapees to the South?",
+    "term": "Fugitive Slave Act of 1850 or Fugitive Slave Law [prompt on ˈˈCompromise of 1850ˈˈ before mentioned; do NOT accept or prompt on ˈˈFugitive Slave Clauseˈˈ or ˈˈFugitive Slave Act of 1793ˈˈ]"
+  },
+  {
+    "id": 4087,
+    "definition": "Name these former Treasury Secretaries. This Swiss-born politician is the longest tenured Treasury Secretary in history, having served for nearly thirteen years from 1801 to 1814.",
+    "term": "Abraham Alfonse Albert Gallatin"
+  },
+  {
+    "id": 4088,
+    "definition": "Name these former Treasury Secretaries. This Georgia politician served as Treasury Secretary between 1816 and 1825, but he is perhaps best remembered for finishing third, behind John Quincy Adams and Andrew Jackson, in the presidential election of 1824.",
+    "term": "William Harris Crawford"
+  },
+  {
+    "id": 4089,
+    "definition": "Name these former Treasury Secretaries. This politician was proposed as a presidential candidate in a document known as the Pomeroy Circular. During his tenure as Secretary of Treasury, greenback currency was issued for the first time. This man, who served as the first Republican Governor of Ohio, was succeeded in his most powerful position by Morrison Waite. This politician served as Abraham Lincoln's first Secretary of Treasury, which he resigned for a position that would allow him to preside over the impeachment of Andrew Johnson. Name this Supreme Court Chief Justice between 1864 and 1873.",
+    "term": "Salmon Portland Chase"
+  },
+  {
+    "id": 4090,
+    "definition": "Name these men who served as Supreme Court justices. The majority opinion in Gideon v. Wainwright was written by this justice, who was an Alabama Senator when he was elevated to the Supreme Court in 1937. He went on to serve until 1971, making him the fifth-longest tenured Supreme Court justice in history.",
+    "term": "Hugo Lafayette Black"
+  },
+  {
+    "id": 4091,
+    "definition": "Name these men who served as Supreme Court justices. This co-founder of the ACLU was appointed to the Supreme Court by FDR as the third-ever Jewish member of the court. He served between 1939 and 1962 and was renowned for his advocacy of judicial restraint.",
+    "term": "Felix Frankfurter"
+  },
+  {
+    "id": 4092,
+    "definition": "Name these men who served as Supreme Court justices. While on the Supreme Court, this man authored the majority opinion that upheld a Washington minimum wage law in West Coast Hotel v. Parrish. He succeeded David Brewer on the Supreme Court by resigning as Governor of New York. This man delivered the majority opinion declaring the NIRA (ˈˈN-I-R-Aˈˈ) unconstitutional in Schechter (SHEK- turr) Poultry v. U.S. This man resigned from the Supreme Court in an unsuccessful bid to defeat Woodrow Wilson, but he would later be reappointed to the court as the successor to William Howard Taft. Name this loser in the election of 1916 who was the Chief Justice of the Supreme Court from 1930 to 1941.",
+    "term": "Charles Evans Hughes Sr."
+  },
+  {
+    "id": 4093,
+    "definition": "Identify these economic schools named for geographic locations. An economic school based in this European country includes thinkers like Ludwig von Mises and Friedrich Hayek. That economic school focuses on changes in the market because of individual decisions and what von Mises called praxeology.",
+    "term": "Austria"
+  },
+  {
+    "id": 4094,
+    "definition": "Identify these economic schools named for geographic locations. Amartya Sen and George Akerlof taught at the school of economics in this European city, where Jomo Kenyatta studied under Bronislaw Malinowski.",
+    "term": "London"
+  },
+  {
+    "id": 4095,
+    "definition": "Identify these economic schools named for geographic locations. A professor of one school in this city names a theorem in which a Pareto efficient transaction can be reached by bargaining, despite the presence of any externalities. Another professor of this economic school wrote Capitalism and Freedom and collaborated with Anna Schwartz on A Monetary History of the United States. A group of economists from this city advised the Chilean dictator Augusto Pinochet. Identify this Midwestern school where Ronald Coase and Milton Friedman taught at its namesake university.",
+    "term": "Chicago"
+  },
+  {
+    "id": 4096,
+    "definition": "Name these words or phrases that appear in the U.S. Constitution. Give the exact four word phrase that fills in the blank in the following excerpt that begins Article 4: ˈˈ[blank] shall be given in each State to the public Acts, Records, and Judicial Proceedings of every other State.ˈˈ",
+    "term": "Full faith and credit"
+  },
+  {
+    "id": 4097,
+    "definition": "Name these words or phrases that appear in the U.S. Constitution. Give the exact two word phrase that fills in the blank in the following excerpt from Article 6: ˈˈno [blank] shall ever be required as a Qualification to any Office or public Trust under the United States.ˈˈ",
+    "term": "Religious test"
+  },
+  {
+    "id": 4098,
+    "definition": "Name these words or phrases that appear in the U.S. Constitution. Section 2 of the Fourteenth Amendment notes that Representatives are to be determined based on state population ˈˈexcluding [these individuals] not taxed.ˈˈ An unarmed group of these people were attacked by John () Chivington during the Sand Creek Massacre. The Supreme Court ruled in () Worcester (WOOS-ter) v. Georgia that state laws did not apply in lands controlled by these people, who were subjected to a namesake 1830 ˈˈRemoval Actˈˈ signed by Andrew Jackson. Name these people subjected to forced marches known as the (**) Trail of Tears.",
+    "term": "Indians [accept Native Americans or American Indians or indigenous Americans or indigenous people or natives; accept Cheyenne or Arapaho after (); accept Cherokee after (); accept Five Civilized Tribes or Chickasaw or Choctaw or Creek Confederacy or Muscogee or Seminole after (**)]"
+  },
+  {
+    "id": 4099,
+    "definition": "Name these people and concepts from French economics. This French term from liberal economics refers to the hands off approach of the government in order to let the market work freely.",
+    "term": "Laissez-faire"
+  },
+  {
+    "id": 4100,
+    "definition": "Name these people and concepts from French economics. John Maynard Keynes interpreted this law, named for a Frenchmen, to mean that supply creates its own demand.",
+    "term": "Say's law"
+  },
+  {
+    "id": 4101,
+    "definition": "Name these people and concepts from French economics. French economist Leon Walras proposed one type of these events which he suggested will reach equilibrium through trial and error. Ronald Coase was referred to as the father of the spectrum type of these events after suggesting the distribution of radio and TV bandwidth. Collusion refers to people with prior knowledge of other people's attendance of these events working together, while the Dutch form entails the price of an item decreasing until it is purchased. In what events do people bid on items being sold?",
+    "term": "Auction"
+  },
+  {
+    "id": 4102,
+    "definition": "Name these states who were once led by the following governors. Gray Davis, Earl Warren, and currently Jerry Brown",
+    "term": "California"
+  },
+  {
+    "id": 4103,
+    "definition": "Name these states who were once led by the following governors. George Romney, Jennifer Granholm, and currently Rick Snyder",
+    "term": "Michigan"
+  },
+  {
+    "id": 4104,
+    "definition": "Name these states who were once led by the following governors. One man who served as governor of this state was Winthrop Rockefeller, who was a grandson of John D. Rockefeller. After being convicted of fraud, Jim Guy Tucker resigned as governor of this state, where members of the 101st Airborne Division compelled another governor to allow Central High School to desegregate by accepting nine black students. The Whitewater scandal involved a governor of this state who was re-elected as President over Republican Bob Dole. Name this Southern state whose governors have included Orval Faubus (OR-vil FAW-bus), Mike Huckabee, and Bill Clinton.",
+    "term": "Arkansas"
+  },
+  {
+    "id": 4105,
+    "definition": "Name these economists better known for their work in other fields of thought. This British economist laid out an early form of Walrus' law in his Essays on Some Unsettled Questions of Political Economy. He may be better known for his theory of names outlined in his book A System of Logic.",
+    "term": "John Stuart Mill"
+  },
+  {
+    "id": 4106,
+    "definition": "Name these economists better known for their work in other fields of thought. This man argued that the British taxation of American colonies is justified as a ˈˈreserve powerˈˈ in his speech ˈˈOn American Taxation.ˈˈ He more famously attacked the French Revolution in his Reflections on the Revolution in France.",
+    "term": "Edmund Burke"
+  },
+  {
+    "id": 4107,
+    "definition": "Name these economists better known for their work in other fields of thought. With Gerard Debreu, this man names an economic model that argues given a set of preliminary conditions, there exists a price for every commodity where aggregate supply equals aggregate demand. That model is part of his general equilibrium theory developed concurrently with Lionel McKenzie. Amartya Sen's liberal paradox is considered an extension of a theorem named for this man first presented in Social Choice and Individual Values. Unanimity, non- dictatorship, and individual sovereignty are three of five criteria that cannot be satisfied while creating a community ranking representative of individual ranked preferences in a voting system according to what man's impossibility theorem?",
+    "term": "Kenneth Joseph Arrow"
+  },
+  {
+    "id": 4108,
+    "definition": "Name these clauses from the U.S. Constitution. This clause was cited in the majority opinion to the 1819 case McCulloch (mik-KULL-uk) v. Maryland, in which the Supreme Court ruled that the Second Bank of the U.S. was legal despite the fact that the power to charter a bank is not granted to the federal government by the Constitution.",
+    "term": "Necessary and Proper Clause [accept Elastic Clause or Basket Clause or Coefficient Clause or Sweeping Clause]"
+  },
+  {
+    "id": 4109,
+    "definition": "Name these clauses from the U.S. Constitution. These exact two words are the namesake of two separate Constitutional clauses: one in Article 4 notes ˈˈthe citizens of each state shall be entitled to allˈˈ of these ˈˈof Citizens in the several states,ˈˈ and the other in the Fourteenth Amendment notes ˈˈNo state shall make or enforce any law which shall abridgeˈˈ these ˈˈof citizens of the United States.ˈˈ",
+    "term": "Privileges and Immunities [accept Privileges and Immunities Clause or Privileges or Immunities Clause]"
+  },
+  {
+    "id": 4110,
+    "definition": "Name these clauses from the U.S. Constitution. In a 1964 case, the Supreme Court ruled that this clause was not violated by the provision in the Civil Rights Act of 1964 that prohibited racial discrimination by the Heart of Atlanta Hotel. In 2012, Chief Justice John Roberts was the swing vote in a case which ruled that the individual mandate in the Affordable Care Act was legal as a tax but would be considered unconstitutional under this clause, which appears in Article 1, Section 8 as one of the enumerated powers. In the 1824 case Gibbons v. Ogden, the court ruled that this clause allowed Congress to regulate navigation on interstate waterways. Name this clause concerning business activities among the states.",
+    "term": "Commerce Clause"
+  },
+  {
+    "id": 4111,
+    "definition": "Identify these important documents from American history. James Madison stated that ˈˈThe latent causes of faction are thus sown in the nature of manˈˈ in which of the Federalist Papers which stated that a large government was best suited to combat the danger of factions?",
+    "term": "Federalist Number 10"
+  },
+  {
+    "id": 4112,
+    "definition": "Identify these important documents from American history. The writers stated that ˈˈif men were angels, no government would be necessaryˈˈ in which of the Federalist Papers which discussed the importance of checks and balances and stated that ˈˈambition must be made to counteract ambition?ˈˈ",
+    "term": "Federalist Number 51"
+  },
+  {
+    "id": 4113,
+    "definition": "Identify these important documents from American history. One line from this document stated ˈˈLike Paul, I must constantly respond to the Macedonian call for aid.ˈˈ This document quoted Thomas Aquinas and compared the writer's current circumstance to Socrates's ˈˈunnerving commitment to truth.ˈˈ This document cited Chief Justice Earl Warren in stating that ˈˈjustice too long delayed is justice denied.ˈˈ This document was written in response to a newspaper article entitled ˈˈA Call for Unityˈˈ and contains the quote ˈˈinjustice anywhere is a threat to justice everywhere.ˈˈ Identify this 1963 document that was written while Dr. Martin Luther King Jr. was imprisoned in Alabama.",
+    "term": "Letter from Birmingham Jail (Accept Letter from Birmingham City Jail OR The Negro is Your Brother)"
+  },
+  {
+    "id": 4114,
+    "definition": "Answer these questions about Constitutional amendments. Team A:Wayne Wheeler of the Anti-Saloon League drafted what 1919 legislation which enacted the intent of the 18th amendment? ANSWER: Volstead Act OR National Prohibition Act The 20th amendment moved the starting date for each session of Congress from March 4th to what date in January?",
+    "term": "January 3rd"
+  },
+  {
+    "id": 4115,
+    "definition": "Answer these questions about Constitutional amendments. Team A:Wayne Wheeler of the Anti-Saloon League drafted what 1919 legislation which enacted the intent of the 18th amendment? ANSWER: Volstead Act OR National Prohibition Act The 2018 Supreme Court case of Collins v. Virginia ruled that this amendment did not apply to the curtilage of a structure. This amendment was extended to electronic communications in the 1967 case of Katz v. United States. Courts in the United States enforce the spirit of this amendment through use of the Exclusionary rule. A 1961 Supreme Court case pertaining to this amendment introduced the ˈˈfruit of the poisonous treeˈˈ doctrine and extended this amendment to the states. That case was Mapp v. Ohio. Identify this amendment which bans illegal search and seizure.",
+    "term": "4th Amendment"
+  },
+  {
+    "id": 4116,
+    "definition": "Identify these individuals who have served as US ambassadors. The US ambassador to the United Nations from 1993-1997 was what woman who later served as the first female Secretary of State?",
+    "term": "Madeleine Albright"
+  },
+  {
+    "id": 4117,
+    "definition": "Identify these individuals who have served as US ambassadors. The US ambassador to the United Nations from 1953-1960 was what Republican who was Richard Nixon's Vice Presidential candidate in the election of 1960? This man's grandfather of the same name led the opposition to Woodrow Wilson's Fourteen Points.",
+    "term": "Henry Cabot Lodge Jr."
+  },
+  {
+    "id": 4118,
+    "definition": "Identify these individuals who have served as US ambassadors. In 1949, this man provided testimony as a character witness on behalf of Alger Hiss. This man died of heart failure in London shortly after returning from a UN conference in Switzerland. During a heated discussion with Soviet minister Valerian Zorin during the Cuban Missile Crisis, this man famously quipped ˈˈDo not wait for the translation.ˈˈ This man served as US ambassador to the United Nations from 1961 until his 1965 death. Identify this Democratic politician who lost the 1952 and 1956 Presidential elections to Dwight Eisenhower.",
+    "term": "Adlai Stevenson"
+  },
+  {
+    "id": 4119,
+    "definition": "Answer these questions about American Vice Presidents. What man served as Abraham Lincoln's first Vice President from 1861-1865 before being replaced in the position by Andrew Johnson?",
+    "term": "Hannibal Hamlin"
+  },
+  {
+    "id": 4120,
+    "definition": "Answer these questions about American Vice Presidents. What Ohio politician who won a Nobel Peace Prize for his work on World War I reparations plans served as Vice President from 1925-1929 under Calvin Coolidge?",
+    "term": "Charles Dawes"
+  },
+  {
+    "id": 4121,
+    "definition": "Answer these questions about American Vice Presidents. A speech given by this man entitled ˈˈThe Price of Free World Victoryˈˈ inspired the Aaron Copland composition ˈˈFanfare for the Common Man.ˈˈ After being removed as Vice President after a contentious National Convention, this man was appointed Secretary of Agriculture. After Vice President John Nance Garner ran against the sitting President in 1940, he was replaced as Vice President by this man. Identify this politician from Iowa who served as Franklin Roosevelt's second Vice President before being replaced by Harry Truman.",
+    "term": "Henry Wallace"
+  },
+  {
+    "id": 4122,
+    "definition": "Identify the state based upon people who have served as Governor of that state. Michele Grisham is the current Governor of what state that was previously governed by Gary Johnson and Bill Richardson?",
+    "term": "New Mexico"
+  },
+  {
+    "id": 4123,
+    "definition": "Identify the state based upon people who have served as Governor of that state. Chris Sununu is the current Governor of what state that was previously governed by Jeanne Shaheen and Maggie Hassan?",
+    "term": "New Hampshire"
+  },
+  {
+    "id": 4124,
+    "definition": "Identify the state based upon people who have served as Governor of that state. One former Governor of this state chaired a National Commission to investigate the causes of the Deepwater Horizon Oil Spill. That man, Bob Graham, served as Governor of this state from 1979- 1987 before being elected to the US Senate. Charlie Crist served as Governor of this state from 2007- 2011 after succeeding a man whose brother and father served as US President. Ron DeSantis is the current Governor of what state that was previously governed by Rick Scott and Jeb Bush?",
+    "term": "Florida"
+  },
+  {
+    "id": 4125,
+    "definition": "Answers these questions about concepts from economics. Guns and butter are traditional examples used to demonstrate what curve from economics which shows the possible combinations that an economy might produce of two goods at full employment?",
+    "term": "Production Possibilities Curve OR Production Possibilities Frontier OR PPC OR PPF"
+  },
+  {
+    "id": 4126,
+    "definition": "Answers these questions about concepts from economics. The Production Possibilities Curve can often be used to demonstrate what concept from economics, which is defined as the value of the most valuable option not taken by a business?",
+    "term": "Opportunity Cost"
+  },
+  {
+    "id": 4127,
+    "definition": "Answers these questions about concepts from economics. The negative slope of these curves is equal to the marginal rate of substitution and can be found by utilizing the corners of an Edgeworth Box. The budget constraint curve intersects a point that is tangent to one of these curves. When two products are perfect substitutes, one of these curves would have a constant slope; however, when two products are perfect complements, these curves would take on an L- shape. Identify these curves connecting points on a graph for which consumers have no preference.",
+    "term": "Indifference curves"
+  },
+  {
+    "id": 4128,
+    "definition": "Answer these questions about the US Constitution. The Supreme Court case of Wisconsin v. Yoder dealt with what clause of the 1st Amendment? That case concerned Amish children attending school past the eighth grade.",
+    "term": "Free exercise clause"
+  },
+  {
+    "id": 4129,
+    "definition": "Answer these questions about the US Constitution. In the 1967 case Afroyim v. Rusk, the Supreme Court stated that this amendment overrode the Bancroft Treaties. In the 1886 case of Santa Clara County v. Southern Pacific Railroad, the Supreme Court said that this amendment grants protections to businesses in addition to people. This amendment discusses the fact that no state will enforce a law restricting the Privileges and Immunities of citizens of another state. This amendment's due process clause has been used to selectively incorporate other amendments to the states. Identify this Reconstruction amendment that contains the equal protection clause and guarantees citizenship for anyone born in the United States,",
+    "term": "Team B:The Supreme Court case of Gibbons v. Ogden dealt with what clause of the Constitution that can be found in Article 1, Section 8 within the powers of Congress? ANSWER: Commerce clause ANSWER: 14th Amendment"
+  },
+  {
+    "id": 4130,
+    "definition": "Name the following related to the U.S. Congress. The Constitution's ˈˈNecessary and Properˈˈ clause is used as justification to give Congress powers of this type, which are not expressly granted by the Constitution.",
+    "term": "implied powers"
+  },
+  {
+    "id": 4131,
+    "definition": "Name the following related to the U.S. Congress. When combining the House of Representatives and Senate, this is the number of voting members of which Congress is comprised.",
+    "term": "five hundred thirty-five or 535"
+  },
+  {
+    "id": 4132,
+    "definition": "Name the following related to the U.S. Congress. Proceedings related to this action are not subject to judicial review according to the ruling of a 1993 Supreme Court case involving Walter Nixon. William Belknap was the only Cabinet member to whom this action was applied, and in 15 of the 19 times in which this action took place, the target was a federal judge. It first occurred to a U.S. president after a violation of the Tenure of Office Act in 1868. A trial overseen by the Senate occurs after the House of Representatives takes this action, which can be initiated due to ˈˈtreason, bribery, or other high crimes and misdemeanors.ˈˈ Name this action in which a federal official is removed from office.",
+    "term": "impeachment [accept word forms]"
+  },
+  {
+    "id": 4133,
+    "definition": "Name these amendments to the U.S. Constitution. Ratified in 1961, this amendment gave citizens of the District of Columbia the ability to vote in presidential elections by granting Washington D.C. members in the Electoral College.",
+    "term": "23rd Amendment"
+  },
+  {
+    "id": 4134,
+    "definition": "Name these amendments to the U.S. Constitution. Ratified in 1913, this amendment allows for the direct election of U.S. Senators, who had previously been chosen by state legislatures.",
+    "term": "17th Amendment"
+  },
+  {
+    "id": 4135,
+    "definition": "Name these amendments to the U.S. Constitution. Joseph McKenna argued that this amendment had an ˈˈexpansive and vital characterˈˈ in the majority opinion for Weems v. United States. Since the 1958 case Trop v. Dulles, the ˈˈevolving standards of decencyˈˈ test has been applied in cases dealing with this amendment, which, along with the 14th amendment, was at the center of a 1972 case involving William Furman. In the case Gregg v. Georgia, the Supreme Court ruled that this amendment was not automatically violated by sentences involving the death penalty. Name this Bill of Rights amendment which outlaws ˈˈexcessive bail, ˈˈexcessive fines,ˈˈ and ˈˈcruel and unusual punishments.ˈˈ",
+    "term": "8th Amendment"
+  },
+  {
+    "id": 4136,
+    "definition": "These questions will involve the economics of society's ability to make goods. What diagrams depict two goods, such as guns and butter, and a society's ability to make them? They are generally used to illustrate the tradeoffs between making said two goods.",
+    "term": "production possibility frontier [or ppf, accept production possibilities frontier or production possibility diagram or production possibilities diagram]"
+  },
+  {
+    "id": 4137,
+    "definition": "These questions will involve the economics of society's ability to make goods. The production possibilities frontier illustrates this type of cost of making a good, which is defined as the alternatives one foregoes to engage in an activity.",
+    "term": "opportunity cost"
+  },
+  {
+    "id": 4138,
+    "definition": "These questions will involve the economics of society's ability to make goods. In agreement with the views of the libertarian Richard Cobden, this economist argued that England's ability to make technological advances were hampered by its desire to keep import duties high. He extended Ferdinand Lasalle's (LUH-ˈˈSal'sˈˈ) argument that payments to laborers would, in the long run, tend toward the level necessary for subsistence, which became known as his iron law of wages. Name this British economist who wrote Principles of Political Economy and Taxation and Rent in addition to developing a theory of international trade.",
+    "term": "David Ricardo"
+  },
+  {
+    "id": 4139,
+    "definition": "Name these Supreme Court cases. The ruling from this 1966 case established that during an interrogation, criminal suspects shall be advised of their rights to silence and an attorney via a namesake warning.",
+    "term": "Ernesto Arturo Miranda v. Arizona [accept Miranda warnings or Miranda rights]"
+  },
+  {
+    "id": 4140,
+    "definition": "Name these Supreme Court cases. The doctrine of judicial review was established in this 1803 case which stemmed from the sitting Secretary of State's refusal to deliver the commission of a man whose appointment was made by John Adams on the latter's final day in office.",
+    "term": "William Marbury v. James Madison"
+  },
+  {
+    "id": 4141,
+    "definition": "Name these Supreme Court cases. In his final appearance before the Supreme Court, former Democratic presidential nominee John W. Davis argued on behalf of the defense for this case. The rulings made four years earlier in Sweatt v. Painter and McLaurin v. Oklahoma State Regents were referenced in the unanimous opinion for this case. In a subsequent case, the Supreme Court ruled that its decision must be implemented ˈˈwith all deliberate speed.ˈˈ Thurgood Marshall, while working for the NAACP, argued for the plaintiffs in this case, which overturned the ˈˈseparate but equalˈˈ doctrine established in Plessy v. Ferguson. Name this 1954 case which ruled that segregation in schools was illegal.",
+    "term": "Oliver Brown, et al. v. Board of Education of Topeka, Kansas, et. al."
+  },
+  {
+    "id": 4142,
+    "definition": "Name these current U.S. governors. Raised as Sikh, this Indian-American woman and youngest current governor has served as South Carolina's Governor since succeeding Mark Sanford in 2011.",
+    "term": "Nimrata Nikki Randhawa Haley"
+  },
+  {
+    "id": 4143,
+    "definition": "Name these current U.S. governors. This other Indian-American, who has served as the Governor of Louisiana since 2008, made headlines in January 2015 for criticizing Western European governments for allegedly allowing Muslim-controlled ˈˈno-go zones.ˈˈ",
+    "term": "Piyush ˈˈBobbyˈˈ Jindal (JIN-dul)"
+  },
+  {
+    "id": 4144,
+    "definition": "Name these current U.S. governors. In 2011 this governor pulled his state out of the environmental organization Regional Greenhouse Gas Initiative. Shortly before being re-elected as governor over Barbara Buono, he authorized over ten million dollars to be spent on a special election to fill the seat left by deceased U.S. Senator Frank Lautenberg, which was won by Cory Booker. In January 2015 he was criticized for accepting all-expense paid trips to several Dallas Cowboys football games. This governor was embroiled in a 2013 scandal in which members of his staff were involved in the closure of traffic lanes that provided residents of Fort Lee access to the George Washington Bridge. Name this current Governor of New Jersey.",
+    "term": "Christopher James Christie"
+  },
+  {
+    "id": 4145,
+    "definition": "Name the following related to the economics of living. The Case-Shiller metric is an example of what measure of the cost of living, which is calculated for a ˈˈbasket of goodsˈˈ?",
+    "term": "consumer price index or CPI"
+  },
+  {
+    "id": 4146,
+    "definition": "Name the following related to the economics of living. What economic variable in the cost of living is often controlled through the use of namesake price ceilings? For a business, this cost is often tax-deductible.",
+    "term": "rent"
+  },
+  {
+    "id": 4147,
+    "definition": "Name the following related to the economics of living. The golden rule of this quantity is used to figure out what is the ideal macroeconomic level of it for growth. This quantity, which is the S in the IS-LM model, is the upper bound on the so-called ˈˈreserve ratioˈˈ, which is defined as the amount of money the Federal Reserve mandates that banks keep on hand. A financial institution that specializes in mortgages is called a ˈˈ[this] and loan bankˈˈ. Accounts named for this quantity feature a rate of return that ideally beats the inflation rate. Name this quantity, which is defined as the portion of income one keeps for future use.",
+    "term": "savings rate"
+  },
+  {
+    "id": 4148,
+    "definition": "Name these Cabinet-level positions In 2014, former Kansas Governor Kathleen Sibelius resigned from this position, which led to the appointment of its current holder, Sylvia Burwell.",
+    "term": "Secretary of Health and Human Services or Health and Human Services Secretary [prompt on ˈˈHHSˈˈ]"
+  },
+  {
+    "id": 4149,
+    "definition": "Name these Cabinet-level positions A 2014 scandal led to Eric Shinseki's resignation of this office, which was the most recent to be added as a Cabinet level position until the 2001 creation of the Department of Homeland Security.",
+    "term": "Secretary of Veterans Affairs or Veterans Affairs Secretary [prompt on ˈˈVAˈˈ]"
+  },
+  {
+    "id": 4150,
+    "definition": "Name these Cabinet-level positions In 1989 the U.S. Senate denied the appointment of John Tower to this position. Charles Wilson was pressured to resign as CEO of General Motors after being nominated for this position, which was first held by a man who is presumed to have committed suicide by jumping out of a hospital window. Caspar Weinberger held this office under Ronald Reagan until his resignation amid the Iran-Contra Affair. This position was held two separate times, twenty-four years apart, by Donald Rumsfeld, and its longest holder was Robert McNamara. In 2015, Chuck Hagel was replaced by Ashton Carter in what Cabinet-level office that was created in 1947 to replace the position of Secretary of War?",
+    "term": "Secretary of Defense [accept Defense Secretary; prompt on ˈˈSecDefˈˈ; do not accept or prompt on ˈˈSecretary of Warˈˈ]"
+  },
+  {
+    "id": 4151,
+    "definition": "Name these current U.S. Senators. The most senior member of the Senate is this Democrat from Vermont who was replaced as president pro tempore in January 2015.",
+    "term": "Patrick Joseph Leahy (LAY-hee)"
+  },
+  {
+    "id": 4152,
+    "definition": "Name these current U.S. Senators. This woman, who became Mayor of San Francisco following the 1978 assassination of George Moscone and Harvey Milk, is currently the senior Senator from California.",
+    "term": "Dianne Goldman Berman Feinstein [or Dianne Emiel Goldman]"
+  },
+  {
+    "id": 4153,
+    "definition": "Name these current U.S. Senators. This politician first entered the Senate by winning an election against Richard Kimball. In September 2014, this Senator battled rumors that he met and took a photograph with ISIS leader Abu Bakr al-Baghdadi (AH-boo BAH-kur ahl- bahg-DAH-dee). Early in his career, this Senator was cleared of wrongdoing after becoming embroiled in a scandal involving Charles Keating. The memoir Faith of My Fathers recounted the military service of this man, who co-authored a 2002 campaign finance reform law with Russ Feingold. More recently, this Senatorial successor to Barry Goldwater ran for president on a ticket with Sarah Palin. The loser to Barack Obama in the Election of 2008 was what former Vietnam War POW and current Senator from Arizona?",
+    "term": "John Sidney McCain III"
+  },
+  {
+    "id": 4154,
+    "definition": "Name these Articles of the Constitution. The ˈˈFull Faith and Creditˈˈ clause is mentioned within this Article, which notes that the Federal government will guarantee every state a republican form of government and protect them against invasion.",
+    "term": "Article Four or 4th Article"
+  },
+  {
+    "id": 4155,
+    "definition": "Name these Articles of the Constitution. This Article specifies that the Constitution must be ratified by nine of the original thirteen states in order to become valid.",
+    "term": "Article Seven or 7th Article"
+  },
+  {
+    "id": 4156,
+    "definition": "Name these Articles of the Constitution. The Constitution's Recommendation Clause is within this Article, which notes how care shall be taken to ensure ˈˈthat laws be faithfully executed.ˈˈ The text of this Article, which addresses who can negotiate treaties and appoint ambassadors, was revised by both the 25th and 12th Amendments. Command over the U.S. Armed Forces is granted within this Article, which also requires a regular State of the Union address. The requirements and powers of the U.S. President are outlined in what Article of the Constitution which follows the Article describing the government's legislative branch?",
+    "term": "Article Two or 2nd Article"
+  },
+  {
+    "id": 4157,
+    "definition": "Answer these questions about Supreme Court cases. What 1961 Supreme Court case stated that evidence obtained illegally in violation of the 4th amendment is inadmissible in court?",
+    "term": "Mapp v. Ohio"
+  },
+  {
+    "id": 4158,
+    "definition": "Answer these questions about Supreme Court cases. What 1969 Supreme Court case stated that freedom of expression, such as wearing black armbands in support of a truce during the Vietnam War, is protected free speech?",
+    "term": "Tinker v. Des Moines"
+  },
+  {
+    "id": 4159,
+    "definition": "Answer these questions about Supreme Court cases. The issue at the heart of this Supreme Court case had previously been dismissed by the Court in the case of DeFunis v. Odegaard. Lewis Powell wrote the majority opinion in this case which cited Title VI of the Civil Rights Act of 1964. One party in this case was a 33-year old Marine corps veteran who brought suit after being denied entry to a medical school in Sacramento. Identify this 1978 Supreme Court case which struck down numerical quotas for college admissions, but upheld the principle of affirmative action.",
+    "term": "Regents of the University of California v. Bakke"
+  },
+  {
+    "id": 4160,
+    "definition": "Identify these pieces of legislation passed by Congress. What 1883 legislation passed in the aftermath of the assassination of President Garfield dictated that bureaucratic positions within the federal government be awarded on the basis of merit, not patronage?",
+    "term": "Pendleton Act"
+  },
+  {
+    "id": 4161,
+    "definition": "Identify these pieces of legislation passed by Congress. Upton Sinclair's The Jungle led to the passage of what 1906 legislation which required labels to be placed on products detailing a complete list of ingredients?",
+    "term": "Pure Food and Drug Act"
+  },
+  {
+    "id": 4162,
+    "definition": "Identify these pieces of legislation passed by Congress. One portion of this legislation was struck down by the Supreme Court in a suit brought by Wisconsin Right to Life. This legislation was mostly upheld in a 2003 Supreme Court case brought by Mitch McConnell. Provisions of this legislation included limits on soft money as well as restrictions on when ads could be aired by outside organizations. This legislation was introduced by a Wisconsin Democrat and an Arizona Republican. Identify this 2002 campaign finance legislation, parts of which were overturned in the 2010 Citizens United case.",
+    "term": "McCain-Feingold Act OR Bipartisan Campaign Reform Act OR BRCA"
+  },
+  {
+    "id": 4163,
+    "definition": "Answer these questions about the US Constitution. What Article to the US Constitution describes how a ⅔ vote in the House and Senate is required to suggest an amendment to the Constitution, and that the amendment then must be approved by ¾ of the states?",
+    "term": "Article Five"
+  },
+  {
+    "id": 4164,
+    "definition": "Answer these questions about the US Constitution. What Article to the US Constitution forbids religious tests as a condition of holding office and states that the US government will pay debts incurred under the Articles of Confederation?",
+    "term": "Article Six"
+  },
+  {
+    "id": 4165,
+    "definition": "Answer these questions about the US Constitution. In 2019, the Supreme Court case of Timbs v. Indiana ruled that a portion of this amendment applies to the states through selective incorporation of the 14th amendment. That case concerning this amendment dealt with a car that was confiscated by police as part of an arrest. The 1988 case of United States v. Bajakajian marked the first time that the Supreme Court cited this amendment to declare a fine to be excessive. Identify this amendment to the US Constitution that prohibits cruel and unusual punishments.",
+    "term": "8th Amendment"
+  },
+  {
+    "id": 4166,
+    "definition": "Answer these questions about US state Governors. Since 2015, Doug Ducey has served as Governor of what US state? Ducey succeeded this state's previous Governor Jan Brewer, who had signed the immigration bill SB 1070 into law.",
+    "term": "Arizona"
+  },
+  {
+    "id": 4167,
+    "definition": "Answer these questions about US state Governors. Jared Polis, the first openly gay Governor in the United States, currently serves as Governor of what state previously led by John Hickenlooper?",
+    "term": "Colorado"
+  },
+  {
+    "id": 4168,
+    "definition": "Answer these questions about US state Governors. One man who served as Governor of this state attempted to avert the Civil War by crafting the Crittenden Compromise. This state's 12th Governor James Morehead is the namesake of a university in this state. Isaac Shelby was the first Governor of this state when it became the 15th US state in 1792. While campaigning in 2014, the current Governor of this state caused controversy when he attended a rally that included a cockfighting match. Identify this state whose current Governor Matt Bevin challenged Mitch McConnell for a Senate seat in 2014.",
+    "term": "Kentucky"
+  },
+  {
+    "id": 4169,
+    "definition": "Identify these current members of the US Senate. What former Mayor of Newark is currently the junior Senator from New Jersey? This man has announced his intention to seek the 2020 Democratic Presidential nomination.",
+    "term": "Cory Booker"
+  },
+  {
+    "id": 4170,
+    "definition": "Identify these current members of the US Senate. What former city prosecutor is currently the senior Senator from Minnesota? This woman has announced her intention to seek the 2020 Democratic Presidential nomination.",
+    "term": "Amy Klobuchar"
+  },
+  {
+    "id": 4171,
+    "definition": "Identify these current members of the US Senate. This politician wrote an amicus brief to accompany the Supreme Court Case D.C. v. Heller while serving as Solicitor General from his home state. This man stated that he was willing to speak until he could ˈˈno longer standˈˈ prior to reading Green Eggs and Ham during a lengthy filibuster over passage of the Affordable Care Act. This incumbent narrowly defeated his Democratic opponent in a 2018 Senate election, leading that opponent to declare his intention to seek the 2020 Democratic Presidential nomination. This opponent of Beto OˈRourke was accused of being the Zodiac Killer in a popular meme from 2015. Identify this junior Senator from Texas.",
+    "term": "Ted Cruz"
+  },
+  {
+    "id": 4172,
+    "definition": "Answer these questions about US Supreme Court justices. What man who had served as Attorney General and Secretary of the Treasury under Andrew Jackson served as Chief Justice of the Court from 1836-1864?",
+    "term": "Roger Taney"
+  },
+  {
+    "id": 4173,
+    "definition": "Answer these questions about US Supreme Court justices. Taney was replaced as Chief Justice by what former Ohio Governor who had previously served as Treasury Secretary under Abraham Lincoln?",
+    "term": "Salmon P. Chase"
+  },
+  {
+    "id": 4174,
+    "definition": "Answer these questions about US Supreme Court justices. Due to the state in which they were born, this justice and Harry Blackmun were often dubbed the ˈˈMinnesota Twins.ˈˈ This man wrote the majority opinion in a case which stated that de facto segregation must be addressed, Swann v. Charlotte-Mecklenburg County. This man also wrote the majority opinion in a case which ruled that executive privilege could not protect a sitting President from criminal prosecution, US v. Nixon. Identify this conservative justice who led the Court from 1969-1986 following the resignation of Earl Warren.",
+    "term": "Warren Burger"
+  },
+  {
+    "id": 4175,
+    "definition": "Name these economic concepts related to the IS-LM model and its founder. The IS-LM model is also named for Alvin Hansen and what economist, who names a type of demand in which the utility is fixed?",
+    "term": "John Richard Hicks"
+  },
+  {
+    "id": 4176,
+    "definition": "Name these economic concepts related to the IS-LM model and its founder. The vertical axis of the model is labeled for what quantity, which is applied to the overall GDP labeled on the horizontal axis?",
+    "term": "Interest rate"
+  },
+  {
+    "id": 4177,
+    "definition": "Name these economic concepts related to the IS-LM model and its founder. The equilibrium point in the national investment curve on the IS-LM model corresponds to this specific quantity, whose namesake function shifts upward with a rise in consumer expenditures. The Keynesian cross diagram plots this macroeconomic quantity on the vertical axis, against GDP. A model plotting real output and price level shows a graph with a negative slope representing this value, and its shifts are often attributed to an increase in spending. Identify this quantity, which is often contrasted with aggregate supply.",
+    "term": "Aggregate demand [prompt on partial answer]"
+  },
+  {
+    "id": 4178,
+    "definition": "Name these former Attorneys General. James Madison's final Attorney General was this Pennsylvania politician best known for negotiating an 1818 disarmament treaty with British minister Charles Bagot (BAG-ut).",
+    "term": "Richard Rush [accept Rush-Bagot Treaty]"
+  },
+  {
+    "id": 4179,
+    "definition": "Name these former Attorneys General. Serving as the Attorney General under William Henry Harrison, John Tyler, and Millard Fillmore, this Kentuckian proposed a namesake 1860 compromise in a fruitless attempt to avoid the Civil War.",
+    "term": "John Jordan Crittenden [accept Crittenden Compromise]"
+  },
+  {
+    "id": 4180,
+    "definition": "Name these former Attorneys General. The Senate rejected this politician's nomination to the Supreme Court as a replacement for Gabriel Duvall. This man became Attorney General after the position was resigned by John Berrien, and he served briefly as Andrew Jackson's Secretary of Treasury before being rejected by the Senate and replaced by Levi Woodbury. This man ruled that the writ of habeas corpus may not be suspended by the president in the case Ex parte Merryman, but he is best known for ruling that the Missouri Compromise was unconstitutional in an 1857 case which also determined that African-Americans were not U.S. citizens. What Chief Justice of the Supreme Court between 1836 and 1864 delivered the majority opinion in the Dred Scott case?",
+    "term": "Roger Brooke Taney"
+  },
+  {
+    "id": 4181,
+    "definition": "Name the following related to economic goods. Hot dogs and hamburgers are goods with what relation, which is characterized by a positive cross price elasticity of demand?",
+    "term": "substitute goods"
+  },
+  {
+    "id": 4182,
+    "definition": "Name the following related to economic goods. Hot dogs and hot dog buns are goods with what relation, which is characterized by a negative cross price elasticity of demand?",
+    "term": "complementary goods"
+  },
+  {
+    "id": 4183,
+    "definition": "Name the following related to economic goods. Arnold Harberger was the first to graphically illustrate this economic quantity for a good. It is smaller for goods that have more inelastic supplies and demands. Graphically speaking, this quantity can be illustrated with a shape whose vertices are defined by the equilibrium point, the new willingness to pay, and the new willingness to supply; thus, this quantity is illustrated as a triangle in supply and demand charts. Name this micro-economic quantity which represents the amount of economic profit that is lost when an excess burden is placed on a good.",
+    "term": "deadweight loss [accept excess burden; prompt on ˈˈallocative inefficiencyˈˈ]"
+  },
+  {
+    "id": 4184,
+    "definition": "Give the following related to New Deal programs. The Supreme Court case Schechter Poultry Corporation v. U.S. partially struck down the legislation that formed this New Deal agency, whose motto was ˈˈwe do our part.ˈˈ",
+    "term": "National Recovery Administration or NRA"
+  },
+  {
+    "id": 4185,
+    "definition": "Give the following related to New Deal programs. This 1935 legislation, which was sponsored by a New York Senator, sought to increase the rights of employees by legally allowing the organization of labor unions and collective bargaining, among other things.",
+    "term": "National Labor Relations Act [or NLRA or Wagner Act]"
+  },
+  {
+    "id": 4186,
+    "definition": "Give the following related to New Deal programs. This man's presidential aspirations were damaged by the revelation of the so-called ˈˈGuru lettersˈˈ between him and Nicholas Roerich. Economist John Kenneth Galbraith claimed that this man was ˈˈsecond only to Roosevelt as the most important figure of the New Deal.ˈˈ In one election, Idaho Senator Glen Taylor was his vice presidential running mate. Nine years after his father died while serving in the position, this man became Secretary of Agriculture, which he would hold for the first seven years of FDR's presidency. This Progressive Party presidential candidate in the Election of 1948 rose to his highest government position as the successor to John Nance Garner. Name this Iowa politician who served from 1941 to 1945 as FDR's second vice president.",
+    "term": "Henry Agard Wallace"
+  },
+  {
+    "id": 4187,
+    "definition": "Answer the following about public economics. A lighthouse is a public good, and thus an example of what problem, in which those who did not pay for a good still benefit from it anyways?",
+    "term": "free rider problem"
+  },
+  {
+    "id": 4188,
+    "definition": "Answer the following about public economics. Erik Lindahl suggested that the free rider problem be solved by taxing individuals based on this quantity, which is defined as the satisfaction gained from a good.",
+    "term": "total utility"
+  },
+  {
+    "id": 4189,
+    "definition": "Answer the following about public economics. Arthur Pigou's (PEE-gohz) namesake tax is used to prevent the public from creating these situations. George Stigler studied capture theory, which focuses on how third-party agencies rectify these situations. In ˈˈThe Problem of Social Costˈˈ, Ronald Coase theorized that these phenomena can be solved without outside intervention. These can be positive, such as the construction of an airport or a beautiful concert, or negative, such as loud noise or air pollution. Name these economic phenomena that affect those not involved in a financial transaction.",
+    "term": "externality [or externalities]"
+  },
+  {
+    "id": 4190,
+    "definition": "Name these presidential elections. James Birney ran for president on the Liberty Party ticket for the second consecutive time in this election, which was won by a ticket featuring George Dallas.",
+    "term": "Presidential Election of 1844"
+  },
+  {
+    "id": 4191,
+    "definition": "Name these presidential elections. James Weaver won 22 electoral votes while running for president on the People's Party ticket in this election, which was won by a ticket featuring Adlai Stevenson I (the first).",
+    "term": "Presidential Election of 1892"
+  },
+  {
+    "id": 4192,
+    "definition": "Name these presidential elections. The third place ticket in this election included Seymour Stedman as the vice presidential candidate. One party's nominee was chosen after the sitting president blocked the nomination of his son-in-law and former Secretary of the Treasury, William McAdoo. The eventual winner of this election only disclosed his adulterous affair with Carrie Phillips after his nomination was secured ˈˈin a smoke-filled room.ˈˈ Eugene V. Debs' final presidential run took place while in prison during this election, which included Franklin D. Roosevelt as the vice presidential candidate for Democratic nominee James Cox. The slogan ˈˈreturn to normalcyˈˈ was used by the Republicans, who won this election with a ticket featuring vice president Calvin Coolidge. Name this presidential election won by Warren G. Harding.",
+    "term": "Presidential Election of 1920"
+  },
+  {
+    "id": 4193,
+    "definition": "Name these former vice presidents. This man, who served as a U.S. Senator from Kentucky both before and after his tenure as vice president, was elected to the position when his ticket won the Election of 1948.",
+    "term": "Alben William Barkley"
+  },
+  {
+    "id": 4194,
+    "definition": "Name these former vice presidents. This Indiana politician was serving as a U.S. Senator upon rising to the position of vice president when his ticket won the Election of 1904.",
+    "term": "Charles Warren Fairbanks"
+  },
+  {
+    "id": 4195,
+    "definition": "Name these former vice presidents. While serving in the military, this man helped lead a retreat that saved an American brigade from being captured after opposing troops landed at Kip's Bay. This man served one term as a U.S. Senator, a position in which he was both preceded and succeeded by Philip Schuyler, who was the recipient of a notable letter from Charles Cooper that included disparaging comments about this man. While vice president, he presided over the impeachment of Supreme Court Justice Samuel Chase and conspired with James Wilkinson to establish a new nation in the southwest U.S. under his control. Also during his vice presidential tenure, he travelled to Weehawken, New Jersey to engage a political rival in a duel. Name this first vice president under Thomas Jefferson who was charged with treason and killed Alexander Hamilton.",
+    "term": "Aaron Burr Jr."
+  },
+  {
+    "id": 4196,
+    "definition": "Answer the following about foreign currencies. This theory of foreign currencies assumes that one unit of currency can be used to purchase the same goods in any place, hence its name.",
+    "term": "purchasing power parity [accept PPP]"
+  },
+  {
+    "id": 4197,
+    "definition": "Answer the following about foreign currencies. Purchasing Power Parity is often measured using this trademarked item, due to its ubiquity. That measure was introduced in a whimsical article in The Economist by Pam Woodall.",
+    "term": "Big Mac [do not accept or prompt on any less specific answers]"
+  },
+  {
+    "id": 4198,
+    "definition": "Answer the following about foreign currencies. The Mundell-Fleming model assumes that an economy cannot maintain a fixed exchange rate with other countries, free capital movement, and an independent form of this scheme. Moral suasion (SWAY-zhuhn) is often defined as a component of this scheme, which also includes setting the reserve ratio, altering the gold standard, and the purchase and selling of bonds via open market operations. The Federal Reserve theoretically alters the economy using this sort of scheme. Name this sort of economic policy that is distinguished from fiscal policy.",
+    "term": "monetary policy"
+  },
+  {
+    "id": 4199,
+    "definition": "Name these men who served as Associate Justices of the Supreme Court. The majority opinion in Griswold v. Connecticut was authored by this justice, who was appointed to the position by FDR in 1939 and went on to serve for 36 years, the longest tenure of any Supreme Court justice.",
+    "term": "William Orville Douglas"
+  },
+  {
+    "id": 4200,
+    "definition": "Name these men who served as Associate Justices of the Supreme Court. This man, who was appointed to the Supreme Court in 1877 by Rutherford B. Hayes, was the sole dissenting justice in the 1896 case Plessy v. Ferguson. One of his grandsons was appointed to the Court in 1955 by Dwight Eisenhower.",
+    "term": "John Marshall Harlan"
+  },
+  {
+    "id": 4201,
+    "definition": "Name these men who served as Associate Justices of the Supreme Court. This justice was appointed to the Court to replace the retiring Horace Gray. This justice authored the dissenting opinion in the case which ruled that the Northern Securities Company was a monopoly and must be dissolved. In one case, his majority opinion upheld a Tennessee statute allowing forced sterilization and noted that ˈˈthree generations of imbeciles are enoughˈˈ; that case was Buck v. Bell. This justice delivered a dissenting opinion in Abrams v. United States shortly after authoring an opinion in which he noted that ˈˈthe most stringent protection of free speech would not protect a man in falsely shouting fire in a theatreˈˈ because it would ˈˈcreate a clear and present danger.ˈˈ Name this early 20th century Associate Justice who authored the unanimous majority opinion in Schenck v. United States and is sometimes known as ˈˈThe Great Dissenter.ˈˈ",
+    "term": "Oliver Wendell Holmes Jr."
+  },
+  {
+    "id": 4202,
+    "definition": "Name the state once represented by the following individuals in the U.S. Senate. Max Baucus, Burton K. Wheeler, and Thomas Walsh.",
+    "term": "Montana"
+  },
+  {
+    "id": 4203,
+    "definition": "Name the state once represented by the following individuals in the U.S. Senate. John Sparkman, Oscar Underwood, and William Rufus King.",
+    "term": "Alabama"
+  },
+  {
+    "id": 4204,
+    "definition": "Name the state once represented by the following individuals in the U.S. Senate. One Senator from this state died in office in 1917 after being accidentally shot while duck hunting. Another Senator from this state was sued after awarding Ronald Hutchinson one of his monthly Golden Fleece Awards for wasteful government spending. In addition to Paul Husting and William Proxmire, this state was represented in the Senate by a man who teamed with the aforementioned Thomas Walsh to investigate the Teapot Dome scandal and later finished third in the Election of 1924. Another Senator from this state rose to prominence after a 1950 speech in Wheeling, West Virginia in which he claimed to have a list of State Department employees who were members of the Communist Party. Robert La Follette and Joseph McCarthy were from what state currently represented in the Senate by Ron Johnson and the openly-gay Tammy Baldwin?",
+    "term": "Wisconsin"
+  },
+  {
+    "id": 4205,
+    "definition": "Answer the following about situations in which market failure occurs. The market for high school textbooks is a classic example of what situation, in which there is only one buyer, thus making it so that market failure can be induced by the sellers.",
+    "term": "monopsony [do not accept ˈˈmonopolyˈˈ]"
+  },
+  {
+    "id": 4206,
+    "definition": "Answer the following about situations in which market failure occurs. Cartels may cause market failure by engaging in this practice, in which different prices are set for different customers.",
+    "term": "price discrimination [or price differentiation]"
+  },
+  {
+    "id": 4207,
+    "definition": "Answer the following about situations in which market failure occurs. This situation is subject to the Bertrand (ˈˈBEARˈˈ-trahn) and Cournot (cor-NO) models. Prices in this situation are ˈˈsticky-upwardˈˈ since those prices can be modeled by a step function. A kinked demand curve characterizes this situation, which is often exacerbated by collusion amongst the suppliers. The video game console market is one example of this situation, since Sony, Microsoft, and Nintendo dominate revenues. Name this market situation in which a small number of sellers make a product.",
+    "term": "oligopoly"
+  },
+  {
+    "id": 4208,
+    "definition": "Name these amendments to the U.S. Constitution. This amendment guarantees the voting rights of all U.S. citizens that are 18 years of age or older.",
+    "term": "26th Amendment"
+  },
+  {
+    "id": 4209,
+    "definition": "Name these amendments to the U.S. Constitution. This amendment guarantees that the States will be reserved all powers that are neither delegated to the Federal government nor prohibited to the States by the U.S. Constitution.",
+    "term": "10th Amendment"
+  },
+  {
+    "id": 4210,
+    "definition": "Name these amendments to the U.S. Constitution. Oliver Wendell Holmes Jr. envisioned a scenario in which this amendment would be reduced ˈˈto a form of wordsˈˈ in his majority opinion for Silverthorne Lumber Company v. U.S., which introduced the ˈˈfruit of the poisonous treeˈˈ doctrine that clarifies when this amendment is violated. The Supreme Court case Weeks v. U.S. involved an interpretation of this amendment, which is not violated in actions covered by the plain view doctrine or border crossing exception. The exclusionary rule protects the rights conferred by this amendment, which grants ˈˈthe right of the people to be secure in their persons, houses, papers, and effects.ˈˈ The issuance of warrants is addressed by what Bill of Rights amendment that protects ˈˈagainst unreasonable searches and seizuresˈˈ?",
+    "term": "4th Amendment"
+  }
+]

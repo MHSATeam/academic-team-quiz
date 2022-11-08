@@ -1,22 +1,61 @@
-<template>
-  <img alt="Vue logo" src="./assets/logo.png" />
-  <HelloWorld msg="Hello Vue 3 + Vite" />
-</template>
+<script setup lang="ts">
+import { onMounted, reactive, ref } from "vue";
+import QuestionBox from "./components/QuestionBox.vue";
+import SetPicker from "./components/SetPicker.vue";
 
-<script setup>
-import HelloWorld from './components/HelloWorld.vue'
+const setPicker = ref();
 
-// This starter template is using Vue 3 experimental <script setup> SFCs
-// Check out https://github.com/vuejs/rfcs/blob/script-setup-2/active-rfcs/0000-script-setup.md
+const questions = reactive<{ id: number; question: string; quiet: boolean }[]>(
+  []
+);
+const nextQuestion = async (quiet: boolean = false, errorCount = 0) => {
+  const question = {
+    id: 0,
+    question: "",
+    quiet,
+  };
+  try {
+    const response = await fetch("/api/question", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        sets: [...setPicker.value.selectedSets],
+      }),
+    }).then((response) => response.json());
+    question.question = response.definition;
+    question.id = response.id;
+  } catch (e) {
+    console.error(e);
+    if (errorCount < 3) {
+      nextQuestion(quiet, errorCount + 1);
+    } else {
+      alert(
+        "There was an error fetching the question. Please try again later."
+      );
+    }
+    return;
+  }
+  questions.push(question);
+};
+const swapLastQuestion = async () => {
+  await nextQuestion(true);
+  questions.splice(questions.length - 2, 1);
+};
+
+onMounted(() => {
+  nextQuestion();
+});
 </script>
 
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
-</style>
+<template>
+  <header>
+    <h1>Academic Team Quiz</h1>
+  </header>
+  <main @click="setPicker.toggle(false)">
+    <QuestionBox v-for="(question, index) in questions" :question="question.question" :question-id="question.id"
+      :key="index" @next="nextQuestion()" :quiet="question.quiet" />
+  </main>
+  <SetPicker @update="swapLastQuestion" ref="setPicker" />
+</template>
