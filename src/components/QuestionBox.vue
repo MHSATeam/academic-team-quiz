@@ -17,6 +17,7 @@ const questionBox = ref<HTMLElement | null>(null);
 const userAnswer = ref("");
 const isCorrect = ref(false);
 const isSubmitted = ref(false);
+const recievedAnswer = ref(false);
 const hadError = ref(false);
 
 const onSubmit = async () => {
@@ -39,6 +40,7 @@ const onSubmit = async () => {
     console.error(error);
     hadError.value = true;
   } finally {
+    recievedAnswer.value = true;
     emit("next");
   }
 };
@@ -107,11 +109,11 @@ onMounted(async () => {
     (!animate ? 'hidden-left ' : '') +
     (hadError
       ? 'error'
-      : isSubmitted
-        ? isCorrect
+      : (isSubmitted && recievedAnswer
+        ? (isCorrect
           ? 'correct'
-          : 'incorrect'
-        : '')
+          : 'incorrect')
+        : ''))
   ">
     <h2>{{ props.question }}</h2>
     <form class="answer-form" @submit.prevent="onSubmit" v-if="!isSubmitted && !hadError">
