@@ -50,7 +50,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <header>
+  <header @click="setPicker.toggle(false)">
     <h1>Academic Team Quiz</h1>
   </header>
   <main @click="setPicker.toggle(false)">

@@ -1,27 +1,7 @@
-import fs from "fs/promises";
+import { readdir, readFile } from "fs/promises";
+import * as path from "path";
+import { sets } from "./sets";
 const questions: { [key in Set]: QuizletTerm[] } = {};
-export const sets = [
-  "american-government-and-economics-(all)",
-  "american-government-and-economics-(hard)",
-  "american-history-(hard)",
-  "american-history-(old)",
-  "american-literature-(all)",
-  "american-literature-(hard)",
-  "fine-arts-(all)",
-  "fine-arts-(hard)",
-  "geography-(all)",
-  "geography-(hard)",
-  "life-science-(all)",
-  "life-science-(hard)",
-  "math-(all)",
-  "math-(hard)",
-  "physical-science-(all)",
-  "physical-science-(hard)",
-  "world-history-(all)",
-  "world-history-(hard)",
-  "world-literature-(all)",
-  "world-literature-(hard)",
-];
 
 export type Set = typeof sets[number];
 export type Question = {
@@ -36,7 +16,8 @@ export type QuizletTerm = Question & Answer;
 async function loadSets() {
   if (Object.keys(questions).length !== sets.length) {
     for (const set of sets) {
-      const data = await fs.readFile(`./data/${set}.json`, "utf-8");
+      const file = path.join(process.cwd(), "public", "data", `${set}.json`);
+      const data = await readFile(file, "utf8");
       questions[set] = JSON.parse(data);
     }
   }

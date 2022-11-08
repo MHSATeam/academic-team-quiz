@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, reactive, ref } from "vue";
-import { sets } from "../../data";
+import { sets } from "../../public/data/sets";
 
 const open = ref(false);
 const displayNames: { [key: string]: string } = {
