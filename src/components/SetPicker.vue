@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, reactive, ref } from "vue";
+import { computed, onMounted, reactive, ref, watch } from "vue";
 import { sets } from "../../public/data/sets";
 
 const open = ref(false);
@@ -28,6 +28,60 @@ const setList = reactive(
     selected: true,
   }))
 );
+
+//save sets on change
+watch(
+  () => setList,
+  () => {
+    saveSetList();
+  },
+  { deep: true }
+);
+
+//save question groups on change
+
+watch(
+  () => questionGroups,
+  () => {
+    saveQuestionGroups();
+  },
+  { deep: true }
+);
+
+//save question groups to local storage
+const saveQuestionGroups = () => {
+  localStorage.setItem(
+    "questionGroups",
+    JSON.stringify(questionGroups)
+  );
+};
+
+//load question groups from local storage
+const loadQuestionGroups = () => {
+  const savedQuestionGroups = localStorage.getItem("questionGroups");
+  if (savedQuestionGroups) {
+    questionGroups.all = JSON.parse(savedQuestionGroups).all;
+    questionGroups.hard = JSON.parse(savedQuestionGroups).hard;
+  }
+};
+
+//save setList to local storage
+const saveSetList = () => {
+  localStorage.setItem("setList", JSON.stringify(setList));
+};
+
+//load setList from local storage
+const loadSetList = () => {
+  const savedSetList = localStorage.getItem("setList");
+  if (savedSetList) {
+    const parsedSetList = JSON.parse(savedSetList);
+    setList.forEach((set, index) => {
+      if (parsedSetList[index].id === set.id) {
+        set.selected = parsedSetList[index].selected;
+      }
+    });
+  }
+};
 const selectedSets = computed(() => {
   var finalSetList: string[] = [];
   for (const set of setList) {
@@ -60,6 +114,11 @@ const emit = defineEmits(["update"]);
 defineExpose({
   selectedSets,
   toggle,
+});
+
+onMounted(() => {
+  loadSetList();
+  loadQuestionGroups();
 });
 </script>
 <template>
