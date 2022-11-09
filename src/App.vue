@@ -14,6 +14,7 @@ const nextQuestion = async (quiet: boolean = false, errorCount = 0) => {
     question: "",
     quiet,
   };
+
   try {
     const response = await fetch("/api/question", {
       method: "POST",
