@@ -24,6 +24,9 @@ const nextQuestion = async (quiet: boolean = false, errorCount = 0) => {
         sets: [...setPicker.value.selectedSets],
       }),
     }).then((response) => response.json());
+    if (questions.find(q => q.id === response.id)) {
+      return nextQuestion(quiet, errorCount + 0.5);
+    }
     question.question = response.definition;
     question.id = response.id;
   } catch (e) {
