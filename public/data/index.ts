@@ -32,7 +32,6 @@ export const letters = [
   "R",
   "S",
   "T",
-  "U",
   "V",
   "W",
 ];

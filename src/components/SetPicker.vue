@@ -138,28 +138,34 @@ onMounted(() => {
       <h3>Configuration</h3>
       <div class="question-group group">
         <span class="group-name">Question Types</span>
-        <div class="group-item" v-for="(questionGroup, key) in questionGroups" :key="key">
+        <label :for="key" class="switch" v-for="(questionGroup, key) in questionGroups" :key="key">
           <input type="checkbox" :id="key" v-model="questionGroups[key]" @change="emit('update')" :disabled="
             questionGroup &&
             (questionGroups.all ? !questionGroups.hard : questionGroups.hard)
-          " />
-          <label :for="key">{{
+          " class="checkbox" />
+          <span class="slider-track">
+            <span class="slider-indicator"></span>
+          </span>
+          {{
               key[0].toUpperCase() + key.substring(1)
-          }}</label>
-        </div>
+          }}
+        </label>
       </div>
       <div class="set-list group">
         <span class="group-name">Question Sets</span>
-        <div class="group-item" v-for="set in setList" :key="set.id">
+        <label class="switch" :for="set.id" v-for="set in setList" :key="set.id">
           <input type="checkbox" :id="set.id" v-model="set.selected" @change="emit('update')" :disabled="
             set.selected &&
             setList.reduce(
               (count, set) => count + (set.selected ? 1 : 0),
               0
             ) === 1
-          " />
-          <label :for="set.id">{{ set.displayName }}</label>
-        </div>
+          " class="checkbox" />
+          <span class="slider-track">
+            <span class="slider-indicator"></span>
+          </span>
+          {{ set.displayName }}
+        </label>
       </div>
     </div>
   </div>
