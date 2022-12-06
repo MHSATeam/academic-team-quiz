@@ -119,6 +119,11 @@ defineExpose({
 onMounted(() => {
   loadSetList();
   loadQuestionGroups();
+  document.addEventListener("click", (event) => {
+    if (event.target !== document.querySelector(".sidebar")) {
+      toggle(false);
+    }
+  });
 });
 </script>
 <template>

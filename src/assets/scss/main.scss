@@ -20,6 +20,24 @@ body {
 
 header {
   border-bottom: solid black 3px;
+  display: flex;
+  justify-content: space-between;
+  .links {
+    display: flex;
+    align-items: center;
+    .link {
+      margin: 0 1rem;
+      text-decoration: none;
+      color: black;
+      text-underline-offset: 4px;
+      &:hover {
+        text-decoration: underline;
+      }
+      &.active {
+        text-decoration: underline;
+      }
+    }
+  }
 }
 
 .question-box {
@@ -148,4 +166,29 @@ header {
       transform: rotate(90deg);
     }
   }
+}
+
+.generate-button {
+  display: block;
+  width: 80%;
+  margin: 1rem auto;
+  //rounded green button
+  background-color: #28a745;
+  border-color: #28a745;
+  color: white;
+  border-radius: 5px;
+  padding: 0.5rem 1rem;
+  &:hover {
+    background-color: #218838;
+    border-color: #1e7e34;
+    cursor: pointer;
+  }
+}
+
+.indent {
+  margin-left: 3rem;
+}
+
+.loading {
+  text-align: center;
 }
