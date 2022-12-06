@@ -4,5 +4,11 @@
     "api/**.ts": {
       "includeFiles": "public/data/**"
     }
-  }
+  },
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ]
 }
