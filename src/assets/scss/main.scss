@@ -158,9 +158,9 @@ header {
       display: flex;
       font-weight: 700;
       margin-bottom: 16px;
-
+      margin-left: 5px;
       &:last-of-type {
-        margin: 0;
+        margin-bottom: 0;
       }
     }
     .checkbox {
@@ -190,6 +190,7 @@ header {
       border-radius: 100px;
       cursor: pointer;
       display: flex;
+      flex-shrink: 0;
       height: $track-height;
       margin-right: 12px;
       position: relative;
@@ -200,7 +201,7 @@ header {
       align-items: center;
       background: #121942;
       border-radius: $toggle-indicator-size;
-      bottom: 2px;
+      bottom: 3px;
       display: flex;
       height: $toggle-indicator-size;
       justify-content: center;
