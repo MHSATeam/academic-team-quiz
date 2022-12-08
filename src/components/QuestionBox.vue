@@ -117,7 +117,7 @@ onMounted(async () => {
   ">
     <h2>{{ props.question }}</h2>
     <form class="answer-form" @submit.prevent="onSubmit" v-if="!isSubmitted && !hadError">
-      <input class="answer-input" v-model="userAnswer" type="text" ref="inputRef" />
+      <input class="answer-input input" v-model="userAnswer" type="text" ref="inputRef" />
       <button class="answer-button" type="submit">Submit</button>
     </form>
     <div class="correct-answer" v-else-if="!hadError">

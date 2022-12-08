@@ -40,6 +40,27 @@ header {
   }
 }
 
+.input {
+  display: block;
+  margin: 1rem 0;
+  border: 1px solid #ced4da;
+  border-radius: 0.25rem;
+  padding: 0.375rem 0.75rem;
+  font-size: 1rem;
+  line-height: 1.5;
+  color: #495057;
+  background-color: #fff;
+  background-clip: padding-box;
+  width: 25%;
+  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+  &:focus {
+    color: #495057;
+    background-color: #fff;
+    border-color: #80bdff;
+    outline: 0;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+  }
+}
 .question-box {
   border: solid black 3px;
   border-radius: 5px;
@@ -66,27 +87,6 @@ header {
 
   .answer-form {
     margin: 1rem 0;
-    .answer-input {
-      display: block;
-      margin: 1rem 0;
-      border: 1px solid #ced4da;
-      border-radius: 0.25rem;
-      padding: 0.375rem 0.75rem;
-      font-size: 1rem;
-      line-height: 1.5;
-      color: #495057;
-      background-color: #fff;
-      background-clip: padding-box;
-      width: 25%;
-      transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
-      &:focus {
-        color: #495057;
-        background-color: #fff;
-        border-color: #80bdff;
-        outline: 0;
-        box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
-      }
-    }
     .answer-button {
       display: block;
       margin: 0.5rem 0;
@@ -239,27 +239,38 @@ header {
   }
 }
 
-.generate-button {
-  display: block;
-  width: 80%;
-  margin: 1rem auto;
-  //rounded green button
-  background-color: #28a745;
-  border-color: #28a745;
-  color: white;
-  border-radius: 5px;
-  padding: 0.5rem 1rem;
-  &:hover {
-    background-color: #218838;
-    border-color: #1e7e34;
-    cursor: pointer;
-  }
-}
-
 .indent {
   margin-left: 3rem;
 }
 
 .loading {
   text-align: center;
+}
+
+.set-generation {
+  display: flex;
+  div {
+    display: flex;
+    flex-direction: column;
+    input,
+    label {
+      flex-shrink: 0;
+      width: auto;
+    }
+  }
+  .generate-button {
+    flex-grow: 1;
+    //rounded green button
+    background-color: #28a745;
+    border-color: #28a745;
+    color: white;
+    border-radius: 5px;
+    padding: 0.5rem 1rem;
+    margin: 0 1rem 0 0;
+    &:hover {
+      background-color: #218838;
+      border-color: #1e7e34;
+      cursor: pointer;
+    }
+  }
 }

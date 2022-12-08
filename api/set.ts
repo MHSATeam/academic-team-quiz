@@ -6,7 +6,8 @@ export default function handler(req, res) {
     return;
   }
 
-  const { sets: requestedSets }: { sets: string[] } = req.body;
+  const { sets: requestedSets, players }: { sets: string[]; players: number } =
+    req.body;
   const filteredSets: Set[] = requestedSets.filter(
     (set: string): set is Set => {
       return sets.includes(set);
@@ -16,7 +17,7 @@ export default function handler(req, res) {
     res.status(400).send("No valid sets provided");
     return;
   }
-  getQuestionSet(filteredSets).then((questionSet) => {
+  getQuestionSet(filteredSets, players).then((questionSet) => {
     res.status(200).json(questionSet);
   });
 }

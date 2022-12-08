@@ -89,7 +89,10 @@ export async function getAnswer(id: number): Promise<string> {
   throw new Error("Question not found");
 }
 
-export async function getQuestionSet(sets: Set[]): Promise<QuestionSet> {
+export async function getQuestionSet(
+  sets: Set[],
+  players: number
+): Promise<QuestionSet> {
   await loadSets();
   const questionSet: QuestionSet = {
     catagories: {},
@@ -110,7 +113,7 @@ export async function getQuestionSet(sets: Set[]): Promise<QuestionSet> {
     if (!done) {
       questionSet.catagories[set] = questions[set]
         .sort(() => Math.random() - 0.5)
-        .slice(0, 2);
+        .slice(0, players + 1);
     }
   }
   var maxCount = 100;

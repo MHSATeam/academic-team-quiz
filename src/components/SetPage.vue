@@ -5,7 +5,8 @@
       <div v-for="([catagoryName, catagory]) in catagories" :key="catagoryName" class="indent">
         <h2>{{ displayNames[catagoryName.replace(/-\(.*\)/, "")] }}</h2>
         <div v-for="(question, index) of catagory" :key="question.id" class="indent">
-          <h3>Team {{ letters[index] }}:</h3>
+          <h3 v-if="(index !== catagory.length - 1)">Team {{ letters[index] }}:</h3>
+          <h3 v-else>Toss-up:</h3>
           <p>{{ question.definition }}</p>
           <p><b>Answer:</b> {{ question.term }}</p>
         </div>
@@ -22,7 +23,13 @@
     <div v-else>
       <h1 class="loading">Loading...</h1>
     </div>
-    <button @click="generateSet" class="generate-button">Regenerate Set</button>
+    <div class="set-generation">
+      <button @click="generateSet" class="generate-button">Regenerate Set</button>
+      <div>
+        <label for="player-count">Number of Teams</label>
+        <input class="input" min="1" max="8" type="number" name="player-count" id="player-count" v-model="playerCount">
+      </div>
+    </div>
   </div>
   <SetPicker ref="setPicker" />
 </template>
@@ -34,6 +41,7 @@ const letters = reactive("ABCDEFGHIJKLMNOPQRSTUVWXYZ".split(""));
 
 const setPicker = ref();
 const set = reactive<{ set: QuestionSet | null }>({ set: null });
+const playerCount = ref(2);
 
 const catagories = computed(() => {
   if (set.set === null) {
@@ -56,6 +64,9 @@ const displayNames = reactive<{ [key: string]: string }>({
 })
 
 const generateSet = async () => {
+  if (playerCount.value < 1 || playerCount.value > 8) {
+    playerCount.value = 2;
+  }
   const response = await fetch("/api/set", {
     method: "POST",
     headers: {
@@ -63,6 +74,7 @@ const generateSet = async () => {
     },
     body: JSON.stringify({
       sets: [...setPicker.value.selectedSets],
+      players: playerCount.value,
     }),
   }).then((response) => response.json());
   set.set = response;
