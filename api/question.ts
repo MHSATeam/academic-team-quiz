@@ -1,5 +1,5 @@
 import { sets } from "../public/data/sets";
-import { getQuestion, Set } from "../public/data";
+import { getQuestion, getAnswer, Set } from "../public/data";
 import { readFile } from "fs/promises";
 import * as path from "path";
 export default function handler(req, res) {
@@ -19,6 +19,10 @@ export default function handler(req, res) {
     return;
   }
   getQuestion(filteredSets).then((question) => {
-    res.status(200).json(question);
+    const response = { term: "", ...question };
+    getAnswer(question.id).then((answer) => {
+      response.term = answer;
+      res.status(200).json(response);
+    });
   });
 }

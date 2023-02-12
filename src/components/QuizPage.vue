@@ -5,13 +5,14 @@ import SetPicker from "./SetPicker.vue";
 
 const setPicker = ref();
 
-const questions = reactive<{ id: number; question: string; quiet: boolean }[]>(
+const questions = reactive<{ id: number; question: string; answer: string; quiet: boolean }[]>(
   []
 );
-const nextQuestion = async (quiet: boolean = false, errorCount = 0) => {
+const nextQuestion = async (quiet: boolean = false, errorCount = 0): Promise<void> => {
   const question = {
     id: 0,
     question: "",
+    answer: "",
     quiet,
   };
 
@@ -30,6 +31,7 @@ const nextQuestion = async (quiet: boolean = false, errorCount = 0) => {
     }
     question.question = response.definition;
     question.id = response.id;
+    question.answer = response.term;
   } catch (e) {
     console.error(e);
     if (errorCount < 3) {
@@ -54,8 +56,8 @@ onMounted(() => {
 </script>
 <template>
   <main>
-    <QuestionBox v-for="(question, index) in questions" :question="question.question" :question-id="question.id"
-      :key="index" @next="nextQuestion()" :quiet="question.quiet" />
+    <QuestionBox v-for="(question, index) in questions" :question="question.question" :answer="question.answer"
+      :question-id="question.id" :key="index" @next="nextQuestion()" :quiet="question.quiet" />
     <h1 v-if="(questions.length === 0)" class="loading">Loading...</h1>
   </main>
   <SetPicker @update="swapLastQuestion" ref="setPicker" />

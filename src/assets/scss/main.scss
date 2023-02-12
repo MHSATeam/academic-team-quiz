@@ -65,20 +65,23 @@ header {
   border: solid black 3px;
   border-radius: 5px;
   padding: 1rem;
-  margin: 1rem 0;
+  margin: 1.1rem 0;
   transition: transform 0.2s ease-in-out;
   transform: translateX(0);
-  &.correct {
-    background-color: #c3e6cb;
-  }
-  &.incorrect {
-    background-color: #f5c6cb;
-  }
-  &.error {
-    //grayed out
-    background-color: #e2e3e5;
-    //muted text
-    color: #6c757d;
+  .correct-answer-text {
+    .show-answer {
+      width: 10rem;
+      height: 1em;
+      border: none;
+      border-radius: 5px;
+      background-color: #888;
+      cursor: pointer;
+      display: inline;
+      &:hover {
+        background-color: #777;
+      }
+      align-items: center;
+    }
   }
 
   &.hidden-left {
@@ -272,5 +275,22 @@ header {
       border-color: #1e7e34;
       cursor: pointer;
     }
+  }
+}
+
+.math {
+  .row {
+    display: flex;
+    justify-content: space-evenly;
+    &:last-child .question:last-child {
+      flex-grow: 0;
+    }
+  }
+  .question {
+    margin: 1rem;
+    border: solid black 3px;
+    border-radius: 5px;
+    padding: 1rem;
+    flex-grow: 1;
   }
 }
