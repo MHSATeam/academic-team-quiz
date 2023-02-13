@@ -1,7 +1,6 @@
 import { sets } from "../public/data/sets";
 import { getQuestion, getAnswer, Set } from "../public/data";
-import { readFile } from "fs/promises";
-import * as path from "path";
+
 export default function handler(req, res) {
   if (!req.body || !req.body.sets) {
     res.status(400).send("Missing sets");

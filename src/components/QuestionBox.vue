@@ -79,8 +79,7 @@ onMounted(async () => {
     (!animate ? 'hidden-left ' : '')
   ">
     <h2>{{ props.question }}</h2>
-    <p class="correct-answer-text">Answer:
-
+    <p class="correct-answer-text">Answer:&nbsp;
       <button v-if="!answerShown" @click="showAnswer" class="show-answer"></button>
       <span v-else>{{ props.answer }}</span>
     </p>
