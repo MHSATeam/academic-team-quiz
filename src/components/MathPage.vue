@@ -37,8 +37,17 @@ enum ProblemType {
 }
 // ADD TO DEFAULT LIST ASWELL!!!!
 
-const randomInt = (min: number = 0, max: number = 2) => {
-  return Math.floor(Math.random() * (max - min)) + min;
+const randomInt = (min: number = 0, max: number = 2, ...exclude: number[]) => {
+  function getNumber() {
+    return Math.floor(Math.random() * (max - min)) + min;
+  }
+  var number = getNumber();
+  var count = 0;
+  while (exclude.includes(number) && count < 50) {
+    number = getNumber();
+    count++;
+  }
+  return number;
 }
 
 const generateProblems = (count: number, types: ProblemType[] = [], random: boolean = false): Problem[] => {
@@ -98,6 +107,23 @@ const generateProblem = (type: ProblemType): Problem => {
     question: "",
     answers: [],
     answerType: AnswerType.AnyOrder
+  }
+  class Vector {
+    public x: number;
+    public y: number;
+    constructor(x: number, y: number) {
+      this.x = x;
+      this.y = y;
+    }
+    public dot(vector: Vector) {
+      return this.x * vector.x + this.y * vector.y;
+    }
+    public distanceString(vector: Vector) {
+      return nerdamer(`sqrt((${this.x - vector.x})^2+(${this.y - vector.y})^2)`).expand().toTeX();
+    }
+    public static randomVector(min, max) {
+      return new Vector(randomInt(min, max), randomInt(min, max));
+    }
   }
   switch (type) {
     case ProblemType.CubicRoots:
@@ -216,10 +242,7 @@ const generateProblem = (type: ProblemType): Problem => {
     case ProblemType.ParabolaVertices: {
       const x = randomInt(-10, 10);
       const y = randomInt(-10, 10);
-      var a = randomInt(-3, 4);
-      if (a === 0) {
-        a++;
-      }
+      var a = randomInt(-3, 4, 0);
 
       const nerdString = `${a}*((x-(${x}))^2)+(${y})`;
       console.log(nerdString);
@@ -229,6 +252,47 @@ const generateProblem = (type: ProblemType): Problem => {
       problem.answers.push(`(${x}, ${y})`);
       break;
     }
+    case ProblemType.CompleteTheSequence: {
+      const isAddition = Math.random() > 0.5;
+      var termCount;
+      var terms = [];
+      var answer = 0;
+      if (isAddition) {
+        termCount = randomInt(20, 100)
+        const number = randomInt(-30, 30, 0, 1, -1);
+        const start = randomInt(3, 20);
+        for (let i = 1; i <= termCount; i++) {
+          terms.push(start + (number * i));
+        }
+        answer = terms[terms.length - 1];
+      } else {
+        termCount = randomInt(7, 10);
+        const number = randomInt(-4, 5, 0, 1);
+        const start = randomInt(3, 20);
+        for (let i = 1; i <= termCount; i++) {
+          terms.push(start * (number ** i));
+        }
+        answer = terms[terms.length - 1];
+      }
+      problem.question = `Find the ${termCount}th term in the sequence [${terms.slice(0, 6).join(", ")}]`;
+      problem.answers.push(answer.toString());
+      break;
+    }
+    case ProblemType.DotProduct: {
+      const vector1 = Vector.randomVector(-15, 15);
+      const vector2 = Vector.randomVector(-15, 15);
+      const dotProduct = vector1.dot(vector2);
+      problem.question = `Find the dot product: $$\\begin{bmatrix}${vector1.x}\\\\${vector1.y}\\end{bmatrix}\\cdot\\begin{bmatrix}${vector2.x}\\\\${vector2.y}\\end{bmatrix}$$`;
+      problem.answers.push(dotProduct.toString());
+      break;
+    }
+    case ProblemType.VectorDistance: {
+      const vector1 = Vector.randomVector(-15, 15);
+      const vector2 = Vector.randomVector(-15, 15);
+      const distance = vector1.distanceString(vector2);
+      problem.question = `Find the distance between $\\begin{bmatrix}${vector1.x}\\\\${vector1.y}\\end{bmatrix}$ and $\\begin{bmatrix}${vector2.x}\\\\${vector2.y}\\end{bmatrix}$`;
+      problem.answers.push(distance);
+    }
   }
 
   return problem;
@@ -236,7 +300,17 @@ const generateProblem = (type: ProblemType): Problem => {
 const QUESTION_ROWS = 5;
 const QUESTIONS_PER_ROW = 4;
 const QUESTION_COUNT = QUESTION_ROWS * QUESTIONS_PER_ROW;
-const problemSet = generateProblems(QUESTION_COUNT, [ProblemType.Area, ProblemType.BinaryConversion, ProblemType.HexConversion, ProblemType.QuadRoots, ProblemType.CubicRoots, ProblemType.ParabolaVertices], true);
+const ALLOWED_PROBLEM_TYPES = [
+  ProblemType.Area,
+  ProblemType.BinaryConversion,
+  ProblemType.CubicRoots,
+  ProblemType.DotProduct,
+  ProblemType.HexConversion,
+  ProblemType.ParabolaVertices,
+  ProblemType.QuadRoots,
+  ProblemType.VectorDistance,
+];
+const problemSet = generateProblems(QUESTION_COUNT, ALLOWED_PROBLEM_TYPES, true);
 const answerShown = reactive(new Array(QUESTION_COUNT).fill(false));
 type IndexedProblem = Problem & { index: number };
 const displayMath = reactive(problemSet.reduce<IndexedProblem[][]>((arr: IndexedProblem[][], value: Problem, index: number) => {
@@ -267,7 +341,7 @@ const TEX_OPTIONS = reactive({
         <vue-mathjax :formula="problem.question" :options="TEX_OPTIONS" />
         <p class="correct-answer-text">{{
           problem.answerType === AnswerType.AllOrdered ? "Answers in order:" :
-            (problem.answerType === AnswerType.Any) ? "Answers (only one needed):" : "Answer(s):"
+          (problem.answerType === AnswerType.Any) ? "Answers (only one needed):" : "Answer(s):"
         }}&nbsp;
           <button v-if="!answerShown[problem.index]" @click="() => {
             answerShown[problem.index] = true;
