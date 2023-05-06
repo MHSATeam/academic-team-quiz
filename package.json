@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "@types/mathjax": "^0.0.37",
+    "@vercel/analytics": "^1.0.1",
     "js-levenshtein": "^1.1.6",
     "mathjax": "^3.2.2",
     "nerdamer": "^1.1.13",

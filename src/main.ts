@@ -1,12 +1,14 @@
 import { createApp } from "vue";
 import App from "./App.vue";
 import "./assets/scss/main.scss";
+import { inject } from "@vercel/analytics";
 
 import { createRouter, createWebHistory } from "vue-router";
 import VueMathjax from "vue-mathjax-next";
 import QuizPage from "./components/QuizPage.vue";
 import SetPage from "./components/SetPage.vue";
 import MathPage from "./components/MathPage.vue";
+inject();
 const router = createRouter({
   history: createWebHistory(),
   routes: [
