@@ -1,9 +1,9 @@
 import { readdir, readFile } from "fs/promises";
 import * as path from "path";
-import { sets } from "./sets";
+import { sets } from "./_set-list.js";
 const questions: { [key in Set]: QuizletTerm[] } = {};
 
-export type Set = typeof sets[number];
+export type Set = (typeof sets)[number];
 export type Question = {
   id: number;
   definition: string;
@@ -35,7 +35,7 @@ export const letters = [
   "V",
   "W",
 ];
-export type Letter = typeof letters[number];
+export type Letter = (typeof letters)[number];
 export type QuestionSet = {
   catagories: { [key in Set]: QuizletTerm[] };
   alphabetRound: {

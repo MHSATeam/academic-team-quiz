@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, onMounted, reactive, ref, watch } from "vue";
-import { sets } from "../../public/data/sets";
+import { sets } from "../../api-lib/_set-list";
 
 const open = ref(false);
 const displayNames: { [key: string]: string } = {

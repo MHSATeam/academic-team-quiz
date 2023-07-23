@@ -36,7 +36,7 @@
 <script lang="ts" setup>
 import { computed, onMounted, reactive, ref } from 'vue';
 import SetPicker from './SetPicker.vue';
-import type { QuestionSet } from "../../public/data/";
+import type { QuestionSet } from "../../api-lib/_utils";
 const letters = reactive("ABCDEFGHIJKLMNOPQRSTUVWXYZ".split(""));
 
 const setPicker = ref();

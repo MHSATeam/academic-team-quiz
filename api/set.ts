@@ -1,5 +1,5 @@
-import { sets } from "../public/data/sets";
-import { getQuestionSet, Set } from "../public/data";
+import { sets } from "../api-lib/_set-list.js";
+import { getQuestionSet, Set } from "../api-lib/_utils.js";
 export default function handler(req, res) {
   if (!req.body || !req.body.sets) {
     res.status(400).send("Missing sets");

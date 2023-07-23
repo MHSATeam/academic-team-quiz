@@ -1,4 +1,4 @@
-import { getAnswer } from "../public/data";
+import { getAnswer } from "../api-lib/_utils.js";
 export default function handler(req, res) {
   const { id }: { id: number } = req.body;
   if (id !== 0 && !id) {

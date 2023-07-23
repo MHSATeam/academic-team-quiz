@@ -1,11 +1,12 @@
 {
   "name": "academic-team-quiz",
   "version": "0.1.0",
+  "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
     "serve": "vite preview",
-    "vercel-dev": "vercel dev --local-config ./local-vercel.json"
+    "vercel-dev": "vercel dev --local-config ./local-vercel.json --listen 5173"
   },
   "dependencies": {
     "@types/mathjax": "^0.0.37",
