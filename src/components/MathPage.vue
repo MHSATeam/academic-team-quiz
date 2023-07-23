@@ -1,41 +1,8 @@
 <script lang="ts" setup>
-import { reactive, ref } from 'vue';
+import { onMounted, reactive, ref } from 'vue';
 import nerdamer from "nerdamer";
-type Problem = {
-  type: ProblemType,
-  question: string,
-  answers: string[],
-  answerType: AnswerType
-}
-enum AnswerType {
-  Any,
-  AllOrdered,
-  AnyOrder
-}
-
-// ADD TO DEFAULT LIST ASWELL!!!!
-enum ProblemType {
-  QuadRoots,
-  CubicRoots,
-  Simplify,
-  VectorDistance,
-  SlopeTwoPoint,
-  Area,
-  Volume,
-  SurfaceArea,
-  Perimeter,
-  DotProduct,
-  CompleteTheSequence,
-  ParabolaVertices,
-  BinaryConversion,
-  HexConversion,
-  Systems,
-  ArithmeticMean,
-  GeometricMean,
-  HarmonicMean,
-  TrigAngles
-}
-// ADD TO DEFAULT LIST ASWELL!!!!
+import MathProblem from './MathProblem.vue';
+import { AnswerType, Problem, ProblemType } from '../math-types';
 
 const randomInt = (min: number = 0, max: number = 2, ...exclude: number[]) => {
   function getNumber() {
@@ -297,9 +264,8 @@ const generateProblem = (type: ProblemType): Problem => {
 
   return problem;
 }
-const QUESTION_ROWS = 5;
-const QUESTIONS_PER_ROW = 4;
-const QUESTION_COUNT = QUESTION_ROWS * QUESTIONS_PER_ROW;
+const STARTING_QUESTION_COUNT = 20;
+const NEW_LOAD_QUESTION_COUNT = 8;
 const ALLOWED_PROBLEM_TYPES = [
   ProblemType.Area,
   ProblemType.BinaryConversion,
@@ -310,46 +276,20 @@ const ALLOWED_PROBLEM_TYPES = [
   ProblemType.QuadRoots,
   ProblemType.VectorDistance,
 ];
-const problemSet = generateProblems(QUESTION_COUNT, ALLOWED_PROBLEM_TYPES, true);
-const answerShown = reactive(new Array(QUESTION_COUNT).fill(false));
-type IndexedProblem = Problem & { index: number };
-const displayMath = reactive(problemSet.reduce<IndexedProblem[][]>((arr: IndexedProblem[][], value: Problem, index: number) => {
-  if (arr[arr.length - 1].length === QUESTIONS_PER_ROW) {
-    arr.push([]);
-  }
-  arr[arr.length - 1].push({ ...value, index } as Problem & { index: number });
-  return arr;
-}, [[]]));
-const TEX_OPTIONS = reactive({
-  tex2jax: {
-    inlineMath: [
-      ["$", "$"],
-    ],
-    displayMath: [
-      ["$$", "$$"],
-    ],
-    processEscapes: true,
-    processEnvironments: true,
-  },
+const problemSet = ref<Problem[]>([]);
+
+onMounted(() => {
+  problemSet.value = generateProblems(STARTING_QUESTION_COUNT, ALLOWED_PROBLEM_TYPES, true);
 });
 </script>
 <template>
   <main class="math">
     <h1>Computational Math <span style="color: #f44;">(BETA)</span></h1>
-    <div class="row" v-for="problemRow in displayMath">
-      <div class="question" v-for="problem in problemRow">
-        <vue-mathjax :formula="problem.question" :options="TEX_OPTIONS" />
-        <p class="correct-answer-text">{{
-          problem.answerType === AnswerType.AllOrdered ? "Answers in order:" :
-          (problem.answerType === AnswerType.Any) ? "Answers (only one needed):" : "Answer(s):"
-        }}&nbsp;
-          <button v-if="!answerShown[problem.index]" @click="() => {
-            answerShown[problem.index] = true;
-          }" class="show-answer"></button>
-          <span v-show="answerShown[problem.index]"><vue-mathjax
-              :formula="problem.answers.map((a) => '$' + a + '$').join(', ')" :options="TEX_OPTIONS" /></span>
-        </p>
-      </div>
+    <div class="grid">
+      <MathProblem :problem="problem" v-for="problem in problemSet"/>
     </div>
+    <button class="load-button" @click="() => {
+      problemSet.push(...generateProblems(NEW_LOAD_QUESTION_COUNT, ALLOWED_PROBLEM_TYPES, true));
+    }">Load more</button>
   </main>
 </template>

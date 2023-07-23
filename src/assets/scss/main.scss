@@ -280,8 +280,11 @@ header {
 }
 
 .math {
-  .row {
-    display: flex;
+  display: flex;
+  flex-direction: column;
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
     justify-content: space-evenly;
   }
   .question {
@@ -289,6 +292,16 @@ header {
     border: solid black 3px;
     border-radius: 5px;
     padding: 1rem;
-    flex-grow: 1;
+    overflow: hidden;
+  }
+  .load-button {
+    margin: 0 auto 5em auto;
+    padding: 0.5em;
+    border-radius: 0.3em;
+    border: black 2px solid;
+    cursor: pointer;
+    &:hover {
+      background: #ccc;
+    }
   }
 }
