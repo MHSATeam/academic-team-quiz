@@ -6,7 +6,7 @@ const emit = defineEmits(["next"]);
 const props = defineProps<{
   question: string;
   questionId: number;
-  answer: string
+  answer: string;
   quiet: boolean;
 }>();
 
@@ -16,7 +16,7 @@ const answerShown = ref(false);
 const showAnswer = () => {
   answerShown.value = true;
   emit("next");
-}
+};
 
 // const checkAnswer = (correctAnswer: string, answer: string) => {
 //   // A check to see if the answer is close enough to the term
@@ -75,12 +75,19 @@ onMounted(async () => {
 });
 </script>
 <template>
-  <div ref="questionBox" class="question-box" :class="
-    (!animate ? 'hidden-left ' : '')
-  ">
+  <div
+    ref="questionBox"
+    class="question-box"
+    :class="!animate ? 'hidden-left ' : ''"
+  >
     <h2>{{ props.question }}</h2>
-    <p class="correct-answer-text">Answer:&nbsp;
-      <button v-if="!answerShown" @click="showAnswer" class="show-answer"></button>
+    <p class="question-correct-answer-container">
+      Answer:&nbsp;
+      <button
+        v-if="!answerShown"
+        @click="showAnswer"
+        class="show-answer-button"
+      ></button>
       <span v-else>{{ props.answer }}</span>
     </p>
   </div>

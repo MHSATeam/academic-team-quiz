@@ -1,8 +1,8 @@
 <script lang="ts" setup>
-import { onMounted, reactive, ref } from 'vue';
+import { onMounted, reactive, ref } from "vue";
 import nerdamer from "nerdamer";
-import MathProblem from './MathProblem.vue';
-import { AnswerType, Problem, ProblemType } from '../math-types';
+import MathProblem from "./MathProblem.vue";
+import { AnswerType, Problem, ProblemType } from "../math-types";
 
 const randomInt = (min: number = 0, max: number = 2, ...exclude: number[]) => {
   function getNumber() {
@@ -15,9 +15,13 @@ const randomInt = (min: number = 0, max: number = 2, ...exclude: number[]) => {
     count++;
   }
   return number;
-}
+};
 
-const generateProblems = (count: number, types: ProblemType[] = [], random: boolean = false): Problem[] => {
+const generateProblems = (
+  count: number,
+  types: ProblemType[] = [],
+  random: boolean = false
+): Problem[] => {
   if (count === 0) {
     return [];
   }
@@ -41,40 +45,42 @@ const generateProblems = (count: number, types: ProblemType[] = [], random: bool
       ProblemType.ArithmeticMean,
       ProblemType.GeometricMean,
       ProblemType.HarmonicMean,
-      ProblemType.TrigAngles
-    ]
+      ProblemType.TrigAngles,
+    ];
   }
   const problems = [];
   for (let i = 0; i < count; i++) {
-    const type = types[Math.floor(((i / count) * types.length))];
+    const type = types[Math.floor((i / count) * types.length)];
     const problem = generateProblem(type);
     problems.push(problem);
   }
   if (random) {
-    let currentIndex = problems.length, randomIndex;
+    let currentIndex = problems.length,
+      randomIndex;
 
     // While there remain elements to shuffle.
     while (currentIndex != 0) {
-
       // Pick a remaining element.
       randomIndex = Math.floor(Math.random() * currentIndex);
       currentIndex--;
 
       // And swap it with the current element.
       [problems[currentIndex], problems[randomIndex]] = [
-        problems[randomIndex], problems[currentIndex]];
+        problems[randomIndex],
+        problems[currentIndex],
+      ];
     }
   }
   return problems;
-}
+};
 
 const generateProblem = (type: ProblemType): Problem => {
   const problem: Problem = {
     type,
     question: "",
     answers: [],
-    answerType: AnswerType.AnyOrder
-  }
+    answerType: AnswerType.AnyOrder,
+  };
   class Vector {
     public x: number;
     public y: number;
@@ -86,7 +92,9 @@ const generateProblem = (type: ProblemType): Problem => {
       return this.x * vector.x + this.y * vector.y;
     }
     public distanceString(vector: Vector) {
-      return nerdamer(`sqrt((${this.x - vector.x})^2+(${this.y - vector.y})^2)`).expand().toTeX();
+      return nerdamer(`sqrt((${this.x - vector.x})^2+(${this.y - vector.y})^2)`)
+        .expand()
+        .toTeX();
     }
     public static randomVector(min, max) {
       return new Vector(randomInt(min, max), randomInt(min, max));
@@ -111,16 +119,15 @@ const generateProblem = (type: ProblemType): Problem => {
           problem.answers.push(roots[i].toString());
         }
       }
-      console.log(nerdString);
       problem.question += "$$" + nerdamer(nerdString).expand().toTeX() + "$$";
       break;
     }
     case ProblemType.Area: {
       type Shape = {
-        name: string,
-        scalars: string[],
-        variables: number
-        formula: (...variable: number[]) => string
+        name: string;
+        scalars: string[];
+        variables: number;
+        formula: (...variable: number[]) => string;
       };
       const shapes: Shape[] = [
         {
@@ -129,7 +136,7 @@ const generateProblem = (type: ProblemType): Problem => {
           variables: 1,
           formula: (radius) => {
             return nerdamer("pi*" + radius + "^2").toTeX();
-          }
+          },
         },
         {
           name: "square",
@@ -137,7 +144,7 @@ const generateProblem = (type: ProblemType): Problem => {
           variables: 1,
           formula: (side) => {
             return nerdamer(side + "^2").toTeX();
-          }
+          },
         },
         {
           name: "rectangle",
@@ -145,7 +152,7 @@ const generateProblem = (type: ProblemType): Problem => {
           variables: 2,
           formula: (width, length) => {
             return nerdamer(`${width} * ${length}`).toTeX();
-          }
+          },
         },
         {
           name: "triangle",
@@ -153,7 +160,7 @@ const generateProblem = (type: ProblemType): Problem => {
           variables: 2,
           formula: (base, height) => {
             return nerdamer(`(1/2) * ${base} * ${height}`).toTeX();
-          }
+          },
         },
         {
           name: "trapezoid",
@@ -161,8 +168,8 @@ const generateProblem = (type: ProblemType): Problem => {
           variables: 3,
           formula: (base1, base2, height) => {
             return nerdamer(`((${base1} + ${base2}) / 2) * ${height}`).toTeX();
-          }
-        }
+          },
+        },
       ];
       const shape = shapes[Math.floor(Math.random() * shapes.length)];
       const invert = Math.random() > 0.5;
@@ -177,14 +184,27 @@ const generateProblem = (type: ProblemType): Problem => {
           problem.answers.push(area);
         }
       } else {
-        const variables = new Array(shape.variables).fill(null).map(() => randomInt(3, 15));
+        const variables = new Array(shape.variables)
+          .fill(null)
+          .map(() => randomInt(3, 15));
         const area = shape.formula(...variables);
         if (invert) {
           const missingVar = Math.floor(Math.random() * variables.length);
-          problem.question = `Given a ${shape.name} with an area of $${area}$, ${shape.scalars.map((v, i) => " a " + v + " of $" + variables[i] + "$").filter((_v, index) => index !== missingVar).join(", ").replace(/, ([^,]*)$/, ' and $1')} find it's ${shape.scalars[missingVar]}`;
+          problem.question = `Given a ${
+            shape.name
+          } with an area of $${area}$, ${shape.scalars
+            .map((v, i) => " a " + v + " of $" + variables[i] + "$")
+            .filter((_v, index) => index !== missingVar)
+            .join(", ")
+            .replace(/, ([^,]*)$/, " and $1")} find it's ${
+            shape.scalars[missingVar]
+          }`;
           problem.answers.push(variables[missingVar].toString());
         } else {
-          problem.question = `Given a ${shape.name} with${shape.scalars.map((v, i) => " a " + v + " of $" + variables[i] + "$").join(", ").replace(/, ([^,]*)$/, ' and $1')} find its area`;
+          problem.question = `Given a ${shape.name} with${shape.scalars
+            .map((v, i) => " a " + v + " of $" + variables[i] + "$")
+            .join(", ")
+            .replace(/, ([^,]*)$/, " and $1")} find its area`;
           problem.answers.push(area);
         }
       }
@@ -198,11 +218,19 @@ const generateProblem = (type: ProblemType): Problem => {
       const hex = number.toString(16);
       const toDecimal = Math.random() > 0.5;
       if (toDecimal) {
-        problem.question = `Convert $${type === ProblemType.BinaryConversion ? binary : hex}$ from ${type === ProblemType.BinaryConversion ? "binary" : "hex"} to decimal`;
+        problem.question = `Convert $${
+          type === ProblemType.BinaryConversion ? binary : hex
+        }$ from ${
+          type === ProblemType.BinaryConversion ? "binary" : "hex"
+        } to decimal`;
         problem.answers.push(decimal);
       } else {
-        problem.question = `Convert the decimal $${decimal}$ to ${type === ProblemType.BinaryConversion ? "binary" : "hex"}`;
-        problem.answers.push(type === ProblemType.BinaryConversion ? binary : hex);
+        problem.question = `Convert the decimal $${decimal}$ to ${
+          type === ProblemType.BinaryConversion ? "binary" : "hex"
+        }`;
+        problem.answers.push(
+          type === ProblemType.BinaryConversion ? binary : hex
+        );
       }
       break;
     }
@@ -212,8 +240,7 @@ const generateProblem = (type: ProblemType): Problem => {
       var a = randomInt(-3, 4, 0);
 
       const nerdString = `${a}*((x-(${x}))^2)+(${y})`;
-      console.log(nerdString);
-      const nerdTex = nerdamer(nerdString).expand().toTeX()
+      const nerdTex = nerdamer(nerdString).expand().toTeX();
 
       problem.question = `Find the vertex of the parabola $$${nerdTex}$$`;
       problem.answers.push(`(${x}, ${y})`);
@@ -225,11 +252,11 @@ const generateProblem = (type: ProblemType): Problem => {
       var terms = [];
       var answer = 0;
       if (isAddition) {
-        termCount = randomInt(20, 100)
+        termCount = randomInt(20, 100);
         const number = randomInt(-30, 30, 0, 1, -1);
         const start = randomInt(3, 20);
         for (let i = 1; i <= termCount; i++) {
-          terms.push(start + (number * i));
+          terms.push(start + number * i);
         }
         answer = terms[terms.length - 1];
       } else {
@@ -237,11 +264,13 @@ const generateProblem = (type: ProblemType): Problem => {
         const number = randomInt(-4, 5, 0, 1);
         const start = randomInt(3, 20);
         for (let i = 1; i <= termCount; i++) {
-          terms.push(start * (number ** i));
+          terms.push(start * number ** i);
         }
         answer = terms[terms.length - 1];
       }
-      problem.question = `Find the ${termCount}th term in the sequence [${terms.slice(0, 6).join(", ")}]`;
+      problem.question = `Find the ${termCount}th term in the sequence [${terms
+        .slice(0, 6)
+        .join(", ")}]`;
       problem.answers.push(answer.toString());
       break;
     }
@@ -259,14 +288,39 @@ const generateProblem = (type: ProblemType): Problem => {
       const distance = vector1.distanceString(vector2);
       problem.question = `Find the distance between $\\begin{bmatrix}${vector1.x}\\\\${vector1.y}\\end{bmatrix}$ and $\\begin{bmatrix}${vector2.x}\\\\${vector2.y}\\end{bmatrix}$`;
       problem.answers.push(distance);
+      break;
+    }
+    case ProblemType.SlopeTwoPoint: {
+      let point1: Vector, point2: Vector;
+      while (
+        point1 === undefined ||
+        point2 === undefined ||
+        point1.x === point2.x
+      ) {
+        point1 = Vector.randomVector(-15, 15);
+        point2 = Vector.randomVector(-15, 15);
+      }
+      const slopeExpresion = nerdamer(
+        `(${point1.y} - ${point2.y}) / (${point1.x} - ${point2.x})`
+      );
+      const slopeFrac = slopeExpresion.expand().toTeX();
+      const slopeAppr = (
+        Math.round(parseFloat(slopeExpresion.toDecimal()) * 1000) / 1000
+      ).toString();
+      problem.question = `Given two points find the slope of the line that pass through both $(${point1.x}, ${point1.y})$ and $(${point2.x}, ${point2.y})$`;
+      problem.answers.push(slopeFrac);
+      if (slopeFrac !== slopeAppr) {
+        problem.answerType = AnswerType.Any;
+        problem.answers.push(slopeAppr);
+      }
     }
   }
 
   return problem;
-}
+};
 const STARTING_QUESTION_COUNT = 20;
 const NEW_LOAD_QUESTION_COUNT = 8;
-const ALLOWED_PROBLEM_TYPES = [
+const ALLOWED_PROBLEM_TYPES: ProblemType[] = [
   ProblemType.Area,
   ProblemType.BinaryConversion,
   ProblemType.CubicRoots,
@@ -274,22 +328,40 @@ const ALLOWED_PROBLEM_TYPES = [
   ProblemType.HexConversion,
   ProblemType.ParabolaVertices,
   ProblemType.QuadRoots,
+  ProblemType.SlopeTwoPoint,
   ProblemType.VectorDistance,
 ];
 const problemSet = ref<Problem[]>([]);
 
 onMounted(() => {
-  problemSet.value = generateProblems(STARTING_QUESTION_COUNT, ALLOWED_PROBLEM_TYPES, true);
+  problemSet.value = generateProblems(
+    STARTING_QUESTION_COUNT,
+    ALLOWED_PROBLEM_TYPES,
+    true
+  );
 });
 </script>
 <template>
   <main class="math">
-    <h1>Computational Math <span style="color: #f44;">(BETA)</span></h1>
+    <h1>Computational Math <span style="color: #f44">(BETA)</span></h1>
     <div class="grid">
-      <MathProblem :problem="problem" v-for="problem in problemSet"/>
+      <MathProblem :problem="problem" v-for="problem in problemSet" />
     </div>
-    <button class="load-button" @click="() => {
-      problemSet.push(...generateProblems(NEW_LOAD_QUESTION_COUNT, ALLOWED_PROBLEM_TYPES, true));
-    }">Load more</button>
+    <button
+      class="load-button"
+      @click="
+        () => {
+          problemSet.push(
+            ...generateProblems(
+              NEW_LOAD_QUESTION_COUNT,
+              ALLOWED_PROBLEM_TYPES,
+              true
+            )
+          );
+        }
+      "
+    >
+      Load more
+    </button>
   </main>
 </template>
