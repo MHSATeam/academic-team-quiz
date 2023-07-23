@@ -128,13 +128,14 @@ onMounted(() => {
     class="sidebar no-print"
     :class="open ? 'open' : 'closed'"
     @keypress.escape="open = false"
-    @click.exact="open = !open"
+    @click="open = !open"
   >
     <!--An arrow pointing in the direction of next movement-->
     <svg
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 24 24"
       :class="open ? 'arrow arrow-open' : 'arrow arrow-closed'"
+      @click.stop="open = !open"
     >
       <path d="M0 0h24v24H0z" fill="none" />
       <path d="M16.59 8.59L12 13.17 7.41 8.59 6 10l6 6 6-6z" />
