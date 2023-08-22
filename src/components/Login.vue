@@ -1,8 +1,10 @@
 <script lang="ts" setup>
-import { ref } from "vue";
+import { nextTick, onMounted, ref } from "vue";
 import { useRouter } from "vue-router";
 
 const password = ref("");
+const passwordInput = ref<HTMLInputElement | null>(null);
+const loading = ref(false);
 
 const router = useRouter();
 
@@ -12,10 +14,10 @@ const getPasswordHash = async (password: string) => {
   const hashArray = Array.from(new Uint8Array(hashBuffer));
   return hashArray.map((bytes) => bytes.toString(16).padStart(2, "0")).join("");
 };
-const onSubmit = async () => {
+const onSubmit = async (event: Event) => {
+  event.preventDefault();
+  loading.value = true;
   const hash = await getPasswordHash(password.value);
-  console.log(password.value);
-  console.log(hash);
   const response: { success: boolean; error?: string } = await (
     await fetch("/api/login", {
       method: "POST",
@@ -34,22 +36,65 @@ const onSubmit = async () => {
     if (response.error) {
       alert(response.error);
     }
+    loading.value = false;
   }
 };
+
+onMounted(() => {
+  nextTick(() => {
+    passwordInput.value?.focus();
+  });
+});
 </script>
 
 <template>
   <div class="login-box">
     <h1>Academic Team Quiz</h1>
-    <input
-      class="password-input"
-      type="password"
-      name="password"
-      id="password"
-      placeholder="Password"
-      v-model="password"
-    />
-    <button @click="onSubmit" class="submit-button">Login</button>
+    <form @submit="onSubmit" class="login-form">
+      <input
+        class="password-input"
+        type="password"
+        name="password"
+        id="password"
+        placeholder="Password"
+        v-model="password"
+        ref="passwordInput"
+      />
+      <button @click="onSubmit" class="submit-button" :disabled="loading">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          class="lucide lucide-loader-2 rotating"
+          v-if="loading"
+        >
+          <path d="M21 12a9 9 0 1 1-6.219-8.56" />
+        </svg>
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          class="lucide lucide-lock"
+          v-else
+        >
+          <rect width="18" height="11" x="3" y="11" rx="2" ry="2" />
+          <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+        </svg>
+        Login
+      </button>
+    </form>
   </div>
 </template>
 
@@ -67,6 +112,12 @@ const onSubmit = async () => {
   padding: 3em;
 }
 
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5em;
+}
+
 .password-input {
   padding: 0.5em;
   border-radius: 0.5em;
@@ -79,8 +130,12 @@ const onSubmit = async () => {
   border: 2px solid #1a4;
   background-color: #1c4;
   color: #fff;
-  font-size: large;
+  font-size: larger;
+  align-items: center;
   font-weight: bold;
+  display: flex;
+  justify-content: center;
+  gap: 0.25em;
 }
 
 .submit-button:hover {
@@ -90,5 +145,19 @@ const onSubmit = async () => {
 .submit-button:active {
   background-color: #1a4;
   cursor: pointer;
+}
+
+.submit-button:disabled {
+  background-color: gray;
+  border: 2px solid #999;
+  cursor: initial;
+}
+.rotating {
+  animation: rotate 1s linear infinite;
+}
+@keyframes rotate {
+  to {
+    transform: rotate(360deg);
+  }
 }
 </style>
