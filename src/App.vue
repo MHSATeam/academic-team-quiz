@@ -1,7 +1,7 @@
 <script setup lang="ts"></script>
 
 <template>
-  <header class="no-print">
+  <header v-if="$route.name !== 'login'" class="no-print">
     <h1>Academic Team Quiz</h1>
     <div class="links">
       <router-link to="quiz" class="link" active-class="active"
