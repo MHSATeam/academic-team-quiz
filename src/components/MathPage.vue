@@ -46,6 +46,7 @@ const generateProblems = (
       ProblemType.GeometricMean,
       ProblemType.HarmonicMean,
       ProblemType.TrigAngles,
+      ProblemType.TwoDigitMultiplication,
     ];
   }
   const problems = [];
@@ -101,6 +102,14 @@ const generateProblem = (type: ProblemType): Problem => {
     }
   }
   switch (type) {
+    case ProblemType.TwoDigitMultiplication: {
+      const a = randomInt(10, 99);
+      const b = randomInt(10, 99);
+      const product = a * b;
+      problem.question = `Find the product of ${a} and ${b}`;
+      problem.answers.push(product.toString());
+      break;
+    }
     case ProblemType.CubicRoots:
     case ProblemType.QuadRoots: {
       problem.question = "Find the roots of the function\n";
@@ -321,15 +330,7 @@ const generateProblem = (type: ProblemType): Problem => {
 const STARTING_QUESTION_COUNT = 20;
 const NEW_LOAD_QUESTION_COUNT = 8;
 const ALLOWED_PROBLEM_TYPES: ProblemType[] = [
-  ProblemType.Area,
-  ProblemType.BinaryConversion,
-  ProblemType.CubicRoots,
-  ProblemType.DotProduct,
-  ProblemType.HexConversion,
-  ProblemType.ParabolaVertices,
-  ProblemType.QuadRoots,
-  ProblemType.SlopeTwoPoint,
-  ProblemType.VectorDistance,
+  ProblemType.TwoDigitMultiplication,
 ];
 const problemSet = ref<Problem[]>([]);
 

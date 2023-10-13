@@ -26,6 +26,7 @@ export enum ProblemType {
   BinaryConversion,
   HexConversion,
   Systems,
+  TwoDigitMultiplication,
   ArithmeticMean,
   GeometricMean,
   HarmonicMean,
