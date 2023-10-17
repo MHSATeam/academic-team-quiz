@@ -1,5 +1,6 @@
 import { getAnswer } from "../api-lib/_utils.js";
-export default function handler(req, res) {
+import { VercelRequest, VercelResponse } from "@vercel/node";
+export default function handler(req: VercelRequest, res: VercelResponse) {
   const { id }: { id: number } = req.body;
   if (id !== 0 && !id) {
     res.status(400).send("No id provided");

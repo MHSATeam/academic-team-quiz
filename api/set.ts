@@ -1,6 +1,7 @@
-import { sets } from "../api-lib/_set-list.js";
-import { getQuestionSet, Set } from "../api-lib/_utils.js";
-export default function handler(req, res) {
+import { VercelRequest, VercelResponse } from "@vercel/node";
+import { Set, sets } from "../api-lib/_set-list.js";
+import { getQuestionSet } from "../api-lib/_utils.js";
+export default function handler(req: VercelRequest, res: VercelResponse) {
   if (!req.body || !req.body.sets) {
     res.status(400).send("Missing sets");
     return;
@@ -10,7 +11,7 @@ export default function handler(req, res) {
     req.body;
   const filteredSets: Set[] = requestedSets.filter(
     (set: string): set is Set => {
-      return sets.includes(set);
+      return sets.includes(set as Set);
     }
   );
   if (filteredSets.length === 0) {
