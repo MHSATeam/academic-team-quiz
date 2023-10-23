@@ -1,5 +1,5 @@
 import { QuestionSet } from "@/api-lib/_utils";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { displayNames } from "../setNames";
 import { Set, sets } from "@/api-lib/_set-list";
 import SetPicker from "./SetPicker";
@@ -9,8 +9,15 @@ export default function SetPage() {
   const [selectedSets, setSelectedSets] = useState<Set[]>(sets);
   const [set, setSet] = useState<QuestionSet | null>(null);
   const [playerCount, setPlayerCount] = useState(2);
+  const [showSetInstruction, setShowSetInstruction] = useState(true);
 
-  const generateSet = async (playerCount: number, selectedSets: Set[]) => {
+  const swapValue = useRef(0);
+
+  const generateSet = async (
+    playerCount: number,
+    selectedSets: Set[],
+    swap: number
+  ) => {
     const response = await fetch("/api/set", {
       method: "POST",
       headers: {
@@ -21,11 +28,15 @@ export default function SetPage() {
         players: Math.max(1, Math.min(8, playerCount)),
       }),
     }).then((response) => response.json());
-    setSet(response);
+    if (swapValue.current === swap) {
+      setSet(response);
+    }
   };
 
   useEffect(() => {
-    generateSet(playerCount, selectedSets);
+    if (swapValue.current === 0) {
+      generateSet(playerCount, selectedSets, ++swapValue.current);
+    }
   }, []);
 
   const catagories = [];
@@ -89,7 +100,7 @@ export default function SetPage() {
         <div className="set-generation no-print">
           <button
             onClick={() => {
-              generateSet(playerCount, selectedSets);
+              generateSet(playerCount, selectedSets, ++swapValue.current);
             }}
             className="generate-button"
           >
@@ -111,16 +122,22 @@ export default function SetPage() {
                   Math.min(8, e.target.valueAsNumber)
                 );
                 setPlayerCount(newPlayerCount);
-                generateSet(newPlayerCount, selectedSets);
+                generateSet(newPlayerCount, selectedSets, ++swapValue.current);
               }}
             />
           </div>
         </div>
       </div>
       <SetPicker
+        showInstruction={showSetInstruction}
+        onToggle={(value) => {
+          if (value) {
+            setShowSetInstruction(false);
+          }
+        }}
         onUpdateSets={(sets) => {
           setSelectedSets(sets);
-          generateSet(playerCount, sets);
+          generateSet(playerCount, sets, ++swapValue.current);
         }}
       />
     </>
