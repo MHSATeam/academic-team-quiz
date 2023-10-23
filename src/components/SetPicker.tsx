@@ -3,6 +3,8 @@ import { type Set, sets } from "@/api-lib/_set-list";
 import { displayNames } from "../setNames";
 
 type SetPickerProps = {
+  showInstruction: boolean;
+  onToggle?: (value: boolean) => void;
   onUpdateSets: (enabledSets: Set[]) => void;
 };
 
@@ -15,7 +17,12 @@ export const defaultSetList = [
 }));
 
 export default function SetPicker(props: SetPickerProps) {
-  const [open, setOpen] = useState(false);
+  const [open, _setOpen] = useState(false);
+
+  const setOpen = (value: boolean) => {
+    _setOpen(value);
+    props.onToggle?.(value);
+  };
 
   const [questionGroups, setQuestionGroups] = useState({
     hard: true,
@@ -70,6 +77,11 @@ export default function SetPicker(props: SetPickerProps) {
         setOpen(!open);
       }}
     >
+      <span
+        className={"instructions" + (!props.showInstruction ? " hide" : "")}
+      >
+        Filter Sets! →
+      </span>
       <svg
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 24 24"

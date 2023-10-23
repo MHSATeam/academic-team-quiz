@@ -7,6 +7,7 @@ export default function QuizPage() {
   const [questions, setQuestions] = useState<
     { id: number; question: string; answer: string; quiet: boolean }[]
   >([]);
+  const [showSetInstruction, setShowSetInstruction] = useState(true);
   const selectedSets = useRef<Set[]>(sets);
   const swapValue = useRef(0);
   const getNextQuestion = async (
@@ -78,6 +79,7 @@ export default function QuizPage() {
             <QuestionBox
               key={index}
               onNext={async () => {
+                setShowSetInstruction(false);
                 const newQuestion = await getNextQuestion();
                 setQuestions((prev) => {
                   return [...prev, newQuestion];
@@ -93,6 +95,12 @@ export default function QuizPage() {
         {questions.length === 0 && <h1 className="loading">Loading...</h1>}
       </main>
       <SetPicker
+        onToggle={(value) => {
+          if (value) {
+            setShowSetInstruction(false);
+          }
+        }}
+        showInstruction={showSetInstruction}
         onUpdateSets={(sets) => {
           selectedSets.current = sets;
           swapValue.current++;

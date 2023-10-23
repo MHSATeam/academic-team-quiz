@@ -23,5 +23,5 @@
     "esm": true,
     "experimentalSpecifierResolution": "node"
   },
-  "include": ["src", "api-lib"]
+  "include": ["src", "api-lib", "api"]
 }
