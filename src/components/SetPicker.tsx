@@ -8,13 +8,15 @@ type SetPickerProps = {
   onUpdateSets: (enabledSets: Set[]) => void;
 };
 
+type SetList = { id: string; displayName: string; selected: boolean }[];
+
 export const defaultSetList = [
   ...new Set(sets.map((set) => set.replace(/-\(.*\)/, ""))),
 ].map((set) => ({
   id: set,
   displayName: displayNames[set],
   selected: true,
-}));
+})) as SetList;
 
 export default function SetPicker(props: SetPickerProps) {
   const [open, _setOpen] = useState(false);
@@ -29,7 +31,37 @@ export default function SetPicker(props: SetPickerProps) {
     all: true,
   });
 
-  const [setList, setSetList] = useState(defaultSetList);
+  const [setList, _setSetList] = useState(defaultSetList);
+
+  const setSetList = (sets: SetList) => {
+    _setSetList(sets);
+    saveSetList(sets);
+  };
+
+  //save setList to local storage
+  const saveSetList = (sets: SetList) => {
+    localStorage.setItem("setList", JSON.stringify(sets));
+  };
+
+  //load setList from local storage
+  const loadSetList = () => {
+    const savedSetList = localStorage.getItem("setList");
+    if (savedSetList) {
+      const parsedSetList = JSON.parse(savedSetList);
+      const newSets = setList.map((set, index) => {
+        let selected = set.selected;
+        if (parsedSetList[index].id === set.id) {
+          selected = parsedSetList[index].selected;
+        }
+        return {
+          ...set,
+          selected,
+        };
+      });
+      _setSetList(newSets);
+      props.onUpdateSets(getSetList(newSets, questionGroups));
+    }
+  };
 
   const getSetList = (
     setList: typeof defaultSetList,
@@ -60,6 +92,7 @@ export default function SetPicker(props: SetPickerProps) {
       }
     };
     document.addEventListener("click", listener);
+    loadSetList();
     return () => {
       document.removeEventListener("click", listener);
     };
