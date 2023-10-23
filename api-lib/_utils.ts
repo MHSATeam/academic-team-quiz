@@ -1,9 +1,30 @@
-import { readdir, readFile } from "fs/promises";
+import { readFile } from "fs/promises";
 import * as path from "path";
-import { sets } from "./_set-list.js";
-const questions: { [key in Set]: QuizletTerm[] } = {};
+import { Set, sets } from "./_set-list.js";
+type QuestionList = { [key in Set]: QuizletTerm[] };
+const questions: QuestionList = {
+  "american-government-and-economics-(all)": [],
+  "american-government-and-economics-(hard)": [],
+  "american-history-(hard)": [],
+  "american-history-(old)": [],
+  "american-literature-(all)": [],
+  "american-literature-(hard)": [],
+  "fine-arts-(all)": [],
+  "fine-arts-(hard)": [],
+  "geography-(all)": [],
+  "geography-(hard)": [],
+  "life-science-(all)": [],
+  "life-science-(hard)": [],
+  "math-(all)": [],
+  "math-(hard)": [],
+  "physical-science-(all)": [],
+  "physical-science-(hard)": [],
+  "world-history-(all)": [],
+  "world-history-(hard)": [],
+  "world-literature-(all)": [],
+  "world-literature-(hard)": [],
+};
 
-export type Set = (typeof sets)[number];
 export type Question = {
   id: number;
   definition: string;
@@ -37,7 +58,7 @@ export const letters = [
 ];
 export type Letter = (typeof letters)[number];
 export type QuestionSet = {
-  catagories: { [key in Set]: QuizletTerm[] };
+  catagories: Partial<QuestionList>;
   alphabetRound: {
     letter: Letter;
     questions: QuizletTerm[];
@@ -60,11 +81,11 @@ const connectorsAndArticles = [
   "by",
 ];
 async function loadSets() {
-  if (Object.keys(questions).length !== sets.length) {
+  if (Object.values(questions).some((arr) => arr.length === 0)) {
     for (const set of sets) {
       const file = path.join(process.cwd(), "public", "data", `${set}.json`);
       const data = await readFile(file, "utf8");
-      questions[set] = JSON.parse(data);
+      questions[set as Set] = JSON.parse(data);
     }
   }
 }
@@ -81,7 +102,7 @@ export async function getQuestion(sets: Set[]): Promise<Question> {
 export async function getAnswer(id: number): Promise<string> {
   await loadSets();
   for (const set in questions) {
-    const question = questions[set].find((q) => q.id === id);
+    const question = questions[set as Set].find((q) => q.id === id);
     if (question) {
       return question.term;
     }
@@ -124,19 +145,26 @@ export async function getQuestionSet(
     maxCount--;
     var question = questions[sets[Math.floor(Math.random() * sets.length)]]
       .sort(() => Math.random() - 0.5)
-      .find((q) =>
-        q.term
+      .find((q) => {
+        const firstWord = q.term
           .toLowerCase()
           .split(" ")
-          .find((v) => !connectorsAndArticles.includes(v))
-          .startsWith(questionSet.alphabetRound.letter.toLowerCase())
-      );
+          .find((v) => !connectorsAndArticles.includes(v));
+        if (!firstWord) {
+          return false;
+        }
+        return firstWord.startsWith(
+          questionSet.alphabetRound.letter.toLowerCase()
+        );
+      });
     if (!question) {
       i--;
       continue;
     }
 
-    if (questionSet.alphabetRound.questions.find((q) => q.id === question.id)) {
+    if (
+      questionSet.alphabetRound.questions.find((q) => q.id === question?.id)
+    ) {
       i--;
       continue;
     }

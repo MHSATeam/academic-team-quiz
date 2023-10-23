@@ -129,13 +129,36 @@ header {
   padding: 2rem 1rem;
   background-color: #f8f9fa;
   box-shadow: -1px 0 6px rgba(0, 0, 0, 0.1);
-  overflow-y: auto;
+  // overflow-y: auto;
   transition: width 0.3s ease-in-out;
   &.open {
     width: 300px;
   }
   &.closed {
     width: 0;
+  }
+  .instructions {
+    position: absolute;
+    top: 0;
+    left: 0;
+    overflow: visible;
+    width: 130px;
+    margin: 10px 0;
+    transform: translateX(-110%);
+    color: #218838;
+    font-size: large;
+    animation: bounce 750ms alternate 0s infinite ease-in-out;
+    @keyframes bounce {
+      from {
+        transform: translateX(-100%);
+      }
+      to {
+        transform: translateX(-110%);
+      }
+    }
+    &.hide {
+      display: none;
+    }
   }
   .sidebar-sticky {
     position: relative;

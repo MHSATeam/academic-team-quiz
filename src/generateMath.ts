@@ -1,8 +1,5 @@
-<script lang="ts" setup>
-import { onMounted, reactive, ref } from "vue";
 import nerdamer from "nerdamer";
-import MathProblem from "./MathProblem.vue";
-import { AnswerType, Problem, ProblemType } from "../math-types";
+import { AnswerType, Problem, ProblemType } from "./math-types";
 
 const randomInt = (min: number = 0, max: number = 2, ...exclude: number[]) => {
   function getNumber() {
@@ -17,7 +14,27 @@ const randomInt = (min: number = 0, max: number = 2, ...exclude: number[]) => {
   return number;
 };
 
-const generateProblems = (
+class Vector {
+  public x: number;
+  public y: number;
+  constructor(x: number, y: number) {
+    this.x = x;
+    this.y = y;
+  }
+  public dot(vector: Vector) {
+    return this.x * vector.x + this.y * vector.y;
+  }
+  public distanceString(vector: Vector) {
+    return nerdamer(`sqrt((${this.x - vector.x})^2+(${this.y - vector.y})^2)`)
+      .expand()
+      .toTeX();
+  }
+  public static randomVector(min: number, max: number) {
+    return new Vector(randomInt(min, max), randomInt(min, max));
+  }
+}
+
+export const generateProblems = (
   count: number,
   types: ProblemType[] = [],
   random: boolean = false
@@ -82,31 +99,12 @@ const generateProblem = (type: ProblemType): Problem => {
     answers: [],
     answerType: AnswerType.AnyOrder,
   };
-  class Vector {
-    public x: number;
-    public y: number;
-    constructor(x: number, y: number) {
-      this.x = x;
-      this.y = y;
-    }
-    public dot(vector: Vector) {
-      return this.x * vector.x + this.y * vector.y;
-    }
-    public distanceString(vector: Vector) {
-      return nerdamer(`sqrt((${this.x - vector.x})^2+(${this.y - vector.y})^2)`)
-        .expand()
-        .toTeX();
-    }
-    public static randomVector(min, max) {
-      return new Vector(randomInt(min, max), randomInt(min, max));
-    }
-  }
   switch (type) {
     case ProblemType.TwoDigitMultiplication: {
       const a = randomInt(10, 99);
       const b = randomInt(10, 99);
       const product = a * b;
-      problem.question = `Find the product of ${a} and ${b}`;
+      problem.question = `Find the product of $${a}$ and $${b}$`;
       problem.answers.push(product.toString());
       break;
     }
@@ -296,11 +294,12 @@ const generateProblem = (type: ProblemType): Problem => {
       const vector2 = Vector.randomVector(-15, 15);
       const distance = vector1.distanceString(vector2);
       problem.question = `Find the distance between $\\begin{bmatrix}${vector1.x}\\\\${vector1.y}\\end{bmatrix}$ and $\\begin{bmatrix}${vector2.x}\\\\${vector2.y}\\end{bmatrix}$`;
-      problem.answers.push(distance);
+      problem.answers.push("$" + distance + "$");
       break;
     }
     case ProblemType.SlopeTwoPoint: {
-      let point1: Vector, point2: Vector;
+      let point1: Vector | undefined = undefined,
+        point2: Vector | undefined = undefined;
       while (
         point1 === undefined ||
         point2 === undefined ||
@@ -317,7 +316,7 @@ const generateProblem = (type: ProblemType): Problem => {
         Math.round(parseFloat(slopeExpresion.toDecimal()) * 1000) / 1000
       ).toString();
       problem.question = `Given two points find the slope of the line that pass through both $(${point1.x}, ${point1.y})$ and $(${point2.x}, ${point2.y})$`;
-      problem.answers.push(slopeFrac);
+      problem.answers.push("$" + slopeFrac + "$");
       if (slopeFrac !== slopeAppr) {
         problem.answerType = AnswerType.Any;
         problem.answers.push(slopeAppr);
@@ -327,42 +326,3 @@ const generateProblem = (type: ProblemType): Problem => {
 
   return problem;
 };
-const STARTING_QUESTION_COUNT = 20;
-const NEW_LOAD_QUESTION_COUNT = 8;
-const ALLOWED_PROBLEM_TYPES: ProblemType[] = [
-  ProblemType.TwoDigitMultiplication,
-];
-const problemSet = ref<Problem[]>([]);
-
-onMounted(() => {
-  problemSet.value = generateProblems(
-    STARTING_QUESTION_COUNT,
-    ALLOWED_PROBLEM_TYPES,
-    true
-  );
-});
-</script>
-<template>
-  <main class="math">
-    <h1>Computational Math <span style="color: #f44">(BETA)</span></h1>
-    <div class="grid">
-      <MathProblem :problem="problem" v-for="problem in problemSet" />
-    </div>
-    <button
-      class="load-button"
-      @click="
-        () => {
-          problemSet.push(
-            ...generateProblems(
-              NEW_LOAD_QUESTION_COUNT,
-              ALLOWED_PROBLEM_TYPES,
-              true
-            )
-          );
-        }
-      "
-    >
-      Load more
-    </button>
-  </main>
-</template>

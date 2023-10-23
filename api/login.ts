@@ -1,4 +1,4 @@
-import { VercelRequest } from "@vercel/node";
+import { VercelRequest, VercelResponse } from "@vercel/node";
 import { setUserCookie } from "../api-lib/_auth.js";
 
 function checkAuthorization(request: VercelRequest): boolean {
@@ -16,7 +16,7 @@ function checkAuthorization(request: VercelRequest): boolean {
   return hash === correctHash;
 }
 
-export default async function handler(req, res) {
+export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method !== "POST") {
     return res
       .status(405)
