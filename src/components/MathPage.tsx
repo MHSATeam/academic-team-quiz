@@ -1,23 +1,11 @@
 import { useEffect, useState } from "react";
-import { Problem, ProblemType } from "../math-types";
+import { ALLOWED_PROBLEM_TYPES, Problem, ProblemType } from "../math-types";
 import { generateProblems } from "../generateMath";
 import { MathJaxContext } from "better-react-mathjax";
 import MathProblem from "./MathProblem";
 
 const STARTING_QUESTION_COUNT = 20;
 const NEW_LOAD_QUESTION_COUNT = 8;
-const ALLOWED_PROBLEM_TYPES: ProblemType[] = [
-  ProblemType.Area,
-  ProblemType.BinaryConversion,
-  ProblemType.CubicRoots,
-  ProblemType.DotProduct,
-  ProblemType.HexConversion,
-  ProblemType.ParabolaVertices,
-  ProblemType.QuadRoots,
-  ProblemType.SlopeTwoPoint,
-  ProblemType.VectorDistance,
-  ProblemType.TwoDigitMultiplication,
-];
 export default function MathPage() {
   const [problemSet, setProblemSet] = useState<Problem[]>([]);
   useEffect(() => {

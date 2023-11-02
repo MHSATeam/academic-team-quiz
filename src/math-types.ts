@@ -32,3 +32,16 @@ export enum ProblemType {
   HarmonicMean,
   TrigAngles,
 }
+
+export const ALLOWED_PROBLEM_TYPES: ProblemType[] = [
+  ProblemType.Area,
+  ProblemType.BinaryConversion,
+  ProblemType.CubicRoots,
+  ProblemType.DotProduct,
+  ProblemType.HexConversion,
+  ProblemType.ParabolaVertices,
+  ProblemType.QuadRoots,
+  ProblemType.SlopeTwoPoint,
+  ProblemType.VectorDistance,
+  ProblemType.TwoDigitMultiplication,
+];
