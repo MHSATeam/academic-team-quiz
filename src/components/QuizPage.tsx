@@ -1,10 +1,10 @@
 import { ArrowRight, Loader2 } from "lucide-react";
 import React, { useEffect, useRef, useState } from "react";
-import NewSetPicker, {
+import SetPicker, {
   convertSetLabelsToSetArray,
   DefaultSetLabels,
   SetLabel,
-} from "./NewSetPicker";
+} from "./SetPicker";
 import QuestionBox from "./QuestionBox";
 import ScrollToTop from "./ScrollToTop";
 
@@ -153,7 +153,7 @@ export default function QuizPage() {
               (optionsOpen ? " max-h-screen" : " max-h-0")
             }
           >
-            <NewSetPicker
+            <SetPicker
               setList={selectedSets}
               onChange={(setList) => {
                 if (setList.length > 0) {
