@@ -7,6 +7,7 @@ type QuestionBoxProps = {
   answer: string;
   quiet: boolean;
   isLastQuestion: boolean;
+  autoNext: boolean;
   onNext: () => void;
 };
 
@@ -38,8 +39,8 @@ export default function QuestionBox(props: QuestionBoxProps) {
     <div
       ref={questionBoxElement}
       className={
-        "translate-x-0 transition-transform" +
-        (!animate ? " -translate-x-[200%]" : "")
+        "transition-transform " +
+        (!animate ? "-translate-x-[200%]" : "translate-x-0")
       }
     >
       <span>{props.question}</span>
@@ -48,6 +49,9 @@ export default function QuestionBox(props: QuestionBoxProps) {
           <button
             onClick={() => {
               setAnswerShown(true);
+              if (props.autoNext) {
+                props.onNext();
+              }
             }}
             className="bg-blue-400 rounded-md px-3 py-1 active:bg-blue-500"
           >
@@ -59,7 +63,7 @@ export default function QuestionBox(props: QuestionBoxProps) {
               <span className="font-bold">Answer: </span>
               <span>{props.answer}</span>
             </div>
-            {props.isLastQuestion && (
+            {props.isLastQuestion && !props.autoNext && (
               <button
                 disabled={clickedNext}
                 onClick={() => {

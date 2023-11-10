@@ -47,7 +47,7 @@ export default function SetPage() {
     <>
       {set !== null && !isLoading ? (
         <div className="flex flex-col">
-          <span className="font-bold text-xl pt-3">Catagory Round</span>
+          <span className="font-bold text-xl">Catagory Round</span>
           {catagories.map(([catagoryName, questions]) => {
             return (
               <div key={catagoryName} className="print:ml-0 ml-2 flex flex-col">

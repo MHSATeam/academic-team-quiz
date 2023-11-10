@@ -40,47 +40,18 @@ export function convertSetLabelsToSetArray(
 }
 
 export default function NewSetPicker(props: NewSetPickerProps) {
-  const [isOpen, setOpen] = useState(false);
-
   return (
-    <div className="flex flex-col border-2 my-4 rounded-lg">
-      <button
-        className={
-          "flex gap-2 p-2 text-lg font-bold" + (isOpen ? " border-b-2" : "")
-        }
-        onClick={() => {
-          setOpen(!isOpen);
-        }}
-        tabIndex={-1}
-      >
-        <span className="my-auto">Set Picker</span>
-        <ArrowRight
-          className={
-            "transition-transform my-auto" + (isOpen ? " rotate-90" : "")
-          }
-        />
-      </button>
-      <div className="flex">
-        <div
-          className={
-            "overflow-hidden transition-[max-height]" +
-            (isOpen ? " max-h-screen" : " max-h-0")
-          }
-        >
-          <Select
-            className="m-2"
-            isMulti
-            isClearable={false}
-            blurInputOnSelect={false}
-            options={DefaultSetLabels}
-            value={props.setList}
-            onChange={(setList) => {
-              props.onChange(setList);
-            }}
-            menuPortalTarget={document.body}
-          />
-        </div>
-      </div>
-    </div>
+    <Select
+      className="m-2"
+      isMulti
+      isClearable={false}
+      blurInputOnSelect={false}
+      options={DefaultSetLabels}
+      value={props.setList}
+      onChange={(setList) => {
+        props.onChange(setList);
+      }}
+      menuPortalTarget={document.body}
+    />
   );
 }
