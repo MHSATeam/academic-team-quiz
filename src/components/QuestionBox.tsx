@@ -49,7 +49,7 @@ export default function QuestionBox(props: QuestionBoxProps) {
             onClick={() => {
               setAnswerShown(true);
             }}
-            className="bg-blue-400 rounded-md px-3 py-1 "
+            className="bg-blue-400 rounded-md px-3 py-1 active:bg-blue-500"
           >
             Show Answer
           </button>
