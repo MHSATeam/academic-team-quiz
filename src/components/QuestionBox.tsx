@@ -24,6 +24,13 @@ export default function QuestionBox(props: QuestionBoxProps) {
   }, []);
 
   useEffect(() => {
+    window.scrollTo({
+      top: document.body.scrollHeight,
+      behavior: "smooth",
+    });
+  }, [answerShown]);
+
+  useEffect(() => {
     setAnswerShown(false);
     setClickedNext(false);
   }, [props.questionId]);
@@ -54,11 +61,14 @@ export default function QuestionBox(props: QuestionBoxProps) {
             </div>
             {props.isLastQuestion && (
               <button
+                disabled={clickedNext}
                 onClick={() => {
-                  setClickedNext(true);
-                  props.onNext();
+                  if (!clickedNext) {
+                    setClickedNext(true);
+                    props.onNext();
+                  }
                 }}
-                className="bg-blue-400 rounded-sm px-2 shrink-0 ml-auto"
+                className="bg-blue-400 h-fit rounded-md px-3 py-1 shrink-0 ml-auto"
               >
                 <span className="flex gap-1">
                   Next

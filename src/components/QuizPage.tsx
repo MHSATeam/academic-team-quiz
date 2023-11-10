@@ -75,7 +75,7 @@ export default function QuizPage() {
     swapLastQuestion(++swapValue.current);
   }, [selectedSets]);
   return (
-    <main>
+    <main className="mb-12">
       <NewSetPicker
         setList={selectedSets}
         onChange={(setList) => {
