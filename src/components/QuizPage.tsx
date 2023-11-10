@@ -1,14 +1,19 @@
-import { useEffect, useRef, useState } from "react";
-import { Set, sets } from "../../api-lib/_set-list";
+import { Loader2 } from "lucide-react";
+import React, { useEffect, useRef, useState } from "react";
+import NewSetPicker, {
+  convertSetLabelsToSetArray,
+  DefaultSetLabels,
+  SetLabel,
+} from "./NewSetPicker";
 import QuestionBox from "./QuestionBox";
-import SetPicker from "./SetPicker";
+import ScrollToTop from "./ScrollToTop";
 
 export default function QuizPage() {
   const [questions, setQuestions] = useState<
     { id: number; question: string; answer: string; quiet: boolean }[]
   >([]);
-  const [showSetInstruction, setShowSetInstruction] = useState(true);
-  const selectedSets = useRef<Set[]>(sets);
+  const [selectedSets, setSelectedSets] =
+    useState<SetLabel[]>(DefaultSetLabels);
   const swapValue = useRef(0);
   const getNextQuestion = async (
     quiet: boolean = false,
@@ -33,7 +38,7 @@ export default function QuizPage() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          sets: selectedSets.current,
+          sets: convertSetLabelsToSetArray(selectedSets),
         }),
       }).then((response) => response.json());
       if (questions.find((q) => q.id === response.id)) {
@@ -60,26 +65,32 @@ export default function QuizPage() {
     if (swap === swapValue.current) {
       setQuestions((prev) => {
         const newArray = [...prev];
-        newArray.splice(prev.length - 2, 1, newQuestion);
+        newArray.splice(prev.length - 1, 1, newQuestion);
         return newArray;
       });
     }
   };
 
   useEffect(() => {
-    getNextQuestion().then((question) => {
-      setQuestions([question]);
-    });
-  }, []);
+    swapLastQuestion(++swapValue.current);
+  }, [selectedSets]);
   return (
-    <>
-      <main>
-        {questions.map((question, index) => {
-          return (
+    <main>
+      <NewSetPicker
+        setList={selectedSets}
+        onChange={(setList) => {
+          if (setList.length > 0) {
+            setSelectedSets([...setList]);
+          }
+        }}
+      />
+      {questions.map((question, index) => {
+        const isLast = index + 1 === questions.length;
+        return (
+          <React.Fragment key={index}>
+            <hr className="pb-4 mt-4 border-black" />
             <QuestionBox
-              key={index}
               onNext={async () => {
-                setShowSetInstruction(false);
                 const newQuestion = await getNextQuestion();
                 setQuestions((prev) => {
                   return [...prev, newQuestion];
@@ -89,24 +100,18 @@ export default function QuizPage() {
               answer={question.answer}
               questionId={question.id}
               quiet={question.quiet}
+              isLastQuestion={isLast}
             />
-          );
-        })}
-        {questions.length === 0 && <h1 className="loading">Loading...</h1>}
-      </main>
-      <SetPicker
-        onToggle={(value) => {
-          if (value) {
-            setShowSetInstruction(false);
-          }
-        }}
-        showInstruction={showSetInstruction}
-        onUpdateSets={(sets) => {
-          selectedSets.current = sets;
-          swapValue.current++;
-          swapLastQuestion(swapValue.current);
-        }}
-      />
-    </>
+          </React.Fragment>
+        );
+      })}
+      {questions.length === 0 && (
+        <span className="justify-center text-2xl flex gap-2">
+          Loading
+          <Loader2 className="animate-spin my-auto" />
+        </span>
+      )}
+      <ScrollToTop />
+    </main>
   );
 }

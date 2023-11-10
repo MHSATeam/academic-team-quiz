@@ -1,6 +1,6 @@
+import { Loader2, Lock } from "lucide-react";
 import React, { FormEvent, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import "../assets/scss/login.scss";
 
 const getPasswordHash = async (password: string) => {
   const utf8 = new TextEncoder().encode(password);
@@ -44,11 +44,11 @@ export default function Login() {
   }, []);
 
   return (
-    <div className="login-box">
-      <h1>Academic Team Quiz</h1>
-      <form onSubmit={onSubmit} className="login-form">
+    <div className="flex flex-col absolute gap-8 left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-2xl border-4 p-12">
+      <h1 className="text-2xl text-center shrink-0">Academic Team Quiz</h1>
+      <form onSubmit={onSubmit} className="flex flex-col gap-3">
         <input
-          className="password-input"
+          className="p-2 rounded-lg border-2"
           type="password"
           name="password"
           id="password"
@@ -58,39 +58,12 @@ export default function Login() {
           }}
           ref={passwordInput}
         />
-        <button onClick={onSubmit} className="submit-button" disabled={loading}>
-          {loading ? (
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              className="lucide lucide-loader-2 rotating"
-            >
-              <path d="M21 12a9 9 0 1 1-6.219-8.56" />
-            </svg>
-          ) : (
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              className="lucide lucide-lock"
-            >
-              <rect width="18" height="11" x="3" y="11" rx="2" ry="2" />
-              <path d="M7 11V7a5 5 0 0 1 10 0v4" />
-            </svg>
-          )}
+        <button
+          onClick={onSubmit}
+          className="bg-green-500 border-2 rounded-lg border-green-600 text-lg items-center flex p-2 active:bg-green-600 justify-center gap-1"
+          disabled={loading}
+        >
+          {loading ? <Loader2 className="animate-spin" /> : <Lock />}
           Login
         </button>
       </form>

@@ -3,39 +3,37 @@ import { useEffect, useRef, useState } from "react";
 import { displayNames } from "../setNames";
 import { Set, sets } from "@/api-lib/_set-list";
 import SetPicker from "./SetPicker";
+import { Loader2 } from "lucide-react";
 
 const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
 export default function SetPage() {
-  const [selectedSets, setSelectedSets] = useState<Set[]>(sets);
   const [set, setSet] = useState<QuestionSet | null>(null);
   const [playerCount, setPlayerCount] = useState(2);
-  const [showSetInstruction, setShowSetInstruction] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
 
   const swapValue = useRef(0);
 
-  const generateSet = async (
-    playerCount: number,
-    selectedSets: Set[],
-    swap: number
-  ) => {
+  const generateSet = async (playerCount: number, swap: number) => {
+    setIsLoading(true);
     const response = await fetch("/api/set", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        sets: selectedSets,
+        sets,
         players: Math.max(1, Math.min(8, playerCount)),
       }),
     }).then((response) => response.json());
     if (swapValue.current === swap) {
       setSet(response);
+      setIsLoading(false);
     }
   };
 
   useEffect(() => {
     if (swapValue.current === 0) {
-      generateSet(playerCount, selectedSets, ++swapValue.current);
+      generateSet(playerCount, ++swapValue.current);
     }
   }, []);
 
@@ -47,22 +45,28 @@ export default function SetPage() {
   }
   return (
     <>
-      <div>
-        {set !== null ? (
-          <div>
-            <h1>Catagory Round</h1>
-            {catagories.map(([catagoryName, questions]) => {
-              return (
-                <div key={catagoryName} className="no-print-indent">
-                  <h2>{displayNames[catagoryName.replace(/-\(.*\)/, "")]}</h2>
+      {set !== null && !isLoading ? (
+        <div className="flex flex-col">
+          <span className="font-bold text-xl pt-3">Catagory Round</span>
+          {catagories.map(([catagoryName, questions]) => {
+            return (
+              <div key={catagoryName} className="print:ml-0 ml-2 flex flex-col">
+                <span className="font-semibold text-lg py-2">
+                  {displayNames[catagoryName.replace(/-\(.*\)/, "")]}
+                </span>
+                <div className="flex flex-col gap-8">
                   {questions.map((question, index) => {
                     return (
-                      <div key={question.id} className="no-print-indent">
-                        <h3 v-if="index !== catagory.length - 1">
-                          Team {letters[index]}:
-                        </h3>
-                        <h3 v-else>Toss-up:</h3>
-                        <p>{question.definition}</p>
+                      <div
+                        key={question.id}
+                        className="print:ml-0 ml-2 flex flex-col gap-2"
+                      >
+                        <span className="font-semibold">
+                          {index !== questions.length - 1
+                            ? `Team ${letters[index]}:`
+                            : "Toss-up:"}
+                        </span>
+                        <span className="">{question.definition}</span>
                         <p>
                           <b>Answer:</b> {question.term}
                         </p>
@@ -70,76 +74,67 @@ export default function SetPage() {
                     );
                   })}
                 </div>
+              </div>
+            );
+          })}
+          <span className="font-bold text-xl pt-3">
+            Alphabet Round{" "}
+            <span className="no-print" style={{ color: "#f44" }}>
+              (BETA)
+            </span>
+          </span>
+          <span className="text-xl">
+            Letter:{" "}
+            <span className="font-bold">{set.alphabetRound.letter}</span>
+          </span>
+          <ol className="ml-2 flex flex-col gap-8 mt-4">
+            {set.alphabetRound.questions.map((question) => {
+              return (
+                <li key={question.id} className="alphabet-questions">
+                  <p>{question.definition}</p>
+                  <p>
+                    <b>Answer:</b> {question.term}
+                  </p>
+                </li>
               );
             })}
-            <h1>
-              Alphabet Round{" "}
-              <span className="no-print" style={{ color: "#f44" }}>
-                (BETA)
-              </span>
-            </h1>
-            <h2>Letter: {set.alphabetRound.letter}</h2>
-            <ol className="indent">
-              {set.alphabetRound.questions.map((question) => {
-                return (
-                  <li key={question.id} className="alphabet-questions">
-                    <p>{question.definition}</p>
-                    <p>
-                      <b>Answer:</b> {question.term}
-                    </p>
-                  </li>
-                );
-              })}
-            </ol>
-          </div>
-        ) : (
-          <div>
-            <h1 className="loading">Loading...</h1>
-          </div>
-        )}
-        <div className="set-generation no-print">
-          <button
-            onClick={() => {
-              generateSet(playerCount, selectedSets, ++swapValue.current);
+          </ol>
+        </div>
+      ) : (
+        <span className="justify-center text-4xl flex gap-2 my-2">
+          Loading
+          <Loader2 size={36} className="animate-spin my-auto" />
+        </span>
+      )}
+      <div className="print:hidden flex gap-4 my-4">
+        <button
+          onClick={() => {
+            generateSet(playerCount, ++swapValue.current);
+          }}
+          className="p-2 bg-green-500 border-green-600 border-2 rounded-lg active:bg-green-600 text-lg grow"
+        >
+          Regenerate Set
+        </button>
+        <div className="flex flex-col">
+          <label className="mb-2">Number of Teams</label>
+          <input
+            className="border-2 rounded-lg p-1 px-2"
+            min="1"
+            max="8"
+            type="number"
+            name="player-count"
+            id="player-count"
+            value={playerCount}
+            onChange={(e) => {
+              const newPlayerCount = Math.max(
+                1,
+                Math.min(8, e.target.valueAsNumber)
+              );
+              setPlayerCount(newPlayerCount);
             }}
-            className="generate-button"
-          >
-            Regenerate Set
-          </button>
-          <div>
-            <label htmlFor="player-count">Number of Teams</label>
-            <input
-              className="input"
-              min="1"
-              max="8"
-              type="number"
-              name="player-count"
-              id="player-count"
-              value={playerCount}
-              onChange={(e) => {
-                const newPlayerCount = Math.max(
-                  1,
-                  Math.min(8, e.target.valueAsNumber)
-                );
-                setPlayerCount(newPlayerCount);
-                generateSet(newPlayerCount, selectedSets, ++swapValue.current);
-              }}
-            />
-          </div>
+          />
         </div>
       </div>
-      <SetPicker
-        showInstruction={showSetInstruction}
-        onToggle={(value) => {
-          if (value) {
-            setShowSetInstruction(false);
-          }
-        }}
-        onUpdateSets={(sets) => {
-          setSelectedSets(sets);
-          generateSet(playerCount, sets, ++swapValue.current);
-        }}
-      />
     </>
   );
 }
