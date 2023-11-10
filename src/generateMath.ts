@@ -171,7 +171,7 @@ const generateProblem = (type: ProblemType): Problem => {
         },
         {
           name: "trapezoid",
-          scalars: ["base 1", "base 2", "height"],
+          scalars: ["first base", "second base", "height"],
           variables: 3,
           formula: (base1, base2, height) => {
             return nerdamer(`((${base1} + ${base2}) / 2) * ${height}`).toTeX();
@@ -180,21 +180,19 @@ const generateProblem = (type: ProblemType): Problem => {
       ];
       const shape = shapes[Math.floor(Math.random() * shapes.length)];
       const invert = Math.random() > 0.5;
+      const variables = new Array(shape.variables)
+        .fill(null)
+        .map(() => randomInt(3, 25));
+      const area = shape.formula(...variables);
       if (shape.variables === 1) {
-        const variable = randomInt(3, 25);
-        const area = shape.formula(variable);
         if (invert) {
           problem.question = `Given an area of $${area}$ find the ${shape.scalars[0]} of a ${shape.name}`;
-          problem.answers.push(variable.toString());
+          problem.answers.push(variables[0].toString());
         } else {
-          problem.question = `Given a ${shape.scalars[0]} of $${variable}$ find the area of a ${shape.name}`;
-          problem.answers.push(area);
+          problem.question = `Given a ${shape.scalars[0]} of $${variables[0]}$ find the area of a ${shape.name}`;
+          problem.answers.push(`$${area}$`);
         }
       } else {
-        const variables = new Array(shape.variables)
-          .fill(null)
-          .map(() => randomInt(3, 15));
-        const area = shape.formula(...variables);
         if (invert) {
           const missingVar = Math.floor(Math.random() * variables.length);
           problem.question = `Given a ${
@@ -212,7 +210,7 @@ const generateProblem = (type: ProblemType): Problem => {
             .map((v, i) => " a " + v + " of $" + variables[i] + "$")
             .join(", ")
             .replace(/, ([^,]*)$/, " and $1")} find its area`;
-          problem.answers.push(area);
+          problem.answers.push(`$${area}$`);
         }
       }
       break;
