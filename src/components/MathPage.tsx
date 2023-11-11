@@ -134,7 +134,7 @@ export default function MathPage() {
                   ...prev,
                   ...generateProblems(
                     NEW_LOAD_QUESTION_COUNT,
-                    ALLOWED_PROBLEM_TYPES,
+                    selectedProblemTypes,
                     true
                   ),
                 ];

@@ -22,12 +22,12 @@ export enum ProblemType {
   DotProduct = "Dot Product",
   CompleteTheSequence = "Complete the Sequence",
   ParabolaVertices = "Parabola Vertices",
-  BinaryConversion = "Binary Conversion",
-  HexConversion = "Hexadecimal Conversion",
+  BinaryConversion = "Binary <-> Decimal",
+  HexConversion = "Hexadecimal <-> Decimal",
+  TrigAngles = "Radians <-> Degrees",
   Systems = "Systems of Equations",
   TwoDigitMultiplication = "2 Digit Multiplication",
   MeanValues = "Means of a Set",
-  TrigAngles = "Trig Angles",
   Derivatives = "Derivatives",
   DefiniteIntegrals = "Definite Integrals",
 }
@@ -45,4 +45,5 @@ export const ALLOWED_PROBLEM_TYPES: ProblemType[] = [
   ProblemType.TwoDigitMultiplication,
   ProblemType.Derivatives,
   ProblemType.DefiniteIntegrals,
+  ProblemType.TrigAngles,
 ];

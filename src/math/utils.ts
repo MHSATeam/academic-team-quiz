@@ -34,6 +34,10 @@ export const randomInt = (
   return number;
 };
 
+export const randomBool = (trueWeight = 0.5) => {
+  return Math.random() <= trueWeight;
+};
+
 export const weightedRandomNumber = (numbers: number[], weights: number[]) => {
   if (numbers.length !== weights.length) {
     throw new Error("Weights and outputs did not match up!");
