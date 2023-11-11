@@ -7,39 +7,12 @@ import {
   Problem,
   ProblemType,
 } from "./math-types";
-
-const randomInt = (min: number = 0, max: number = 2, ...exclude: number[]) => {
-  function getNumber() {
-    return Math.floor(Math.random() * (max - min)) + min;
-  }
-  var number = getNumber();
-  var count = 0;
-  while (exclude.includes(number) && count < 50) {
-    number = getNumber();
-    count++;
-  }
-  return number;
-};
-
-class Vector {
-  public x: number;
-  public y: number;
-  constructor(x: number, y: number) {
-    this.x = x;
-    this.y = y;
-  }
-  public dot(vector: Vector) {
-    return this.x * vector.x + this.y * vector.y;
-  }
-  public distanceString(vector: Vector) {
-    return nerdamer(`sqrt((${this.x - vector.x})^2+(${this.y - vector.y})^2)`)
-      .expand()
-      .toTeX();
-  }
-  public static randomVector(min: number, max: number) {
-    return new Vector(randomInt(min, max), randomInt(min, max));
-  }
-}
+import {
+  nthStringConvert,
+  randomInt,
+  Vector,
+  weightedRandomNumber,
+} from "./utils";
 
 export const generateProblems = (
   count: number,
@@ -305,6 +278,32 @@ const generateProblem = (type: ProblemType): Problem => {
         problem.answerType = AnswerType.Any;
         problem.answers.push(slopeAppr);
       }
+      break;
+    }
+    case ProblemType.Derivatives: {
+      const degree = randomInt(2, 5);
+      const derivativeNumber = weightedRandomNumber([1, 2, 3], [70, 20, 10]);
+      const coefficents = new Array(degree).fill(0).map(() => randomInt(-9, 9));
+      if (coefficents[degree - 1] === 0) {
+        coefficents[degree - 1] = 1;
+      } else {
+        coefficents[degree - 1] = Math.abs(coefficents[degree - 1]);
+      }
+      const equation = coefficents
+        .map((coeff, power) => `(${coeff}*(x^${power + 1}))`)
+        .join("+");
+      console.log(equation);
+      const nerdString = nerdamer(equation).toTeX().removeCdot();
+      problem.question = `Find the ${derivativeNumber}${nthStringConvert(
+        derivativeNumber
+      )} derivative of $$${nerdString}$$`;
+      problem.answers = [
+        `$${nerdamer
+          .diff(equation, "x", derivativeNumber)
+          .toTeX()
+          .removeCdot()}$`,
+      ];
+      break;
     }
   }
 

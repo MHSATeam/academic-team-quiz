@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { AnswerType, Problem } from "../math-types";
+import { AnswerType, Problem } from "../math/math-types";
 import { MathJax } from "better-react-mathjax";
 
 type MathProblemProps = {
