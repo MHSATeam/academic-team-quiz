@@ -16,22 +16,13 @@ export const DefaultSetLabels = [
   label: displayNames[set],
 })) as SetLabel[];
 
-export function convertSetLabelsToSetArray(
-  setList: SetLabel[],
-  all = true,
-  hard = true
-) {
+export function convertSetLabelsToSetArray(setList: SetLabel[]) {
   var finalSetList: Set[] = [];
   for (const set of setList) {
-    if (hard) {
-      finalSetList.push((set.value + "-(hard)") as Set);
-    }
-    if (all) {
-      if (set.value === "american-history") {
-        finalSetList.push((set.value + "-(old)") as Set);
-      } else {
-        finalSetList.push((set.value + "-(all)") as Set);
-      }
+    if (set.value === "american-history") {
+      finalSetList.push((set.value + "-(old)") as Set);
+    } else {
+      finalSetList.push((set.value + "-(all)") as Set);
     }
   }
   return finalSetList;
