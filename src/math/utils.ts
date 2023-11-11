@@ -84,11 +84,17 @@ export class Vector {
   public dot(vector: Vector) {
     return this.x * vector.x + this.y * vector.y;
   }
+
   public distanceString(vector: Vector) {
     return nerdamer(`sqrt((${this.x - vector.x})^2+(${this.y - vector.y})^2)`)
       .expand()
       .toTeX();
   }
+
+  public toString() {
+    return `(${this.x}, ${this.y})`;
+  }
+
   public static randomVector(min: number, max: number) {
     return new Vector(randomInt(min, max), randomInt(min, max));
   }

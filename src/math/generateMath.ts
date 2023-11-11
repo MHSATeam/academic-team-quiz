@@ -254,8 +254,8 @@ const generateProblem = (type: ProblemType): Problem => {
       const vector1 = Vector.randomVector(-15, 15);
       const vector2 = Vector.randomVector(-15, 15);
       const distance = vector1.distanceString(vector2);
-      problem.question = `Find the distance between $\\begin{bmatrix}${vector1.x}\\\\${vector1.y}\\end{bmatrix}$ and $\\begin{bmatrix}${vector2.x}\\\\${vector2.y}\\end{bmatrix}$`;
-      problem.answers.push("$" + distance + "$");
+      problem.question = `Find the distance between $${vector1.toString()}$ and $${vector2.toString()}$`;
+      problem.answers.push(`$${distance.removeCdot()}$`);
       break;
     }
     case ProblemType.SlopeTwoPoint: {
@@ -276,11 +276,11 @@ const generateProblem = (type: ProblemType): Problem => {
       const slopeAppr = (
         Math.round(parseFloat(slopeExpresion.toDecimal()) * 1000) / 1000
       ).toString();
-      problem.question = `Given two points find the slope of the line that pass through both $(${point1.x}, ${point1.y})$ and $(${point2.x}, ${point2.y})$`;
+      problem.question = `Given two points find the slope of the line that pass through both $${point1.toString()}$ and $${point2.toString()}$`;
       problem.answers.push("$" + slopeFrac + "$");
       if (slopeFrac !== slopeAppr) {
         problem.answerType = AnswerType.Any;
-        problem.answers.push(slopeAppr);
+        problem.answers.push(`$${slopeAppr}$`);
       }
       break;
     }
@@ -465,6 +465,7 @@ const generateProblem = (type: ProblemType): Problem => {
           .toTeX()
           .removeCdot()}$`,
       ];
+      break;
     }
   }
 
