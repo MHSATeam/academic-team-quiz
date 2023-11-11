@@ -10,30 +10,34 @@ export default function MathProblem(props: MathProblemProps) {
   const [answerShown, setAnswerShown] = useState(false);
   const problem = props.problem;
   return (
-    <div className="question">
+    <div className="flex flex-col border-2 rounded-md p-2 basis-1/5 grow">
       <MathJax>{problem.question}</MathJax>
-      <div className="answer-container">
-        <span>
-          {problem.answerType === AnswerType.AllOrdered
-            ? "Answers in order:"
-            : problem.answerType === AnswerType.Any
-            ? "Answers (only one needed):"
-            : problem.answers.length === 1
-            ? "Answer:"
-            : "Answers:"}
-        </span>
-        {!answerShown ? (
-          <button
-            onClick={() => {
-              setAnswerShown(true);
-            }}
-            className="show-answer-button"
-          ></button>
-        ) : (
-          <span>
-            <MathJax>{problem.answers.join(", ")}</MathJax>
-          </span>
-        )}
+      <div className="mt-auto">
+        <div className="mt-4">
+          {!answerShown ? (
+            <button
+              onClick={() => {
+                setAnswerShown(true);
+              }}
+              className="bg-blue-400 rounded-md px-3 py-1 active:bg-blue-500"
+            >
+              Show Answer
+            </button>
+          ) : (
+            <>
+              <span className="font-bold">
+                {problem.answerType === AnswerType.AllOrdered
+                  ? "Answers in order:"
+                  : problem.answerType === AnswerType.Any
+                  ? "Answers (only one needed):"
+                  : problem.answers.length === 1
+                  ? "Answer:"
+                  : "Answers:"}
+              </span>
+              <MathJax>{problem.answers.join(", ")}</MathJax>
+            </>
+          )}
+        </div>
       </div>
     </div>
   );

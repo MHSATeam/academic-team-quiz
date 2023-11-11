@@ -1,29 +1,29 @@
+import classNames from "classnames";
 import { Link, NavLink, Outlet } from "react-router-dom";
 
 export default function App() {
   return (
     <>
-      <header className="no-print">
-        <h1>Academic Team Quiz</h1>
-        <div className="links">
-          <NavLink
-            to="/"
-            className={({ isActive }) => "link" + (isActive ? " active" : "")}
-          >
-            Quiz Yourself!
-          </NavLink>
-          <NavLink
-            to="/set"
-            className={({ isActive }) => "link" + (isActive ? " active" : "")}
-          >
-            Create A Set!
-          </NavLink>
-          <NavLink
-            to="/math"
-            className={({ isActive }) => "link" + (isActive ? " active" : "")}
-          >
-            Practice Math!
-          </NavLink>
+      <header className="no-print border-b-4 border-black justify-between flex pb-2 mb-2">
+        <h1 className="text-xl">Academic Team Quiz</h1>
+        <div className="flex items-center gap-4 shrink">
+          {[
+            { to: "/", name: "Quiz Yourself" },
+            { to: "/set", name: "Create A Set" },
+            { to: "/math", name: "Practice Math" },
+          ].map((item) => (
+            <NavLink
+              key={item.to}
+              to={item.to}
+              className={({ isActive }) =>
+                classNames("hover:underline", {
+                  underline: isActive,
+                })
+              }
+            >
+              {item.name}
+            </NavLink>
+          ))}
         </div>
       </header>
       <Outlet />

@@ -29,20 +29,20 @@ export default function MathPage() {
         },
       }}
     >
-      <main className="math">
-        <h1>
+      <main className="flex flex-col">
+        <span className="text-2xl font-bold mb-4">
           Computational Math{" "}
           <span className="no-print" style={{ color: "#f44" }}>
             (BETA)
           </span>
-        </h1>
-        <div className="grid">
+        </span>
+        <div className="flex flex-row flex-wrap gap-4 justify-center">
           {problemSet.map((problem, index) => {
             return <MathProblem key={index} problem={problem} />;
           })}
         </div>
         <button
-          className="load-button"
+          className="p-2 my-3 bg-gray-400 rounded-md active:bg-gray-500"
           onClick={() => {
             setProblemSet((prev) => {
               return [
