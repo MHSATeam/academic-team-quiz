@@ -2,7 +2,7 @@ import cookie from "cookie";
 import { jwtVerify } from "jose";
 import { getEnvVar } from "./api-lib/_auth";
 export const config = {
-  matcher: ["/api/((?!login).*)"],
+  matcher: ["/api/((?!login|ably-auth).*)"],
 };
 
 class AuthError extends Error {}
@@ -32,6 +32,12 @@ async function verifyAuth(req: Request) {
 }
 
 export default async function middleware(req: Request) {
+  const isLocal = process.env.VERCEL_ENV === "development";
+
+  if (isLocal) {
+    return;
+  }
+
   const verifiedToken = await verifyAuth(req).catch((err) => {
     console.error(err.message);
   });

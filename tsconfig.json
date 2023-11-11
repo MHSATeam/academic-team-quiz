@@ -17,7 +17,8 @@
     "jsx": "react-jsx",
     "paths": {
       "@/api-lib/*": ["./api-lib/*"]
-    }
+    },
+    "types": ["vite/client"]
   },
   "ts-node": {
     "esm": true,

@@ -9,6 +9,14 @@ import App from "./App";
 import Error404 from "./components/404";
 import SetPage from "./components/SetPage";
 import MathPage from "./components/MathPage";
+import BuzzerPage from "./components/BuzzerPage";
+import { RealtimeStatus } from "./buzzers/ably-realtime";
+import BuzzerBox from "./components/BuzzerBox";
+
+const loadRealtime = () => {
+  RealtimeStatus.connect();
+  return null;
+};
 
 const router = createBrowserRouter([
   {
@@ -29,6 +37,16 @@ const router = createBrowserRouter([
     ],
   },
   { path: "/login", element: <Login /> },
+  {
+    path: "buzzer",
+    element: <BuzzerPage />,
+    loader: loadRealtime,
+  },
+  {
+    path: "buzzer-box",
+    element: <BuzzerBox />,
+    loader: loadRealtime,
+  },
 ]);
 
 export default function Router() {
