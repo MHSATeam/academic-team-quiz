@@ -1,5 +1,12 @@
 import nerdamer from "nerdamer";
-import { AnswerType, Problem, ProblemType } from "./math-types";
+import "nerdamer/Calculus";
+import "nerdamer/Solve";
+import {
+  ALLOWED_PROBLEM_TYPES,
+  AnswerType,
+  Problem,
+  ProblemType,
+} from "./math-types";
 
 const randomInt = (min: number = 0, max: number = 2, ...exclude: number[]) => {
   function getNumber() {
@@ -43,28 +50,7 @@ export const generateProblems = (
     return [];
   }
   if (types.length === 0) {
-    types = [
-      ProblemType.QuadRoots,
-      ProblemType.CubicRoots,
-      ProblemType.Simplify,
-      ProblemType.VectorDistance,
-      ProblemType.SlopeTwoPoint,
-      ProblemType.Area,
-      ProblemType.Volume,
-      ProblemType.SurfaceArea,
-      ProblemType.Perimeter,
-      ProblemType.DotProduct,
-      ProblemType.CompleteTheSequence,
-      ProblemType.ParabolaVertices,
-      ProblemType.BinaryConversion,
-      ProblemType.HexConversion,
-      ProblemType.Systems,
-      ProblemType.ArithmeticMean,
-      ProblemType.GeometricMean,
-      ProblemType.HarmonicMean,
-      ProblemType.TrigAngles,
-      ProblemType.TwoDigitMultiplication,
-    ];
+    types = ALLOWED_PROBLEM_TYPES;
   }
   const problems = [];
   for (let i = 0; i < count; i++) {
