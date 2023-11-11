@@ -70,12 +70,7 @@ export default function MathPage() {
         }}
       >
         <main className="flex flex-col gap-4">
-          <span className="text-2xl font-bold">
-            Computational Math{" "}
-            <span className="no-print" style={{ color: "#f44" }}>
-              (BETA)
-            </span>
-          </span>
+          <span className="text-2xl font-bold">Computational Math</span>
           <div className="flex flex-col border-2 rounded-lg grow shrink">
             <button
               className={

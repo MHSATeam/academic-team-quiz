@@ -32,6 +32,9 @@ export enum ProblemType {
   DefiniteIntegrals = "Definite Integrals",
   TrigFunctionValues = "Common Trig Functions",
   SimplifyTrigFunctions = "Simplifiy Trig Functions",
+  PlayingCardProbability = "Playing Card Probability",
+  Combinations = "Combinations",
+  Permutations = "Permutations",
 }
 
 export const ALLOWED_PROBLEM_TYPES: ProblemType[] = [
@@ -52,4 +55,5 @@ export const ALLOWED_PROBLEM_TYPES: ProblemType[] = [
   ProblemType.SimplifyTrigFunctions,
   ProblemType.SurfaceArea,
   ProblemType.Volume,
+  // ProblemType.PlayingCardProbability,
 ];

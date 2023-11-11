@@ -467,6 +467,96 @@ const generateProblem = (type: ProblemType): Problem => {
       ];
       break;
     }
+    case ProblemType.PlayingCardProbability: {
+      /*
+        Types:
+        Chance of drawing a color
+        Chance of drawing a face card
+        Chance of drawing a suit
+        Chance of drawing a rank 
+        Chance of drawing a the same card twice
+       */
+      type SpecificationType = "color" | "face" | "rank" | "suit";
+      const specificationTypes: SpecificationType[] = [
+        "color",
+        "face",
+        "rank",
+        "suit",
+      ];
+      const suits = ["heart", "club", "diamond", "spade"],
+        colors = ["red", "black"],
+        faceCards = ["king", "queen", "jack"],
+        numberCards = ["10", "9", "8", "7", "6", "5", "4", "3", "2", "ace"],
+        allCardsOfASuit = [...faceCards, ...numberCards];
+      let numRedCards = 26,
+        numBlackCards = 26,
+        totalCards = 52,
+        numFaceCards = 12,
+        numHeartCards = 13,
+        numClubCards = 13,
+        numDiamondCards = 13,
+        numSpadeCards = 13;
+      const twoSpecifications = randomBool();
+      const specifications: SpecificationType[] = [];
+      const firstType = randomInt(0, specificationTypes.length);
+      specifications.push(specificationTypes[firstType]);
+      if (twoSpecifications) {
+        specifications.push(
+          specificationTypes[randomInt(0, specificationTypes.length, firstType)]
+        );
+        if (
+          specifications.includes("face") &&
+          specifications.includes("rank")
+        ) {
+          specifications.pop();
+        }
+      }
+      function chanceOfSpecification(type: SpecificationType) {
+        switch (type) {
+          case "color": {
+            return `${numBlackCards}/${totalCards}`;
+          }
+          case "face": {
+            return `${numFaceCards}/${totalCards}`;
+          }
+          case "rank": {
+            return `4/${totalCards}`;
+          }
+          case "suit": {
+            return `${numHeartCards}/${totalCards}`;
+          }
+        }
+      }
+      function getInstanceOfAType(type: SpecificationType) {
+        switch (type) {
+          case "color": {
+            return colors[randomInt(0, colors.length)];
+          }
+          case "face": {
+            return faceCards[randomInt(0, faceCards.length)];
+          }
+          case "rank": {
+            return allCardsOfASuit[randomInt(0, allCardsOfASuit.length)];
+          }
+          case "suit": {
+            return suits[randomInt(0, suits.length)];
+          }
+        }
+      }
+      const specificationString = specifications
+        .map((type) => {
+          return getInstanceOfAType(type);
+        })
+        .join(", ");
+      const probability = nerdamer(
+        specifications
+          .map((type) => `(${chanceOfSpecification(type)})`)
+          .join("*")
+      );
+      problem.question = `What is the probability of drawing a ${specificationString} card?`;
+      problem.answers.push(`$${probability.expand().toTeX().removeCdot()}$`);
+      break;
+    }
   }
 
   return problem;
