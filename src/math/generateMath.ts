@@ -386,6 +386,40 @@ const generateProblem = (type: ProblemType): Problem => {
       problem.answers = [`$${toRadians ? angleInRadians : angle}$`];
       break;
     }
+    case ProblemType.TrigFunctionValues: {
+      const functions = ["sin", "cos", "tan", "csc", "sec", "cot"];
+      const commonAngles = [
+        "0",
+        "pi/6",
+        "pi/4",
+        "pi/3",
+        "pi/2",
+        "2pi/3",
+        "3pi/4",
+        "5pi/6",
+        "pi",
+      ];
+      const chosenFunction =
+        functions[weightedRandomNumber([0, 1, 2, 3, 4, 5], [4, 4, 4, 1, 1, 1])];
+      const angle = commonAngles[randomInt(0, commonAngles.length)];
+      let result = "\\infty";
+      const equation = nerdamer(`${chosenFunction}(x)`).sub("x", angle);
+      try {
+        const nerdString = `${chosenFunction}(${angle})`;
+        if (nerdString === "tan(0)") {
+          result = "0";
+        } else {
+          result = nerdamer(nerdString).toTeX().removeCdot();
+        }
+      } catch (e) {
+        console.log(equation.text());
+      }
+      problem.question = `Evaluate the expression. $$${equation
+        .toTeX()
+        .removeCdot()}$$`;
+      problem.answers = [`$${result}$`];
+      break;
+    }
   }
 
   return problem;

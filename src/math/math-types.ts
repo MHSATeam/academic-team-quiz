@@ -30,6 +30,8 @@ export enum ProblemType {
   MeanValues = "Means of a Set",
   Derivatives = "Derivatives",
   DefiniteIntegrals = "Definite Integrals",
+  TrigFunctionValues = "Common Trig Functions",
+  SimplifyTrigFunctions = "Simplifiy Trig Functions",
 }
 
 export const ALLOWED_PROBLEM_TYPES: ProblemType[] = [
@@ -46,4 +48,6 @@ export const ALLOWED_PROBLEM_TYPES: ProblemType[] = [
   ProblemType.Derivatives,
   ProblemType.DefiniteIntegrals,
   ProblemType.TrigAngles,
+  ProblemType.TrigFunctionValues,
+  ProblemType.SimplifyTrigFunctions,
 ];
