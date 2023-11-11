@@ -74,7 +74,7 @@ const generateProblem = (type: ProblemType): Problem => {
       if (type === ProblemType.CubicRoots) {
         roots.push(randomInt(-10, 10));
       }
-      var nerdString = "";
+      let nerdString = "";
       for (let i = 0; i < roots.length; i++) {
         if (roots[i] < 0) {
           nerdString += `(x+${-roots[i]})`;
@@ -292,11 +292,15 @@ const generateProblem = (type: ProblemType): Problem => {
       const equation = coefficents
         .map((coeff, power) => `(${coeff}*(x^${power + 1}))`)
         .join("+");
-      console.log(equation);
-      const nerdString = nerdamer(equation).toTeX().removeCdot();
+      const derivativePowerString =
+        derivativeNumber !== 1 ? "^" + derivativeNumber : "";
+      const nerdString =
+        `\\dfrac{d${derivativePowerString}}{dx${derivativePowerString}}(` +
+        nerdamer(equation).toTeX().removeCdot() +
+        ")";
       problem.question = `Find the ${derivativeNumber}${nthStringConvert(
         derivativeNumber
-      )} derivative of $$${nerdString}$$`;
+      )} derivative. $$${nerdString}$$`;
       problem.answers = [
         `$${nerdamer
           .diff(equation, "x", derivativeNumber)
@@ -304,6 +308,67 @@ const generateProblem = (type: ProblemType): Problem => {
           .removeCdot()}$`,
       ];
       break;
+    }
+    case ProblemType.DefiniteIntegrals: {
+      type IntegralFunction = {
+        equation: string;
+        // ordered from least to greatest
+        possibleBounds: string[];
+      };
+      const trigBounds = [
+        "-2pi",
+        "-4pi/3",
+        "-pi",
+        "0",
+        "pi/2",
+        "pi",
+        "2pi",
+        "3pi",
+        "4pi",
+      ];
+      const functions: IntegralFunction[] = [
+        {
+          equation: "sin(x)",
+          possibleBounds: trigBounds,
+        },
+        {
+          equation: "cos(x)",
+          possibleBounds: trigBounds,
+        },
+        {
+          equation: "x^2",
+          possibleBounds: ["-2", "-1", "0", "1", "2", "3"],
+        },
+        {
+          equation: "x^2+3",
+          possibleBounds: ["0", "1", "2", "3"],
+        },
+      ];
+
+      const chosenFunction = functions[randomInt(0, functions.length)];
+      const lowerBoundIndex = randomInt(
+        0,
+        chosenFunction.possibleBounds.length - 1
+      );
+      const upperBoundIndex = randomInt(
+        lowerBoundIndex + 1,
+        chosenFunction.possibleBounds.length
+      );
+
+      const lowerBound = chosenFunction.possibleBounds[lowerBoundIndex];
+      const upperBound = chosenFunction.possibleBounds[upperBoundIndex];
+
+      const integral = nerdamer(
+        `defint(${chosenFunction.equation}, ${lowerBound}, ${upperBound}, x)`
+      );
+      problem.question = `Evaluate the definite integral. $$\\int_{${nerdamer(
+        lowerBound
+      )
+        .toTeX()
+        .removeCdot()}}^{${nerdamer(upperBound)
+        .toTeX()
+        .removeCdot()}} ${nerdamer(chosenFunction.equation).toTeX()}\\,dx$$`;
+      problem.answers = [`$${integral.evaluate().toTeX()}$`];
     }
   }
 

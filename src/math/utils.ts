@@ -28,6 +28,9 @@ export const randomInt = (
     number = getNumber();
     count++;
   }
+  if (exclude.includes(number)) {
+    throw new Error("Failed to create random int within 50 attempts");
+  }
   return number;
 };
 
