@@ -9,8 +9,11 @@ import {
 } from "./math-types";
 import {
   nthStringConvert,
+  NumberBound,
   randomBool,
   randomInt,
+  Shape3D,
+  Shapes,
   Vector,
   weightedRandomNumber,
 } from "./utils";
@@ -419,6 +422,49 @@ const generateProblem = (type: ProblemType): Problem => {
         .removeCdot()}$$`;
       problem.answers = [`$${result}$`];
       break;
+    }
+    case ProblemType.Volume:
+    case ProblemType.SurfaceArea: {
+      const shapeList = Object.values(Shapes);
+      const shape: Shape3D = shapeList[randomInt(0, shapeList.length)];
+      const isSurfaceArea = type === ProblemType.SurfaceArea;
+      const equation = nerdamer(
+        isSurfaceArea ? shape.surfaceAreaEquation : shape.volumeEquation
+      );
+      const variableValues = shape.variables.map((variableLetter, index) => {
+        const bounds =
+          shape.variableBounds instanceof Array
+            ? shape.variableBounds[index]
+            : shape.variableBounds;
+        return {
+          letter: variableLetter,
+          name: shape.variableNames[index],
+          value: randomInt(bounds),
+        };
+      });
+      let subbedEquation = equation;
+      let variableListString = "";
+      for (let i = 0; i < variableValues.length; i++) {
+        const variable = variableValues[i];
+        subbedEquation = subbedEquation.sub(
+          variable.letter,
+          variable.value.toString()
+        );
+        variableListString += `a ${variable.name} of $${variable.value}$`;
+        if (i < variableValues.length - 2) {
+          variableListString += ", ";
+        } else if (i === variableValues.length - 2) {
+          variableListString += ", and ";
+        }
+      }
+      problem.question = `Find the ${
+        isSurfaceArea ? "surface area" : "volume"
+      } of a ${shape.name} with ${variableListString}`;
+      problem.answers = [
+        `$${nerdamer("simplify(" + subbedEquation.text() + ")")
+          .toTeX()
+          .removeCdot()}$`,
+      ];
     }
   }
 

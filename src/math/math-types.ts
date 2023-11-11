@@ -50,4 +50,6 @@ export const ALLOWED_PROBLEM_TYPES: ProblemType[] = [
   ProblemType.TrigAngles,
   ProblemType.TrigFunctionValues,
   ProblemType.SimplifyTrigFunctions,
+  ProblemType.SurfaceArea,
+  ProblemType.Volume,
 ];

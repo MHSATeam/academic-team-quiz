@@ -15,10 +15,17 @@ Object.defineProperty(String.prototype, "removeCdot", {
 });
 
 export const randomInt = (
-  min: number = 0,
+  arg1: NumberBound | number = 0,
   max: number = 2,
   ...exclude: number[]
 ) => {
+  let min = 0;
+  if (typeof arg1 === "number") {
+    min = arg1;
+  } else {
+    max = arg1.high;
+    min = arg1.low;
+  }
   function getNumber() {
     return Math.floor(Math.random() * (max - min)) + min;
   }
@@ -86,3 +93,61 @@ export class Vector {
     return new Vector(randomInt(min, max), randomInt(min, max));
   }
 }
+
+export type NumberBound = { low: number; high: number };
+
+export type Shape3D = {
+  name: string;
+  surfaceAreaEquation: string;
+  volumeEquation: string;
+
+  variables: string[];
+  variableNames: string[];
+  variableBounds: NumberBound[] | NumberBound;
+};
+
+export const Shapes: { [key: string]: Shape3D } = {
+  Sphere: {
+    name: "sphere",
+    surfaceAreaEquation: "4(pi)(r^2)",
+    volumeEquation: "(4/3)(pi)(r^3)",
+    variables: ["r"],
+    variableNames: ["radius"],
+    variableBounds: { low: 1, high: 15 },
+  },
+  Cube: {
+    name: "cube",
+    surfaceAreaEquation: "6(s^2)",
+    volumeEquation: "s^3",
+    variables: ["s"],
+    variableNames: ["side length"],
+    variableBounds: { low: 1, high: 25 },
+  },
+  RectangularPrism: {
+    name: "rectangular prism",
+    surfaceAreaEquation: "2h*(l+w)",
+    volumeEquation: "w*l*h",
+    variables: ["w", "l", "h"],
+    variableNames: ["width", "length", "height"],
+    variableBounds: { low: 1, high: 20 },
+  },
+  Cone: {
+    name: "right cone",
+    surfaceAreaEquation: "pi*r*(r+sqrt(r^2+h^2))",
+    volumeEquation: "(h/3)*pi*(r^2)",
+    variables: ["r", "h"],
+    variableNames: ["radius", "height"],
+    variableBounds: { low: 1, high: 15 },
+  },
+  Cylinder: {
+    name: "right cylinder",
+    surfaceAreaEquation: "(2*pi*r)(h + r)",
+    volumeEquation: "(pi)(h)(r^2)",
+    variables: ["r", "h"],
+    variableNames: ["radius", "height"],
+    variableBounds: [
+      { low: 2, high: 12 },
+      { low: 1, high: 10 },
+    ],
+  },
+};
