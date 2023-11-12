@@ -118,19 +118,24 @@ export default function MathPage() {
           </div>
           <div className="flex flex-row flex-wrap gap-4 justify-center">
             {problemSet.map((problem, index) => {
-              return <MathProblem key={index} problem={problem} />;
+              return (
+                <MathProblem
+                  key={JSON.stringify(problem) + index.toString()}
+                  problem={problem}
+                />
+              );
             })}
           </div>
           <button
             className="p-2 my-3 bg-gray-400 rounded-md active:bg-gray-500"
             onClick={() => {
-              setProblemSet((prev) => {
-                return generateProblems(
+              setProblemSet(
+                generateProblems(
                   STARTING_QUESTION_COUNT,
                   selectedProblemTypes,
                   true
-                );
-              });
+                )
+              );
             }}
           >
             Regenerate (Beware:{" "}

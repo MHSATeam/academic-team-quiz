@@ -8,10 +8,6 @@ type MathProblemProps = {
 
 export default function MathProblem({ problem }: MathProblemProps) {
   const [answerShown, setAnswerShown] = useState(false);
-
-  useEffect(() => {
-    setAnswerShown(false);
-  }, [problem]);
   return (
     <div className="flex flex-col border-2 rounded-md p-2 basis-1/5 grow">
       <MathJax>{problem.question}</MathJax>
