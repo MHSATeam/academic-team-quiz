@@ -8,9 +8,9 @@ export default function App() {
         <h1 className="text-xl">Academic Team Quiz</h1>
         <div className="flex items-center gap-4 shrink">
           {[
-            { to: "/", name: "Quiz Yourself!" },
+            { to: "/", name: "Quiz Yourself" },
             { to: "/set", name: "Create A Set" },
-            { to: "/math", name: "Practice Math!" },
+            { to: "/math", name: "Practice Math" },
           ].map((item) => (
             <NavLink
               key={item.to}
