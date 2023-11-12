@@ -1,4 +1,4 @@
-import nerdamer from "nerdamer";
+import nerdamer, { Expression } from "nerdamer";
 import "nerdamer/Calculus";
 import "nerdamer/Solve";
 import {
@@ -11,6 +11,7 @@ import {
   Color,
   Deck,
   Draw,
+  generatePolynomial,
   nthStringConvert,
   randomBool,
   randomInt,
@@ -72,7 +73,7 @@ const generateProblem = (type: ProblemType): Problem => {
       const b = randomInt(10, 99);
       const product = a * b;
       problem.question = `Find the product of $${a}$ and $${b}$`;
-      problem.answers.push(product.toString());
+      problem.answers.push(`$${product.toString()}$`);
       break;
     }
     case ProblemType.CubicRoots:
@@ -90,10 +91,11 @@ const generateProblem = (type: ProblemType): Problem => {
           nerdString += `(x-${roots[i]})`;
         }
         if (!problem.answers.includes(roots[i].toString())) {
-          problem.answers.push(roots[i].toString());
+          problem.answers.push(`$${roots[i].toString()}$`);
         }
       }
-      problem.question += "$$" + nerdamer(nerdString).expand().toTeX() + "$$";
+      problem.question +=
+        "$$" + nerdamer(nerdString).expand().toTeX().removeCdot() + "$$";
       break;
     }
     case ProblemType.Area: {
@@ -101,7 +103,7 @@ const generateProblem = (type: ProblemType): Problem => {
         name: string;
         scalars: string[];
         variables: number;
-        formula: (...variable: number[]) => string;
+        formula: (...variable: number[]) => Expression;
       };
       const shapes: Shape[] = [
         {
@@ -109,7 +111,7 @@ const generateProblem = (type: ProblemType): Problem => {
           scalars: ["radius"],
           variables: 1,
           formula: (radius) => {
-            return nerdamer("pi*" + radius + "^2").toTeX();
+            return nerdamer("pi*" + radius + "^2");
           },
         },
         {
@@ -117,7 +119,7 @@ const generateProblem = (type: ProblemType): Problem => {
           scalars: ["side length"],
           variables: 1,
           formula: (side) => {
-            return nerdamer(side + "^2").toTeX();
+            return nerdamer(side + "^2");
           },
         },
         {
@@ -125,7 +127,7 @@ const generateProblem = (type: ProblemType): Problem => {
           scalars: ["width", "length"],
           variables: 2,
           formula: (width, length) => {
-            return nerdamer(`${width} * ${length}`).toTeX();
+            return nerdamer(`${width} * ${length}`);
           },
         },
         {
@@ -133,7 +135,7 @@ const generateProblem = (type: ProblemType): Problem => {
           scalars: ["base", "height"],
           variables: 2,
           formula: (base, height) => {
-            return nerdamer(`(1/2) * ${base} * ${height}`).toTeX();
+            return nerdamer(`(1/2) * ${base} * ${height}`);
           },
         },
         {
@@ -141,7 +143,7 @@ const generateProblem = (type: ProblemType): Problem => {
           scalars: ["first base", "second base", "height"],
           variables: 3,
           formula: (base1, base2, height) => {
-            return nerdamer(`((${base1} + ${base2}) / 2) * ${height}`).toTeX();
+            return nerdamer(`((${base1} + ${base2}) / 2) * ${height}`);
           },
         },
       ];
@@ -150,7 +152,10 @@ const generateProblem = (type: ProblemType): Problem => {
       const variables = new Array(shape.variables)
         .fill(null)
         .map(() => randomInt(3, 25));
-      const area = shape.formula(...variables);
+      const area = shape
+        .formula(...variables)
+        .toTeX()
+        .removeCdot();
       if (shape.variables === 1) {
         if (invert) {
           problem.question = `Given an area of $${area}$ find the ${shape.scalars[0]} of a ${shape.name}`;
@@ -201,7 +206,7 @@ const generateProblem = (type: ProblemType): Problem => {
           type === ProblemType.BinaryConversion ? "binary" : "hex"
         }`;
         problem.answers.push(
-          type === ProblemType.BinaryConversion ? binary : hex
+          `$${type === ProblemType.BinaryConversion ? binary : hex}$`
         );
       }
       break;
@@ -212,10 +217,10 @@ const generateProblem = (type: ProblemType): Problem => {
       var a = randomInt(-3, 4, 0);
 
       const nerdString = `${a}*((x-(${x}))^2)+(${y})`;
-      const nerdTex = nerdamer(nerdString).expand().toTeX();
+      const nerdTex = nerdamer(nerdString).expand().toTeX().removeCdot();
 
       problem.question = `Find the vertex of the parabola $$${nerdTex}$$`;
-      problem.answers.push(`(${x}, ${y})`);
+      problem.answers.push(`$(${x}, ${y})$`);
       break;
     }
     case ProblemType.CompleteTheSequence: {
@@ -250,8 +255,8 @@ const generateProblem = (type: ProblemType): Problem => {
       const vector1 = Vector.randomVector(-15, 15);
       const vector2 = Vector.randomVector(-15, 15);
       const dotProduct = vector1.dot(vector2);
-      problem.question = `Find the dot product: $$\\begin{bmatrix}${vector1.x}\\\\${vector1.y}\\end{bmatrix}\\cdot\\begin{bmatrix}${vector2.x}\\\\${vector2.y}\\end{bmatrix}$$`;
-      problem.answers.push(dotProduct.toString());
+      problem.question = `Find the dot product $$\\begin{bmatrix}${vector1.x}\\\\${vector1.y}\\end{bmatrix}\\cdot\\begin{bmatrix}${vector2.x}\\\\${vector2.y}\\end{bmatrix}$$`;
+      problem.answers.push(`$${dotProduct.toString()}$`);
       break;
     }
     case ProblemType.VectorDistance: {
@@ -289,17 +294,9 @@ const generateProblem = (type: ProblemType): Problem => {
       break;
     }
     case ProblemType.Derivatives: {
-      const degree = randomInt(2, 5);
+      const equation = generatePolynomial(randomInt(2, 5));
       const derivativeNumber = weightedRandomNumber([1, 2, 3], [70, 20, 10]);
-      const coefficents = new Array(degree).fill(0).map(() => randomInt(-9, 9));
-      if (coefficents[degree - 1] === 0) {
-        coefficents[degree - 1] = 1;
-      } else {
-        coefficents[degree - 1] = Math.abs(coefficents[degree - 1]);
-      }
-      const equation = coefficents
-        .map((coeff, power) => `(${coeff}*(x^${power + 1}))`)
-        .join("+");
+
       const derivativePowerString =
         derivativeNumber !== 1 ? "^" + derivativeNumber : "";
       const nerdString =
@@ -308,7 +305,7 @@ const generateProblem = (type: ProblemType): Problem => {
         ")";
       problem.question = `Find the ${derivativeNumber}${nthStringConvert(
         derivativeNumber
-      )} derivative. $$${nerdString}$$`;
+      )} derivative $$${nerdString}$$`;
       problem.answers = [
         `$${nerdamer
           .diff(equation, "x", derivativeNumber)
@@ -325,14 +322,19 @@ const generateProblem = (type: ProblemType): Problem => {
       };
       const trigBounds = [
         "-2pi",
-        "-4pi/3",
         "-pi",
+        "-pi/2",
+        "-pi/3",
+        "-pi/4",
+        "-pi/6",
         "0",
+        "pi/6",
+        "pi/4",
+        "pi/3",
         "pi/2",
         "pi",
         "2pi",
         "3pi",
-        "4pi",
       ];
       const functions: IntegralFunction[] = [
         {
@@ -344,16 +346,17 @@ const generateProblem = (type: ProblemType): Problem => {
           possibleBounds: trigBounds,
         },
         {
-          equation: "x^2",
-          possibleBounds: ["-2", "-1", "0", "1", "2", "3"],
+          equation: "tan(x)",
+          possibleBounds: trigBounds,
         },
         {
-          equation: "x^2+3",
-          possibleBounds: ["0", "1", "2", "3"],
+          equation: generatePolynomial(randomInt(2, 4)),
+          possibleBounds: ["-2", "-1", "0", "1", "2", "3"],
         },
       ];
 
-      const chosenFunction = functions[randomInt(0, functions.length)];
+      const chosenFunction =
+        functions[weightedRandomNumber([0, 1, 2, 3], [4, 4, 1, 5])];
       const lowerBoundIndex = randomInt(
         0,
         chosenFunction.possibleBounds.length - 1
@@ -366,17 +369,27 @@ const generateProblem = (type: ProblemType): Problem => {
       const lowerBound = chosenFunction.possibleBounds[lowerBoundIndex];
       const upperBound = chosenFunction.possibleBounds[upperBoundIndex];
 
-      const integral = nerdamer(
-        `defint(${chosenFunction.equation}, ${lowerBound}, ${upperBound}, x)`
-      );
-      problem.question = `Evaluate the definite integral. $$\\int_{${nerdamer(
+      // const integral = nerdamer(
+      //   `defint(${chosenFunction.equation}, ${lowerBound}, ${upperBound}, x)`
+      // );
+      const integral = nerdamer(`integrate(${chosenFunction.equation},x)`);
+      problem.question = `Evaluate the definite integral $$\\int_{${nerdamer(
         lowerBound
       )
         .toTeX()
         .removeCdot()}}^{${nerdamer(upperBound)
         .toTeX()
-        .removeCdot()}} ${nerdamer(chosenFunction.equation).toTeX()}\\,dx$$`;
-      problem.answers = [`$${integral.evaluate().toTeX()}$`];
+        .removeCdot()}} (${nerdamer(chosenFunction.equation)
+        .toTeX()
+        .removeCdot()})\\,dx$$`;
+      problem.answers = [
+        `$${integral
+          .sub("x", upperBound)
+          .subtract(integral.sub("x", lowerBound))
+          .expand()
+          .toTeX()
+          .removeCdot()}$`,
+      ];
       break;
     }
     case ProblemType.TrigAngles: {
@@ -389,7 +402,7 @@ const generateProblem = (type: ProblemType): Problem => {
         .removeCdot();
       problem.question = `Convert $${toRadians ? angle : angleInRadians}$ to ${
         toRadians ? "radians" : "degrees"
-      }.`;
+      }`;
       problem.answers = [`$${toRadians ? angleInRadians : angle}$`];
       break;
     }
@@ -407,7 +420,7 @@ const generateProblem = (type: ProblemType): Problem => {
         "pi",
       ];
       const chosenFunction =
-        functions[weightedRandomNumber([0, 1, 2, 3, 4, 5], [4, 4, 4, 1, 1, 1])];
+        functions[weightedRandomNumber([0, 1, 2, 3, 4, 5], [2, 2, 2, 1, 1, 1])];
       const angle = commonAngles[randomInt(0, commonAngles.length)];
       let result = "\\infty";
       const equation = nerdamer(`${chosenFunction}(x)`).sub("x", angle);
@@ -415,13 +428,11 @@ const generateProblem = (type: ProblemType): Problem => {
         const nerdString = `${chosenFunction}(${angle})`;
         if (nerdString === "tan(0)") {
           result = "0";
-        } else {
+        } else if (nerdString !== "cot(0)") {
           result = nerdamer(nerdString).toTeX().removeCdot();
         }
-      } catch (e) {
-        console.log(equation.text());
-      }
-      problem.question = `Evaluate the expression. $$${equation
+      } catch (e) {}
+      problem.question = `Evaluate the expression $$${equation
         .toTeX()
         .removeCdot()}$$`;
       problem.answers = [`$${result}$`];
@@ -472,14 +483,6 @@ const generateProblem = (type: ProblemType): Problem => {
       break;
     }
     case ProblemType.PlayingCardProbability: {
-      /*
-        Types:
-        Chance of drawing a color
-        Chance of drawing a face card
-        Chance of drawing a suit
-        Chance of drawing a rank 
-        Chance of drawing a the same card twice
-       */
       const deck = new Deck();
       const withReplacement = randomBool();
       const drawSet = Deck.RandomNonOverlapDrawSet(randomInt(2, 4));

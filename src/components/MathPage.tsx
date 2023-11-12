@@ -125,18 +125,19 @@ export default function MathPage() {
             className="p-2 my-3 bg-gray-400 rounded-md active:bg-gray-500"
             onClick={() => {
               setProblemSet((prev) => {
-                return [
-                  ...prev,
-                  ...generateProblems(
-                    NEW_LOAD_QUESTION_COUNT,
-                    selectedProblemTypes,
-                    true
-                  ),
-                ];
+                return generateProblems(
+                  STARTING_QUESTION_COUNT,
+                  selectedProblemTypes,
+                  true
+                );
               });
             }}
           >
-            Load more
+            Regenerate (Beware:{" "}
+            <span className="text-red-500">
+              This will remove the current problems
+            </span>
+            )
           </button>
         </main>
       </MathJaxContext>

@@ -60,6 +60,19 @@ export const weightedRandomNumber = (numbers: number[], weights: number[]) => {
   throw new Error("No weights were matched! Something went horribly wrong!");
 };
 
+export const generatePolynomial = (degree: number) => {
+  const coefficents = new Array(degree).fill(0).map(() => randomInt(-9, 9));
+  if (coefficents[degree - 1] === 0) {
+    coefficents[degree - 1] = 1;
+  } else {
+    coefficents[degree - 1] = Math.abs(coefficents[degree - 1]);
+  }
+  const equation = coefficents
+    .map((coeff, power) => `(${coeff}*(x^${power + 1}))`)
+    .join("+");
+  return equation;
+};
+
 export const nthStringConvert = (d: number) => {
   if (d > 3 && d < 21) return "th";
   switch (d % 10) {
