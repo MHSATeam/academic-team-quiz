@@ -54,5 +54,5 @@ export const ALLOWED_PROBLEM_TYPES: ProblemType[] = [
   ProblemType.TrigFunctionValues,
   ProblemType.SurfaceArea,
   ProblemType.Volume,
-  // ProblemType.PlayingCardProbability,
+  ProblemType.PlayingCardProbability,
 ];

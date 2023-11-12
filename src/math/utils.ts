@@ -157,3 +157,257 @@ export const Shapes: { [key: string]: Shape3D } = {
     ],
   },
 };
+
+export type Card = {
+  suit: Suit;
+  rank: Rank;
+};
+
+export type Draw = {
+  suit?: Suit;
+  rank?: Rank;
+  color?: Color;
+  face: boolean;
+};
+
+export enum Color {
+  Red,
+  Black,
+}
+
+export enum Suit {
+  Hearts,
+  Diamonds,
+  Clubs,
+  Spades,
+}
+export enum Rank {
+  King = 13,
+  Queen = 12,
+  Jack = 11,
+  Ten = 10,
+  Nine = 9,
+  Eight = 8,
+  Seven = 7,
+  Six = 6,
+  Five = 5,
+  Four = 4,
+  Three = 3,
+  Two = 2,
+  Ace = 1,
+}
+
+export class Deck {
+  public static FaceRanks: Rank[] = [Rank.King, Rank.Queen, Rank.Jack];
+  public static ColorSuits: Record<Color, Suit[]> = {
+    [Color.Black]: [Suit.Clubs, Suit.Spades],
+    [Color.Red]: [Suit.Diamonds, Suit.Hearts],
+  };
+
+  public cards: Card[] = [];
+
+  constructor() {
+    for (let suit = 0; suit < 4; suit++) {
+      for (let rank = 1; rank <= 13; rank++) {
+        this.cards.push({ rank, suit });
+      }
+    }
+  }
+
+  public getSuitCards(suit: Suit): Card[] {
+    return this.cards.filter((c) => c.suit === suit);
+  }
+
+  public getRankCards(rank: Rank): Card[] {
+    return this.cards.filter((c) => c.rank === rank);
+  }
+
+  public getCardsOfSubset(subset: (card: Card) => boolean) {
+    return this.cards.filter(subset);
+  }
+
+  public replaceCard(card: Card) {
+    this.cards.push(card);
+  }
+
+  public pullCard(suit: Suit, rank: Rank) {
+    const index = this.cards.findIndex(
+      (c) => c.rank === rank && c.suit === suit
+    );
+    if (index === -1) return false;
+    this.cards.splice(index, 1);
+    return true;
+  }
+
+  public pullFromDrawParams(draw: Draw) {
+    return this.pullFromSubset(Deck.GetDrawSubset(draw));
+  }
+
+  public pullFromSubset(filter: (card: Card) => boolean) {
+    const subset = this.cards.filter(filter);
+    const card = subset[randomInt(0, subset.length)];
+    const index = this.cards.findIndex(
+      (c) => c.rank === card.rank && c.suit === card.suit
+    );
+    this.cards.splice(index, 1);
+    return card;
+  }
+
+  public pullRandomSuit(suit: Suit) {
+    return this.pullFromSubset((c) => c.suit === suit);
+  }
+
+  public pullRandomColor(color: Color) {
+    return this.pullFromSubset((c) => Deck.ColorSuits[color].includes(c.suit));
+  }
+
+  public pullRandom(): Card {
+    const index = randomInt(0, this.cards.length);
+    return this.cards.splice(index, 1)[0];
+  }
+
+  public static GetDrawSubset(draw: Draw): (card: Card) => boolean {
+    return (card) => {
+      if (
+        draw.color !== undefined &&
+        !Deck.ColorSuits[draw.color].includes(card.suit)
+      ) {
+        return false;
+      }
+      if (draw.rank !== undefined && draw.rank !== card.rank) {
+        return false;
+      }
+      if (draw.suit !== undefined && draw.suit !== card.suit) {
+        return false;
+      }
+      if (draw.face && !Deck.FaceRanks.includes(card.rank)) {
+        return false;
+      }
+      return true;
+    };
+  }
+
+  public static RandomSuit(usedSuits: Suit[] = []): Suit {
+    return randomInt(0, 4, ...usedSuits);
+  }
+
+  public static RandomColor(): Color {
+    return randomInt(0, 2);
+  }
+
+  public static RandomRank(usedRanks: Rank[] = []): Rank {
+    return randomInt(1, 14, ...usedRanks);
+  }
+
+  public static RandomDraw(
+    usedSuits: Suit[] = [],
+    usedRanks: Rank[] = [],
+    includeRanks = true
+  ): Draw {
+    switch (randomInt(usedSuits.length === 4 ? 1 : 0, includeRanks ? 3 : 2)) {
+      case 0: {
+        return {
+          suit: Deck.RandomSuit(usedSuits),
+          face: randomBool(),
+        };
+      }
+      case 1: {
+        return {
+          color: Deck.RandomColor(),
+          face: randomBool(),
+        };
+      }
+      case 2: {
+        return {
+          rank: Deck.RandomRank(usedRanks),
+          face: false,
+        };
+      }
+    }
+    return {
+      face: false,
+    };
+  }
+
+  public static RandomNonOverlapDrawSet(numDraws = 2): Draw[] {
+    const drawList: Draw[] = [];
+    for (let i = 0; i < numDraws; i++) {
+      const faceDependentDraws = drawList.filter((d) => d.face);
+      const usedSuits = faceDependentDraws
+        .filter((d) => d.suit !== undefined)
+        .map((d) => d.suit!);
+      usedSuits.push(
+        ...drawList
+          .filter((d) => d.color !== undefined)
+          .map((d) => Deck.ColorSuits[d.color!])
+          .flat()
+      );
+      const draw = Deck.RandomDraw(
+        usedSuits,
+        faceDependentDraws
+          .filter((d) => d.rank !== undefined)
+          .map((d) => d.rank!),
+        false
+      );
+      drawList.push(draw);
+    }
+    return drawList;
+  }
+
+  public static CardToString(card: Card): string {
+    const suits = Object.values(Suit);
+    const ranks = Object.values(Rank);
+
+    return `${ranks[card.rank - 1].toString().toLowerCase()} of ${suits[
+      card.suit
+    ]
+      .toString()
+      .toLowerCase()}`;
+  }
+
+  public static SuitToString(suit: Suit) {
+    const suits = Object.values(Suit);
+    return suits[suit].toString().toLowerCase();
+  }
+
+  public static RankToString(rank: Rank) {
+    const ranks = Object.values(Rank);
+    return ranks[rank - 1].toString().toLowerCase();
+  }
+
+  public static ColorToString(color: Color) {
+    const colors = Object.values(Color);
+    return colors[color].toString().toLowerCase();
+  }
+
+  public static DrawToString(draw: Draw) {
+    const vowels = ["a", "e", "i", "o", "u"];
+    let name = "";
+
+    if (draw.color !== undefined) {
+      name += Deck.ColorToString(draw.color) + " ";
+    }
+
+    if (draw.suit !== undefined) {
+      name += Deck.SuitToString(draw.suit).slice(0, -1) + " ";
+    }
+
+    if (draw.rank !== undefined) {
+      name += Deck.RankToString(draw.rank) + " ";
+    }
+
+    if (draw.face) {
+      name += "face ";
+    }
+
+    if (draw.face || draw.color !== undefined) {
+      name += "card";
+    } else {
+      name = name.slice(0, -1);
+    }
+
+    let prefix = vowels.includes(name[0]) ? "an " : "a ";
+
+    return prefix + name;
+  }
+}

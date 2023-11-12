@@ -8,12 +8,16 @@ import {
   ProblemType,
 } from "./math-types";
 import {
+  Color,
+  Deck,
+  Draw,
   nthStringConvert,
-  NumberBound,
   randomBool,
   randomInt,
+  Rank,
   Shape3D,
   Shapes,
+  Suit,
   Vector,
   weightedRandomNumber,
 } from "./utils";
@@ -476,85 +480,53 @@ const generateProblem = (type: ProblemType): Problem => {
         Chance of drawing a rank 
         Chance of drawing a the same card twice
        */
-      type SpecificationType = "color" | "face" | "rank" | "suit";
-      const specificationTypes: SpecificationType[] = [
-        "color",
-        "face",
-        "rank",
-        "suit",
-      ];
-      const suits = ["heart", "club", "diamond", "spade"],
-        colors = ["red", "black"],
-        faceCards = ["king", "queen", "jack"],
-        numberCards = ["10", "9", "8", "7", "6", "5", "4", "3", "2", "ace"],
-        allCardsOfASuit = [...faceCards, ...numberCards];
-      let numRedCards = 26,
-        numBlackCards = 26,
-        totalCards = 52,
-        numFaceCards = 12,
-        numHeartCards = 13,
-        numClubCards = 13,
-        numDiamondCards = 13,
-        numSpadeCards = 13;
-      const twoSpecifications = randomBool();
-      const specifications: SpecificationType[] = [];
-      const firstType = randomInt(0, specificationTypes.length);
-      specifications.push(specificationTypes[firstType]);
-      if (twoSpecifications) {
-        specifications.push(
-          specificationTypes[randomInt(0, specificationTypes.length, firstType)]
-        );
-        if (
-          specifications.includes("face") &&
-          specifications.includes("rank")
-        ) {
-          specifications.pop();
+      const deck = new Deck();
+      const withReplacement = randomBool();
+      const drawSet = Deck.RandomNonOverlapDrawSet(randomInt(2, 4));
+      let drawString = "";
+      drawSet
+        .map((draw) => Deck.DrawToString(draw))
+        .forEach((drawText, index, arr) => {
+          if (index !== 0 && drawText === arr[index - 1]) {
+            drawString += drawText.slice(drawText.indexOf(" ") + 1);
+          } else {
+            drawString += drawText;
+          }
+          if (index < arr.length - 2) {
+            drawString += ", then ";
+          } else if (index === arr.length - 2) {
+            if (arr.length === 2) {
+              drawString += " and then ";
+            } else {
+              drawString += ", and then ";
+            }
+          }
+          if (index + 1 !== arr.length && drawText === arr[index + 1]) {
+            drawString += "another ";
+          }
+        });
+      const fractions = [];
+      for (let i = 0; i < drawSet.length; i++) {
+        const draw = drawSet[i];
+        const chances = deck.getCardsOfSubset(Deck.GetDrawSubset(draw)).length;
+        const totalCards = deck.cards.length;
+        fractions.push(`${chances}/${totalCards}`);
+        if (!withReplacement) {
+          deck.pullFromDrawParams(draw);
         }
       }
-      function chanceOfSpecification(type: SpecificationType) {
-        switch (type) {
-          case "color": {
-            return `${numBlackCards}/${totalCards}`;
-          }
-          case "face": {
-            return `${numFaceCards}/${totalCards}`;
-          }
-          case "rank": {
-            return `4/${totalCards}`;
-          }
-          case "suit": {
-            return `${numHeartCards}/${totalCards}`;
-          }
-        }
-      }
-      function getInstanceOfAType(type: SpecificationType) {
-        switch (type) {
-          case "color": {
-            return colors[randomInt(0, colors.length)];
-          }
-          case "face": {
-            return faceCards[randomInt(0, faceCards.length)];
-          }
-          case "rank": {
-            return allCardsOfASuit[randomInt(0, allCardsOfASuit.length)];
-          }
-          case "suit": {
-            return suits[randomInt(0, suits.length)];
-          }
-        }
-      }
-      const specificationString = specifications
-        .map((type) => {
-          return getInstanceOfAType(type);
-        })
-        .join(", ");
-      const probability = nerdamer(
-        specifications
-          .map((type) => `(${chanceOfSpecification(type)})`)
-          .join("*")
-      );
-      problem.question = `What is the probability of drawing a ${specificationString} card?`;
-      problem.answers.push(`$${probability.expand().toTeX().removeCdot()}$`);
+
+      const nerdString = `(${fractions.join(")*(")})`;
+      problem.answers.push(`$${nerdamer(nerdString).toTeX().removeCdot()}$`);
+
+      problem.question = `Given a standard deck of 52 cards. What is the probability of drawing ${drawString}${
+        drawSet.length === 1
+          ? ""
+          : withReplacement
+          ? " with replacement"
+          : " without replacement"
+      }?`;
+
       break;
     }
   }
