@@ -1,14 +1,13 @@
-import { useState } from "react";
-import { AnswerType, Problem } from "../math-types";
+import { useEffect, useState } from "react";
+import { AnswerType, Problem } from "../math/math-types";
 import { MathJax } from "better-react-mathjax";
 
 type MathProblemProps = {
   problem: Problem;
 };
 
-export default function MathProblem(props: MathProblemProps) {
+export default function MathProblem({ problem }: MathProblemProps) {
   const [answerShown, setAnswerShown] = useState(false);
-  const problem = props.problem;
   return (
     <div className="flex flex-col border-2 rounded-md p-2 basis-1/5 grow">
       <MathJax>{problem.question}</MathJax>

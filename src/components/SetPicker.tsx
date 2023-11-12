@@ -35,6 +35,7 @@ export default function SetPicker(props: SetPickerProps) {
       isMulti
       isClearable={false}
       blurInputOnSelect={false}
+      closeMenuOnSelect={false}
       options={DefaultSetLabels}
       value={props.setList}
       onChange={(setList) => {
