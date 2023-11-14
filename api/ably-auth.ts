@@ -1,5 +1,6 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
 import Ably from "ably";
+import { nanoid } from "nanoid";
 
 class KeyMissingError extends Error {}
 
@@ -16,8 +17,9 @@ async function getAblyToken(): Promise<Ably.Types.TokenRequest> {
   }
   return ablyRest.auth.createTokenRequest({
     capability: {
-      "buzzer-click": ["subscribe", "publish"],
+      "buzzer-click": ["subscribe", "publish", "presence"],
     },
+    clientId: nanoid(),
   });
 }
 

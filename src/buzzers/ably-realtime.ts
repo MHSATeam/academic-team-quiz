@@ -1,21 +1,27 @@
 import { Realtime, Types } from "ably";
+import { TeamMember } from "./team-members";
 
 export const BuzzerClickChannel = "buzzer-click";
 export type BuzzerClickMessage = {
-  name: string;
+  user: TeamMember;
   timestamp: number;
 };
 
-type MessageCallback<T> = (msg: T) => void;
-class AblyChannelWrapper<T> {
-  private readonly channel: Types.RealtimeChannelPromise;
+export type BuzzerClickPresence = {
+  user: TeamMember;
+  team: string;
+};
+
+type MessageCallback<Message> = (msg: Message) => void;
+class AblyChannelWrapper<Message> {
+  protected readonly channel: Types.RealtimeChannelPromise;
   constructor(channel: Types.RealtimeChannelPromise) {
     this.channel = channel;
   }
 
-  public subscribe(callback: MessageCallback<T>, event = "status") {
+  public subscribe(callback: MessageCallback<Message>, event = "status") {
     const callbackWrapper = (msg: Types.Message) => {
-      callback(msg.data as T);
+      callback(msg.data as Message);
     };
 
     this.channel.subscribe(event, callbackWrapper);
@@ -34,8 +40,48 @@ class AblyChannelWrapper<T> {
     }
   }
 
-  public async publish(message: T, event = "status"): Promise<void> {
+  public async publish(message: Message, event = "status"): Promise<void> {
     await this.channel.publish(event, message);
+  }
+}
+
+class PresenceChannel<Message, Presence> extends AblyChannelWrapper<Message> {
+  private _isPresent = false;
+
+  public get isPresent() {
+    return this._isPresent;
+  }
+
+  constructor(channel: Types.RealtimeChannelPromise) {
+    super(channel);
+  }
+
+  public async enter(data: Presence) {
+    await this.channel.presence.enter(data);
+    this._isPresent = true;
+  }
+
+  public async leave() {
+    await this.channel.presence.leave();
+    this._isPresent = false;
+  }
+
+  public subscribePresent(
+    callback: (
+      event: Omit<Types.PresenceMessage, "data"> & { data: Presence },
+      type: "enter" | "leave" | "update" | "present"
+    ) => void
+  ): () => void {
+    const onEvent = (event: Types.PresenceMessage) => {
+      if (event.action !== "absent") {
+        callback({ ...event, data: event.data as Presence }, event.action);
+      }
+    };
+
+    this.channel.presence.subscribe(onEvent);
+    return () => {
+      this.channel.presence.unsubscribe(onEvent);
+    };
   }
 }
 
@@ -125,7 +171,10 @@ export class AblyClient {
   private static readonly CONNETION_TIMEOUT = 10000;
   private readonly client: Types.RealtimePromise;
   public stateManager: ConnectionStateManager = new ConnectionStateManager();
-  public readonly buzzerClick: AblyChannelWrapper<BuzzerClickMessage>;
+  public readonly buzzerClick: PresenceChannel<
+    BuzzerClickMessage,
+    BuzzerClickPresence
+  >;
 
   constructor() {
     this.client = new Realtime.Promise({
@@ -133,7 +182,7 @@ export class AblyClient {
       autoConnect: false,
     });
 
-    this.buzzerClick = new AblyChannelWrapper(
+    this.buzzerClick = new PresenceChannel(
       this.client.channels.get(BuzzerClickChannel)
     );
     this.initializeConnectionListener();
