@@ -112,26 +112,41 @@ export default function BuzzerPage() {
         setStatus("naming");
       }
     };
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === " ") {
+        onBuzz(e);
+      }
+    };
     if (status === "joined") {
       document.addEventListener("touchstart", onBuzz);
       document.addEventListener("mousedown", onBuzz);
+      document.addEventListener("keydown", onKeyDown);
     }
     return () => {
       document.removeEventListener("touchstart", onBuzz);
       document.removeEventListener("mousedown", onBuzz);
+      document.removeEventListener("keydown", onKeyDown);
     };
   }, [status, user, isLocked]);
+
   useEffect(() => {
     const onMouseUp = () => {
       setCurrentlyClicking(false);
     };
+    const onKeyUp = (e: KeyboardEvent) => {
+      if (e.key === " ") {
+        onMouseUp();
+      }
+    };
     document.addEventListener("touchend", onMouseUp);
     document.addEventListener("mouseup", onMouseUp);
+    document.addEventListener("keyup", onKeyUp);
     return () => {
       document.removeEventListener("touchend", onMouseUp);
       document.removeEventListener("mouseup", onMouseUp);
+      document.removeEventListener("keyup", onKeyUp);
     };
-  });
+  }, []);
 
   const unusedMembers = TeamMembers.filter((member) =>
     otherUsers.map((value) => value.user.value).includes(member.value)
