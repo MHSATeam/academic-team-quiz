@@ -37,12 +37,14 @@ export default function BuzzerPage() {
   const otherUsers = useUserList();
 
   useEffect(() => {
-    if (currentBuzz === null) {
-      document.body.style.backgroundColor = "unset";
-    } else if (currentBuzz.team === team.value) {
-      document.body.style.backgroundColor = successColor;
-    } else {
-      document.body.style.backgroundColor = failureColor;
+    if (status === "joined") {
+      if (currentBuzz === null) {
+        document.body.style.backgroundColor = "unset";
+      } else if (currentBuzz.team === team.value) {
+        document.body.style.backgroundColor = successColor;
+      } else {
+        document.body.style.backgroundColor = failureColor;
+      }
     }
     let active = true;
     if (currentBuzz !== null && currentBuzz.user.value === user?.value) {
@@ -58,7 +60,7 @@ export default function BuzzerPage() {
       active = false;
       document.body.style.backgroundColor = "unset";
     };
-  }, [currentBuzz]);
+  }, [currentBuzz, status]);
 
   useEffect(() => {
     if (
