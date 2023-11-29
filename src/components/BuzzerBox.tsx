@@ -177,7 +177,12 @@ export default function BuzzerBox() {
                 )
               ) : (
                 <>
-                  <span className="text-red-500 font-bold">
+                  <span
+                    className={classNames(
+                      "font-bold",
+                      getTeamColors(currentBuzz.team, "text-")
+                    )}
+                  >
                     {currentBuzz.user.label}
                   </span>{" "}
                   has buzzed in!
