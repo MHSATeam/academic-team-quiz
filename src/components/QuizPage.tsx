@@ -164,6 +164,7 @@ export default function QuizPage() {
             <div className="flex m-2 gap-2">
               <label htmlFor="auto-next">Auto Switch Question</label>
               <input
+                tabIndex={-1}
                 className="p-2"
                 id="auto-next"
                 name="auto-next"

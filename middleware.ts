@@ -32,6 +32,12 @@ async function verifyAuth(req: Request) {
 }
 
 export default async function middleware(req: Request) {
+  const isLocal = process.env.VERCEL_ENV === "development";
+
+  if (isLocal) {
+    return;
+  }
+
   const verifiedToken = await verifyAuth(req).catch((err) => {
     console.error(err.message);
   });

@@ -12,6 +12,7 @@
   "dependencies": {
     "@types/mathjax": "^0.0.37",
     "@vercel/analytics": "^1.0.1",
+    "ably": "^1.2.47",
     "autoprefixer": "^10.4.16",
     "better-react-mathjax": "^2.0.3",
     "classnames": "^2.3.2",

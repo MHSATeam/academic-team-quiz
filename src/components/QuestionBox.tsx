@@ -1,5 +1,5 @@
 import { ArrowRight, Loader2 } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { Key, useEffect, useRef, useState } from "react";
 
 type QuestionBoxProps = {
   question: string;
@@ -23,13 +23,51 @@ export default function QuestionBox(props: QuestionBoxProps) {
       questionBoxElement.current?.scrollIntoView({ behavior: "smooth" });
     }, 0);
   }, []);
+  useEffect(() => {
+    const onKeyPress = (e: KeyboardEvent) => {
+      if (e.key === " " && props.isLastQuestion) {
+        e.preventDefault();
+        e.stopImmediatePropagation();
+        if (!answerShown) {
+          setAnswerShown(true);
+          if (props.autoNext && !clickedNext) {
+            props.onNext();
+            setClickedNext(true);
+          }
+        } else if (!clickedNext) {
+          props.onNext();
+          setClickedNext(true);
+        }
+      }
+    };
+    const onkeyUp = (e: KeyboardEvent) => {
+      if (e.key === " ") {
+        e.preventDefault();
+      }
+    };
+    document.addEventListener("keypress", onKeyPress);
+    document.addEventListener("keyup", onkeyUp);
+    return () => {
+      document.removeEventListener("keypress", onKeyPress);
+      document.removeEventListener("keyup", onkeyUp);
+    };
+  }, [answerShown, props.onNext, props.autoNext, clickedNext]);
 
   useEffect(() => {
-    window.scrollTo({
-      top: document.body.scrollHeight,
-      behavior: "smooth",
-    });
+    if (!props.autoNext && props.isLastQuestion) {
+      window.scrollTo({
+        top: document.body.scrollHeight,
+        behavior: "smooth",
+      });
+    }
   }, [answerShown]);
+
+  useEffect(() => {
+    if (props.isLastQuestion && answerShown && props.autoNext && !clickedNext) {
+      props.onNext();
+      setClickedNext(true);
+    }
+  }, [props.autoNext]);
 
   useEffect(() => {
     setAnswerShown(false);

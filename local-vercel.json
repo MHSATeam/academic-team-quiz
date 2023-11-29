@@ -1,6 +1,6 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "devCommand": "vite --port $PORT",
+  "devCommand": "vite --port $PORT --host",
   "functions": {
     "api/**.ts": {
       "includeFiles": "public/data/**"
