@@ -2,7 +2,7 @@ import cookie from "cookie";
 import { jwtVerify } from "jose";
 import { getEnvVar } from "./api-lib/_auth";
 export const config = {
-  matcher: ["/api/((?!login|ably-auth).*)"],
+  matcher: ["/api/((?!login).*)"],
 };
 
 class AuthError extends Error {}

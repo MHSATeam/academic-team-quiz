@@ -34,19 +34,19 @@ const router = createBrowserRouter([
       { path: "", element: <QuizPage /> },
       { path: "set", element: <SetPage /> },
       { path: "math", element: <MathPage /> },
+      {
+        path: "buzzer",
+        element: <BuzzerPage />,
+        loader: loadRealtime,
+      },
+      {
+        path: "buzzer-box",
+        element: <BuzzerBox />,
+        loader: loadRealtime,
+      },
     ],
   },
   { path: "/login", element: <Login /> },
-  {
-    path: "buzzer",
-    element: <BuzzerPage />,
-    loader: loadRealtime,
-  },
-  {
-    path: "buzzer-box",
-    element: <BuzzerBox />,
-    loader: loadRealtime,
-  },
 ]);
 
 export default function Router() {
