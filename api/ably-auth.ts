@@ -18,6 +18,7 @@ async function getAblyToken(): Promise<Ably.Types.TokenRequest> {
   return ablyRest.auth.createTokenRequest({
     capability: {
       "buzzer-click": ["subscribe", "publish", "presence"],
+      "box-updates": ["subscribe", "publish", "presence"],
     },
     clientId: nanoid(),
   });

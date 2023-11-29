@@ -2,14 +2,34 @@ import { Realtime, Types } from "ably";
 import { TeamMember } from "./team-members";
 
 export const BuzzerClickChannel = "buzzer-click";
+export const BoxChannel = "box-updates";
+
 export type BuzzerClickMessage = {
   user: TeamMember;
+  team: string;
   timestamp: number;
 };
 
 export type BuzzerClickPresence = {
   user: TeamMember;
   team: string;
+};
+
+export type BoxChannelMessageType = "reset";
+
+export type BoxChannelMessage = {
+  type: BoxChannelMessageType;
+};
+
+export type TeamScore = {
+  team: string;
+  score: number;
+};
+
+export type BoxChannelPresence = {
+  scores: TeamScore[];
+  timestamp: number;
+  locked: boolean;
 };
 
 type MessageCallback<Message> = (msg: Message) => void;
@@ -59,6 +79,14 @@ class PresenceChannel<Message, Presence> extends AblyChannelWrapper<Message> {
   public async enter(data: Presence) {
     await this.channel.presence.enter(data);
     this._isPresent = true;
+  }
+
+  public async update(data: Presence) {
+    if (!this.isPresent) {
+      await this.enter(data);
+    } else {
+      await this.channel.presence.update(data);
+    }
   }
 
   public async leave() {
@@ -175,6 +203,10 @@ export class AblyClient {
     BuzzerClickMessage,
     BuzzerClickPresence
   >;
+  public readonly boxChannel: PresenceChannel<
+    BoxChannelMessage,
+    BoxChannelPresence
+  >;
 
   constructor() {
     this.client = new Realtime.Promise({
@@ -185,6 +217,7 @@ export class AblyClient {
     this.buzzerClick = new PresenceChannel(
       this.client.channels.get(BuzzerClickChannel)
     );
+    this.boxChannel = new PresenceChannel(this.client.channels.get(BoxChannel));
     this.initializeConnectionListener();
   }
 
