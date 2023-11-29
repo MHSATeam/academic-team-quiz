@@ -34,7 +34,7 @@ export default function BuzzerBox() {
       team: "b",
     },
   ]);
-  const [isMuted, setMuted] = useState(true);
+  const [isMuted, setMuted] = useState(false);
   const [isLocked, setLocked] = useState(false);
   const members = useUserList();
 

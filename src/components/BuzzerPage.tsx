@@ -34,6 +34,7 @@ export default function BuzzerPage() {
   const [team, setTeam] = useState<TeamName>({ value: "a", label: "Team A" });
   const [status, setStatus] = useState<JoinStatus>("naming");
   const [canReset, setCanReset] = useState(false);
+  const [currentlyClicking, setCurrentlyClicking] = useState(false);
   const otherUsers = useUserList();
 
   useEffect(() => {
@@ -99,6 +100,7 @@ export default function BuzzerPage() {
       if (isLocked) {
         return;
       }
+      setCurrentlyClicking(true);
       if (user !== null && status === "joined") {
         RealtimeStatus.buzzerClick.publish({
           user,
@@ -119,6 +121,17 @@ export default function BuzzerPage() {
       document.removeEventListener("mousedown", onBuzz);
     };
   }, [status, user, isLocked]);
+  useEffect(() => {
+    const onMouseUp = () => {
+      setCurrentlyClicking(false);
+    };
+    document.addEventListener("touchend", onMouseUp);
+    document.addEventListener("mouseup", onMouseUp);
+    return () => {
+      document.removeEventListener("touchend", onMouseUp);
+      document.removeEventListener("mouseup", onMouseUp);
+    };
+  });
 
   const unusedMembers = TeamMembers.filter((member) =>
     otherUsers.map((value) => value.user.value).includes(member.value)
@@ -212,7 +225,10 @@ export default function BuzzerPage() {
             "p-10",
             "rounded-full",
             "text-center",
-            getTeamColors(team.value)
+            getTeamColors(team.value),
+            {
+              "shadow-lg": currentlyClicking,
+            }
           )}
         >
           <span className="text-4xl shrink-0 whitespace-nowrap">
