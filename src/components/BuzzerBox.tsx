@@ -1,6 +1,7 @@
 import classNames from "classnames";
 import { Lock, Unlock, Volume2, VolumeX } from "lucide-react";
-import { useEffect, useState } from "react";
+import { nanoid } from "nanoid";
+import { useEffect, useRef, useState } from "react";
 import {
   BuzzerClickMessage,
   RealtimeStatus,
@@ -10,6 +11,7 @@ import { getTeamColors } from "../buzzers/get-team-colors";
 import { useBuzzIn } from "../buzzers/useBuzzIn";
 import { useUserList } from "../buzzers/useUserList";
 import beepSoundUrl from "/beep.mp3?url";
+
 const beepSound = new Audio(beepSoundUrl);
 
 export default function BuzzerBox() {
@@ -37,6 +39,7 @@ export default function BuzzerBox() {
   const [isMuted, setMuted] = useState(false);
   const [isLocked, setLocked] = useState(false);
   const members = useUserList();
+  const sessionId = useRef(nanoid());
 
   useEffect(() => {
     RealtimeStatus.boxChannel.update({
@@ -53,6 +56,22 @@ export default function BuzzerBox() {
       }
     };
   }, []);
+
+  const saveBuzz = () => {
+    if (currentBuzz !== null) {
+      fetch("/api/log-buzz", {
+        body: JSON.stringify({
+          buzzList: buzzList.sort((a, b) => a.timestamp - b.timestamp),
+          sessionId: sessionId.current,
+        }),
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      resetBuzzer();
+    }
+  };
 
   const addPoints = (points: number, team: string) => {
     setTeamScores((prev) => {
@@ -129,9 +148,10 @@ export default function BuzzerBox() {
             cornerRounding
           )}
         >
-          {[1, 2 /*...(tieBreaker > 2 ? [tieBreaker] : [])*/, -1].map(
-            (increment) => (
+          {[1, 2, /*...(tieBreaker > 2 ? [tieBreaker] : []),*/ -1].map(
+            (increment, index) => (
               <button
+                key={index}
                 onClick={() => {
                   addPoints(increment, team);
                 }}
@@ -207,19 +227,34 @@ export default function BuzzerBox() {
           </div>
           {createTeamDisplay("b", false)}
         </div>
-        <button
-          className={
-            "p-8 text-center text-2xl " +
-            (currentBuzz === null
-              ? "bg-gray-400"
-              : "bg-red-400 hover:bg-red-500")
-          }
-          onClick={() => {
-            resetBuzzer();
-          }}
-        >
-          Clear
-        </button>
+        <div className="flex">
+          <button
+            className={
+              "grow p-8 text-center text-2xl " +
+              (currentBuzz === null
+                ? "bg-gray-400"
+                : "bg-red-400 hover:bg-red-500")
+            }
+            onClick={() => {
+              resetBuzzer();
+            }}
+          >
+            Clear
+          </button>
+          <button
+            className={
+              "grow p-8 text-center text-2xl border-l-2 " +
+              (currentBuzz === null
+                ? "bg-gray-400"
+                : "bg-green-400 hover:bg-green-500")
+            }
+            onClick={() => {
+              saveBuzz();
+            }}
+          >
+            Save Buzz
+          </button>
+        </div>
       </div>
     </>
   );
