@@ -3,15 +3,16 @@ import {
   createBrowserRouter,
   redirect,
 } from "react-router-dom";
-import QuizPage from "./components/QuizPage";
-import Login from "./components/Login";
 import App from "./App";
-import Error404 from "./components/404";
-import SetPage from "./components/SetPage";
-import MathPage from "./components/MathPage";
-import BuzzerPage from "./components/BuzzerPage";
 import { RealtimeStatus } from "./buzzers/ably-realtime";
-import BuzzerBox from "./components/BuzzerBox";
+import { lazy, Suspense } from "react";
+import Error404 from "./components/404";
+const QuizPage = lazy(() => import("./components/QuizPage"));
+const Login = lazy(() => import("./components/Login"));
+const MathPage = lazy(() => import("./components/MathPage"));
+const BuzzerPage = lazy(() => import("./components/BuzzerPage"));
+const BuzzerBox = lazy(() => import("./components/BuzzerBox"));
+const SetPage = lazy(() => import("./components/SetPage"));
 
 const loadRealtime = async () => {
   RealtimeStatus.connect();
@@ -25,6 +26,7 @@ const checkAuth = async () => {
   }
   return null;
 };
+const loadingFallback = <span>Loading...</span>;
 
 const router = createBrowserRouter([
   {
@@ -33,20 +35,56 @@ const router = createBrowserRouter([
     loader: checkAuth,
     errorElement: <Error404 />,
     children: [
-      { path: "", element: <QuizPage /> },
-      { path: "set", element: <SetPage /> },
-      { path: "math", element: <MathPage /> },
+      {
+        path: "",
+        element: (
+          <Suspense fallback={loadingFallback}>
+            <QuizPage />
+          </Suspense>
+        ),
+      },
+      {
+        path: "set",
+        element: (
+          <Suspense fallback={loadingFallback}>
+            <SetPage />
+          </Suspense>
+        ),
+      },
+      {
+        path: "math",
+        element: (
+          <Suspense fallback={loadingFallback}>
+            <MathPage />
+          </Suspense>
+        ),
+      },
     ],
   },
-  { path: "/login", element: <Login /> },
+  {
+    path: "/login",
+    element: (
+      <Suspense fallback={loadingFallback}>
+        <Login />
+      </Suspense>
+    ),
+  },
   {
     path: "/buzzer",
-    element: <BuzzerPage />,
+    element: (
+      <Suspense fallback={loadingFallback}>
+        <BuzzerPage />
+      </Suspense>
+    ),
     loader: loadRealtime,
   },
   {
     path: "/buzzer-box",
-    element: <BuzzerBox />,
+    element: (
+      <Suspense fallback={loadingFallback}>
+        <BuzzerBox />
+      </Suspense>
+    ),
     loader: loadRealtime,
   },
 ]);
