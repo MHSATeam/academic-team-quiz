@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "academic-team-buzzers",
+  "private_key_id": "05ec42874046d21470c66f517148f770343ea447",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQC4lswcjCXN1EAp\nNmRPoBhhiZFr71TW6tkTVIEhszLID01rx6jrXymGEN3iIQu5PbX+jBX3Eny355Es\nxyzng8e/dTvFTcvjt24oAQc64mYkLUJeUKBwMA8rjDqSAfSf72FpAegpxefnGIVj\n3qcfmXKnWDeknKN2kpByr5EKIZK1vEPfEDwlzydVD/v1D8shCYHoI+KsOBjTifaJ\npC+R/QDM7zoTk4eITcmCRC5GLAdSXs1+OE2tSU/MYwVBDgUB2DWCUkJA76Irzg0W\nqVnfnhAh4DcBBPJiBFdiA1IPJOa2x8iPifUQ7oLIRzTBMkqJfLYLWNmGgD/Tckdi\nyWY78S1FAgMBAAECggEACElCcylk934jL2vCtDuuhWSZCPjZeRF2WmKfA8zgJzQm\nbdkCBrWGgNSRHN2AHkhHEHk9f9lY4gYZMaLk1k/yKH7LBrONDicF4PH1F/aMXOxh\nMdMA2L+FxQi8TeicdBv1yfmQjNYr4XV58ozO5FMxJiCGm8+bKcv39bCsP7qRF5Xi\nmdDxfBclHQ6Vz7VLH1RVCiwdtH9l9jcJGv4Tuij6uc3c+Py2SWcfBtcsyy+om6rq\nCgJ3p5XlUPxjA1maLcUHAJFiskhg8ROfnDLsW1hggOUcd/ZcMRv37pgbczd9UCQ4\nobgjB67WwPn5A7wE8MVh1wrLSj7plT7aGTd40WcN8wKBgQDbYG/kR41W0eH+SSee\n2qYbaRyvgv8uSRw2l2RLT+PGgwCvRe/vooHmllQ7Xzc8oUiRCxijhzf98JTgR+1c\nXRiPZGgrk8AhOL6alP3lV2x3AnR8rvSfVYGb/IusAoH55fjb9IhitXVg1beO8v4O\nmx3i2SwKVKTIs+g9XD1cj+/iSwKBgQDXZ6FvC7Kkx0Ddo1xGCS9sfEm8N8T233Hf\n44wPnGAgsNJuTbtTQpCa0kxJYqBdPnRDtTBGhhi0lws+wgzTc+PLoKS6MQZTM5tj\nfzr4ibwg2JVm0PWj4/18Up10K4D53xEE43QjJAfImgaHT+QDW/DKqQ7Xd7RyuYlV\nGdvVnhL0rwKBgF8BTrPQAPfegT68s7np+xHX3aJs2tJSuzMxMTAkcwJfbYZ6hUSE\nXjlcVTI5NBS/zEt0QMFhJ/CDphXTUIo1jxNaanqkzAoXJwSPDb2qtMB9gbEVm779\nKtpA7sQZeeydmb64EfCdoS3EoG/57+inaLP7VUVMDukUcLlSHwjdFQgtAoGATmwY\nRgmIPJ2ebBLxoT3u2hxV7ASR3R90ogKCF5zjEoPN2QLL1IBDjVpLE9yobcozIgNx\nU/u2OulS2sJjUQi8QoJ19qOqndgIFq1XluzuZTb1Db298LEstHqPgJ/mERK5a4Iz\n4idX/hy1i8X2SZLLk70A/klClRIfgbAsbRVj6VkCgYEAsWZWdhDq1F09hAplAite\nY2s8U38m51smT7Uyknv8tgo3q1T+42va2vyFwjv+siKy5VAJHJl8O2MF8h26A72d\n3wLhEtl7+2gGTE9q8IRMhamIhx5ZA6IscnPUyGf/6Js7zwnZI83Ddz6ahBhfSrF5\n7sYTWN1n58wS7ZLKkFNUNpY=\n-----END PRIVATE KEY-----\n",
+  "client_email": "buzzer-upload@academic-team-buzzers.iam.gserviceaccount.com",
+  "client_id": "118177099804634975746",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/buzzer-upload%40academic-team-buzzers.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}
