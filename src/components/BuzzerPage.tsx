@@ -10,6 +10,7 @@ import { ArrowLeft } from "lucide-react";
 import AblyStatusSymbol from "./AblyStatusSymbol";
 import { useBuzzerBox } from "../buzzers/useBuzzerBox";
 import { getTeamColors } from "../buzzers/get-team-colors";
+import { useNavigate } from "react-router-dom";
 
 type JoinStatus = "joined" | "joining" | "naming";
 
@@ -36,6 +37,7 @@ export default function BuzzerPage() {
   const [canReset, setCanReset] = useState(false);
   const [currentlyClicking, setCurrentlyClicking] = useState(false);
   const otherUsers = useUserList();
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (status === "joined") {
@@ -158,55 +160,70 @@ export default function BuzzerPage() {
 
   if (status === "naming") {
     return (
-      <div className="flex flex-col gap-3 justify-center p-2 absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-lg border-2">
-        <label className="text-center">Choose Your Name</label>
-        <Creatable
-          className="min-w-[16em]"
-          options={TeamMembers}
-          isClearable={false}
-          value={user}
-          onChange={(value, action) => {
-            if (action.action === "create-option" && value) {
-              setUser({ label: value.label, value: "guest" });
-            } else {
-              setUser(value);
-            }
-          }}
-          formatCreateLabel={(input) => {
-            return `Join as guest: "${input}"`;
-          }}
-        />
-        <Select
-          options={"ab".split("").map((char) => ({
-            value: char,
-            label: `Team ${char.toUpperCase()}`,
-          }))}
-          value={team}
-          onChange={(newTeam) => {
-            if (newTeam) {
-              setTeam(newTeam);
-            }
-          }}
-        />
-        <button
-          disabled={user === null}
-          onClick={() => {
-            if (user === null) {
-              return;
-            }
-            if (
-              unusedMembers.map((value) => value.value).includes(user?.value)
-            ) {
-              alert("This person has already logged in!");
-              return;
-            }
-            setStatus("joined");
-          }}
-          className="bg-blue-400 rounded-md active:bg-blue-500 p-2"
-        >
-          Join
-        </button>
-      </div>
+      <>
+        <div className="no-buzz absolute top-0 left-0 p-1">
+          <button
+            onClick={(e) => {
+              navigate("/");
+            }}
+            className="p-3"
+          >
+            <div className="bg-gray-400 p-2 rounded-md flex gap-2">
+              <ArrowLeft />
+              <span>Back to Quiz</span>
+            </div>
+          </button>
+        </div>
+        <div className="flex flex-col gap-3 justify-center p-2 absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-lg border-2">
+          <label className="text-center">Choose Your Name</label>
+          <Creatable
+            className="min-w-[16em]"
+            options={TeamMembers}
+            isClearable={false}
+            value={user}
+            onChange={(value, action) => {
+              if (action.action === "create-option" && value) {
+                setUser({ label: value.label, value: "guest" });
+              } else {
+                setUser(value);
+              }
+            }}
+            formatCreateLabel={(input) => {
+              return `Join as guest: "${input}"`;
+            }}
+          />
+          <Select
+            options={"ab".split("").map((char) => ({
+              value: char,
+              label: `Team ${char.toUpperCase()}`,
+            }))}
+            value={team}
+            onChange={(newTeam) => {
+              if (newTeam) {
+                setTeam(newTeam);
+              }
+            }}
+          />
+          <button
+            disabled={user === null}
+            onClick={() => {
+              if (user === null) {
+                return;
+              }
+              if (
+                unusedMembers.map((value) => value.value).includes(user?.value)
+              ) {
+                alert("This person has already logged in!");
+                return;
+              }
+              setStatus("joined");
+            }}
+            className="bg-blue-400 rounded-md active:bg-blue-500 p-2"
+          >
+            Join
+          </button>
+        </div>
+      </>
     );
   } else if (user !== null) {
     return (

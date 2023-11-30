@@ -1,6 +1,6 @@
 {
-  "short-name": "Buzzer",
-  "name": "A-Team Buzzer",
+  "short-name": "A-Team",
+  "name": "A-Team",
   "icons": [
     {
       "src": "favicon.ico",
@@ -8,7 +8,7 @@
       "sizes": "48x48"
     }
   ],
-  "start_url": "./buzzer",
+  "start_url": "/",
   "display": "standalone",
   "theme_color": "#000000",
   "background_color": "#ffffff"
