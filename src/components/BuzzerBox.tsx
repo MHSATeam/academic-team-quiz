@@ -1,7 +1,7 @@
 import classNames from "classnames";
 import { Lock, Unlock, Volume2, VolumeX } from "lucide-react";
 import { nanoid } from "nanoid";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import {
   BuzzerClickMessage,
   RealtimeStatus,
@@ -15,14 +15,6 @@ import beepSoundUrl from "/beep.mp3?url";
 const beepSound = new Audio(beepSoundUrl);
 
 export default function BuzzerBox() {
-  const [currentBuzz, buzzList, resetBuzzer] = useBuzzIn((message, isFirst) => {
-    if (!isLocked) {
-      setBuzzerHistory([...buzzerHistory, message]);
-    }
-    if (isFirst && !isMuted) {
-      beepSound.play();
-    }
-  });
   const [buzzerHistory, setBuzzerHistory] = useState<
     (BuzzerClickMessage | "reset")[]
   >([]);
@@ -38,6 +30,20 @@ export default function BuzzerBox() {
   ]);
   const [isMuted, setMuted] = useState(false);
   const [isLocked, setLocked] = useState(false);
+
+  const onBuzzIn = useCallback(
+    (message: BuzzerClickMessage, isFirst: boolean) => {
+      if (!isLocked) {
+        setBuzzerHistory((prevHistory) => [...prevHistory, message]);
+      }
+      if (isFirst && !isMuted) {
+        beepSound.play();
+      }
+    },
+    [isLocked, isMuted]
+  );
+  const [currentBuzz, buzzList, resetBuzzer] = useBuzzIn(onBuzzIn);
+
   const members = useUserList();
   const sessionId = useRef(nanoid());
 

@@ -10,6 +10,7 @@
     "vercel-dev": "vercel dev --local-config ./local-vercel.json --listen 5173"
   },
   "dependencies": {
+    "@types/dom-screen-wake-lock": "^1.0.3",
     "@types/mathjax": "^0.0.37",
     "@vercel/analytics": "^1.0.1",
     "ably": "^1.2.47",
