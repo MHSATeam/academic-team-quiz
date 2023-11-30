@@ -1,5 +1,12 @@
 import { Types } from "ably";
-import { Server, ServerCog, ServerOff } from "lucide-react";
+import {
+  Cloud,
+  CloudCog,
+  CloudOff,
+  Server,
+  ServerCog,
+  ServerOff,
+} from "lucide-react";
 import { useEffect, useState } from "react";
 import { RealtimeStatus } from "../buzzers/ably-realtime";
 
@@ -43,15 +50,15 @@ export default function AblyStatusSymbol() {
 
   switch (statusSymbol) {
     case "server": {
-      Symbol = Server;
+      Symbol = Cloud;
       break;
     }
     case "server-cog": {
-      Symbol = ServerCog;
+      Symbol = CloudCog;
       break;
     }
     case "server-off": {
-      Symbol = ServerOff;
+      Symbol = CloudOff;
       break;
     }
   }
