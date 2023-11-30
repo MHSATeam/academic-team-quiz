@@ -41,7 +41,7 @@ export function useBuzzIn(
       unsubscribeBuzzerClick();
       unsubscribeBox();
     };
-  }, [currentBuzz, buzzList]);
+  }, [currentBuzz, buzzList, onBuzzIn]);
 
   function reset() {
     setCurrentClick(null);

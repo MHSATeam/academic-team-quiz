@@ -21,7 +21,7 @@ const userKey = "buzz-user";
 
 export default function BuzzerPage() {
   const [currentBuzz, _, reset] = useBuzzIn();
-  const [scores, isLocked] = useBuzzerBox();
+  const [scores, isLocked, isHostConnected] = useBuzzerBox();
   const [user, setUser] = useState<TeamMember | null>(() => {
     const stored = window.localStorage.getItem(userKey);
     if (stored) {
@@ -38,6 +38,7 @@ export default function BuzzerPage() {
   const [currentlyClicking, setCurrentlyClicking] = useState(false);
   const otherUsers = useUserList();
   const navigate = useNavigate();
+  // const wakeLock = useRef<null | WakeLockSentinel>(null);
 
   useEffect(() => {
     if (status === "joined") {
@@ -64,6 +65,37 @@ export default function BuzzerPage() {
       document.body.style.backgroundColor = "unset";
     };
   }, [currentBuzz, status]);
+
+  // Wake lock system needs more testing before being used
+  // useEffect(() => {
+  //   let active = false;
+  //   async function lock() {
+  //     try {
+  //       if (wakeLock.current !== null) {
+  //         await wakeLock.current.release();
+  //         wakeLock.current = null;
+  //       }
+  //       const newWakeLock = await navigator.wakeLock.request("screen");
+  //       if (active) {
+  //         wakeLock.current = newWakeLock;
+  //       } else {
+  //         newWakeLock.release();
+  //       }
+  //     } catch (err: any) {
+  //       console.log(`${err.name}: ${err.message}`);
+  //     }
+  //   }
+  //   if (status === "joined") {
+  //     lock();
+  //   } else if (wakeLock.current !== null) {
+  //     wakeLock.current.release();
+  //     wakeLock.current = null;
+  //   }
+
+  //   return () => {
+  //     active = false;
+  //   };
+  // }, [status]);
 
   useEffect(() => {
     if (
@@ -92,14 +124,12 @@ export default function BuzzerPage() {
     const onBuzz = (e: UIEvent) => {
       const noBuzzZones = document.getElementsByClassName("no-buzz");
       if (
-        noBuzzZones &&
-        Array.from(noBuzzZones).some(
-          (node) => e.target instanceof Node && node.contains(e.target)
-        )
+        isLocked ||
+        (noBuzzZones &&
+          Array.from(noBuzzZones).some(
+            (node) => e.target instanceof Node && node.contains(e.target)
+          ))
       ) {
-        return;
-      }
-      if (isLocked) {
         return;
       }
       setCurrentlyClicking(true);
@@ -163,7 +193,7 @@ export default function BuzzerPage() {
       <>
         <div className="no-buzz absolute top-0 left-0 p-1">
           <button
-            onClick={(e) => {
+            onClick={() => {
               navigate("/");
             }}
             className="p-3"
@@ -226,25 +256,48 @@ export default function BuzzerPage() {
       </>
     );
   } else if (user !== null) {
+    const topBar = (
+      <div className="no-buzz absolute top-0 left-0 p-1 w-full flex gap-4 items-center">
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            setStatus("naming");
+          }}
+          className="p-3"
+        >
+          <div className="bg-gray-400 p-2 rounded-md">
+            <ArrowLeft />
+          </div>
+        </button>
+        <span className="text-lg">Good Luck {user.label.split(" ")[0]}!</span>
+        <div className="ml-auto m-3">
+          <AblyStatusSymbol />
+        </div>
+      </div>
+    );
+    if (!isHostConnected) {
+      return (
+        <>
+          {topBar}
+          <div
+            className={classNames(
+              "absolute",
+              "top-1/2",
+              "left-1/2",
+              "-translate-x-1/2",
+              "-translate-y-1/2",
+              "flex",
+              "flex-col"
+            )}
+          >
+            <span>Waiting for host to connect...</span>
+          </div>
+        </>
+      );
+    }
     return (
       <>
-        <div className="no-buzz absolute top-0 left-0 p-1 w-full flex gap-4 items-center">
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              setStatus("naming");
-            }}
-            className="p-3"
-          >
-            <div className="bg-gray-400 p-2 rounded-md">
-              <ArrowLeft />
-            </div>
-          </button>
-          <span className="text-lg">Good Luck {user.label.split(" ")[0]}!</span>
-          <div className="ml-auto m-3">
-            <AblyStatusSymbol />
-          </div>
-        </div>
+        {topBar}
         <div
           className={classNames(
             "absolute",
