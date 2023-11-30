@@ -124,6 +124,7 @@ export default function BuzzerPage() {
     const onBuzz = (e: UIEvent) => {
       const noBuzzZones = document.getElementsByClassName("no-buzz");
       if (
+        !isHostConnected ||
         isLocked ||
         (noBuzzZones &&
           Array.from(noBuzzZones).some(
@@ -159,7 +160,7 @@ export default function BuzzerPage() {
       document.removeEventListener("mousedown", onBuzz);
       document.removeEventListener("keydown", onKeyDown);
     };
-  }, [status, user, isLocked]);
+  }, [status, user, isLocked, isHostConnected]);
 
   useEffect(() => {
     const onMouseUp = () => {
