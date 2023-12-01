@@ -79,20 +79,34 @@ export default function BuzzerBox() {
     }
   };
 
-  const addPoints = (points: number, team: string) => {
-    setTeamScores((prev) => {
-      return [
-        ...prev.filter((t) => t.team !== team),
-        {
-          team,
-          score: Math.max(
-            (prev.find((t) => t.team === team)?.score ?? 0) + points,
-            0
-          ),
-        },
-      ];
+  const addPoints = useCallback(
+    (points: number, team: string) => {
+      setTeamScores((prev) => {
+        return [
+          ...prev.filter((t) => t.team !== team),
+          {
+            team,
+            score: Math.max(
+              (prev.find((t) => t.team === team)?.score ?? 0) + points,
+              0
+            ),
+          },
+        ];
+      });
+    },
+    [setTeamScores]
+  );
+
+  useEffect(() => {
+    const unsubscribe = RealtimeStatus.boxChannel.subscribe((message) => {
+      if (message.type === "score") {
+        addPoints(message.amount, message.team);
+      }
     });
-  };
+    return () => {
+      unsubscribe();
+    };
+  }, [addPoints]);
 
   const createTeamDisplay = (team: string, isLeft: boolean) => {
     const teamScore = teamScores.find((t) => t.team === team);
