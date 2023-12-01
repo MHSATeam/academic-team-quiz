@@ -13,6 +13,7 @@ const MathPage = lazy(() => import("./components/MathPage"));
 const BuzzerPage = lazy(() => import("./components/BuzzerPage"));
 const BuzzerBox = lazy(() => import("./components/BuzzerBox"));
 const SetPage = lazy(() => import("./components/SetPage"));
+const Scorekeeper = lazy(() => import("./components/Scorekeeper"));
 
 const loadRealtime = async () => {
   RealtimeStatus.connect();
@@ -83,6 +84,15 @@ const router = createBrowserRouter([
     element: (
       <Suspense fallback={loadingFallback}>
         <BuzzerBox />
+      </Suspense>
+    ),
+    loader: loadRealtime,
+  },
+  {
+    path: "/scorekeeper",
+    element: (
+      <Suspense fallback={loadingFallback}>
+        <Scorekeeper />
       </Suspense>
     ),
     loader: loadRealtime,

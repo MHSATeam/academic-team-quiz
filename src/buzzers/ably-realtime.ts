@@ -15,11 +15,17 @@ export type BuzzerClickPresence = {
   team: string;
 };
 
-export type BoxChannelMessageType = "reset";
+export type BoxChannelMessageType = "reset" | "score";
 
-export type BoxChannelMessage = {
-  type: BoxChannelMessageType;
-};
+export type BoxChannelMessage =
+  | {
+      type: "reset";
+    }
+  | {
+      type: "score";
+      amount: number;
+      team: string;
+    };
 
 export type TeamScore = {
   team: string;
