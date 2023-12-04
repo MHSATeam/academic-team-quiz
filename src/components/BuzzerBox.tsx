@@ -13,21 +13,29 @@ import { useUserList } from "../buzzers/useUserList";
 import beepSoundUrl from "/beep.mp3?url";
 
 const beepSound = new Audio(beepSoundUrl);
+const scoresStorageKey = "scores";
 
 export default function BuzzerBox() {
   const [buzzerHistory, setBuzzerHistory] = useState<
     (BuzzerClickMessage | "reset")[]
   >([]);
-  const [teamScores, setTeamScores] = useState<TeamScore[]>([
-    {
-      score: 0,
-      team: "a",
-    },
-    {
-      score: 0,
-      team: "b",
-    },
-  ]);
+  const [teamScores, setTeamScores] = useState<TeamScore[]>(() => {
+    const loadedScores = localStorage.getItem(scoresStorageKey);
+    if (loadedScores) {
+      return JSON.parse(loadedScores);
+    } else {
+      return [
+        {
+          score: 0,
+          team: "a",
+        },
+        {
+          score: 0,
+          team: "b",
+        },
+      ];
+    }
+  });
   const [isMuted, setMuted] = useState(false);
   const [isLocked, setLocked] = useState(false);
 
@@ -53,6 +61,7 @@ export default function BuzzerBox() {
       timestamp: Date.now(),
       locked: isLocked,
     });
+    localStorage.setItem(scoresStorageKey, JSON.stringify(teamScores));
   }, [teamScores, isLocked]);
 
   useEffect(() => {
@@ -168,20 +177,24 @@ export default function BuzzerBox() {
             cornerRounding
           )}
         >
-          {[1, 2, /*...(tieBreaker > 2 ? [tieBreaker] : []),*/ -1].map(
-            (increment, index) => (
-              <button
-                key={index}
-                onClick={() => {
-                  addPoints(increment, team);
-                }}
-                className="p-2 px-4 bg-gray-400 active:bg-gray-300 rounded-md"
-              >
-                {increment > 0 ? "+" : ""}
-                {increment}
-              </button>
-            )
-          )}
+          {[
+            1,
+            2,
+            /*...(tieBreaker > 2 ? [tieBreaker] : []),*/ -1,
+            ...(score === 0 ? [] : [-score]),
+          ].map((increment, index) => (
+            <button
+              key={index}
+              onClick={() => {
+                addPoints(increment, team);
+              }}
+              className="p-2 px-4 bg-gray-400 active:bg-gray-300 rounded-md"
+            >
+              {increment === -score
+                ? "Clear"
+                : (increment > 0 ? "+" : "") + increment}
+            </button>
+          ))}
         </div>
       </div>
     );
