@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import Creatable from "react-select/creatable";
 import Select from "react-select";
 import { RealtimeStatus } from "../buzzers/ably-realtime";
@@ -120,47 +120,33 @@ export default function BuzzerPage() {
     }
   }, [user]);
 
+  const onBuzz = useCallback(() => {
+    setCurrentlyClicking(true);
+    if (user !== null && status === "joined") {
+      RealtimeStatus.buzzerClick.publish({
+        user,
+        team: team.value,
+        timestamp: Date.now(),
+      });
+    } else {
+      alert("You are missing a name!");
+      setStatus("naming");
+    }
+  }, [status, user, isLocked, isHostConnected]);
+
   useEffect(() => {
-    const onBuzz = (e: UIEvent) => {
-      const noBuzzZones = document.getElementsByClassName("no-buzz");
-      if (
-        !isHostConnected ||
-        isLocked ||
-        (noBuzzZones &&
-          Array.from(noBuzzZones).some(
-            (node) => e.target instanceof Node && node.contains(e.target)
-          ))
-      ) {
-        return;
-      }
-      setCurrentlyClicking(true);
-      if (user !== null && status === "joined") {
-        RealtimeStatus.buzzerClick.publish({
-          user,
-          team: team.value,
-          timestamp: Date.now(),
-        });
-      } else {
-        alert("You are missing a name!");
-        setStatus("naming");
-      }
-    };
     const onKeyDown = (e: KeyboardEvent) => {
       if (e.key === " ") {
-        onBuzz(e);
+        onBuzz();
       }
     };
     if (status === "joined") {
-      document.addEventListener("touchstart", onBuzz);
-      document.addEventListener("mousedown", onBuzz);
       document.addEventListener("keydown", onKeyDown);
     }
     return () => {
-      document.removeEventListener("touchstart", onBuzz);
-      document.removeEventListener("mousedown", onBuzz);
       document.removeEventListener("keydown", onKeyDown);
     };
-  }, [status, user, isLocked, isHostConnected]);
+  }, [status, onBuzz]);
 
   useEffect(() => {
     const onMouseUp = () => {
@@ -316,6 +302,8 @@ export default function BuzzerPage() {
               "shadow-lg": currentlyClicking,
             }
           )}
+          onMouseDown={onBuzz}
+          onTouchStart={onBuzz}
         >
           <span className="text-4xl shrink-0 whitespace-nowrap">
             {isLocked ? "Locked" : "Buzz"}
