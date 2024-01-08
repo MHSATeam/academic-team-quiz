@@ -1,5 +1,5 @@
 import classNames from "classnames";
-import { Link, NavLink, Outlet } from "react-router-dom";
+import { NavLink, Outlet } from "react-router-dom";
 
 export default function App() {
   return (
