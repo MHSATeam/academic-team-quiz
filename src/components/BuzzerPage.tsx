@@ -11,6 +11,7 @@ import AblyStatusSymbol from "./AblyStatusSymbol";
 import { useBuzzerBox } from "../buzzers/useBuzzerBox";
 import { getTeamColors } from "../buzzers/get-team-colors";
 import { useNavigate } from "react-router-dom";
+import { useDebounce } from "../buzzers/useDebounce";
 
 type JoinStatus = "joined" | "joining" | "naming";
 
@@ -120,19 +121,22 @@ export default function BuzzerPage() {
     }
   }, [user]);
 
-  const onBuzz = useCallback(() => {
-    setCurrentlyClicking(true);
-    if (user !== null && status === "joined") {
-      RealtimeStatus.buzzerClick.publish({
-        user,
-        team: team.value,
-        timestamp: Date.now(),
-      });
-    } else {
-      alert("You are missing a name!");
-      setStatus("naming");
-    }
-  }, [status, user, isLocked, isHostConnected]);
+  const onBuzz = useDebounce(
+    useCallback(() => {
+      setCurrentlyClicking(true);
+      if (user !== null && status === "joined") {
+        RealtimeStatus.buzzerClick.publish({
+          user,
+          team: team.value,
+          timestamp: Date.now(),
+        });
+      } else {
+        alert("You are missing a name!");
+        setStatus("naming");
+      }
+    }, [status, user, isLocked, isHostConnected]),
+    500
+  );
 
   useEffect(() => {
     const onKeyDown = (e: KeyboardEvent) => {
@@ -302,8 +306,14 @@ export default function BuzzerPage() {
               "shadow-lg": currentlyClicking,
             }
           )}
-          onMouseDown={onBuzz}
-          onTouchStart={onBuzz}
+          onMouseDown={(e) => {
+            e.preventDefault();
+            onBuzz();
+          }}
+          onTouchStart={(e) => {
+            e.preventDefault();
+            onBuzz();
+          }}
         >
           <span className="text-4xl shrink-0 whitespace-nowrap">
             {isLocked ? "Locked" : "Buzz"}
