@@ -1,7 +1,9 @@
 import classNames from "classnames";
+import { useState } from "react";
 import { RealtimeStatus } from "../buzzers/ably-realtime";
 import { getTeamColors } from "../buzzers/get-team-colors";
 import { useBuzzerBox } from "../buzzers/useBuzzerBox";
+import ExpandingInput from "./ExpandingInput";
 
 export default function Scorekeeper() {
   const [teamScores, _, isHostConnected] = useBuzzerBox();
@@ -12,6 +14,7 @@ export default function Scorekeeper() {
       team,
     });
   };
+  const [customScoreInputs, setCustomScoreInputs] = useState({ a: 0, b: 0 });
   if (!isHostConnected) {
     return (
       <div
@@ -35,7 +38,7 @@ export default function Scorekeeper() {
     <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 p-2 flex flex-col gap-2">
       <span className="text-3xl text-center">Scorekeeper</span>
       <div className="flex gap-4 text-xl flex-wrap">
-        {["a", "b"].map((team) => (
+        {(["a", "b"] as ("a" | "b")[]).map((team) => (
           <div
             key={team}
             className={classNames(
@@ -69,6 +72,45 @@ export default function Scorekeeper() {
                   </button>
                 )
               )}
+            </div>
+            <div className="flex gap-2 mx-auto">
+              <ExpandingInput
+                type="text"
+                className="py-1 p-3 rounded-md bg-white"
+                placeholder=" "
+                value={
+                  Number.isNaN(customScoreInputs[team])
+                    ? ""
+                    : customScoreInputs[team]
+                }
+                onChange={(e) => {
+                  try {
+                    const newValue = parseInt(e.target.value);
+                    setCustomScoreInputs((old) => {
+                      return {
+                        ...old,
+                        [team]: newValue,
+                      };
+                    });
+                  } catch (e) {}
+                }}
+              />
+              <button
+                onClick={() => {
+                  addPoints(
+                    Number.isNaN(customScoreInputs[team])
+                      ? 0
+                      : customScoreInputs[team],
+                    team
+                  );
+                }}
+                className="p-2 px-4 bg-gray-400 active:bg-gray-300 rounded-md"
+              >
+                Add{" "}
+                {Number.isNaN(customScoreInputs[team])
+                  ? 0
+                  : customScoreInputs[team]}
+              </button>
             </div>
           </div>
         ))}
