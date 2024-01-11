@@ -21,7 +21,7 @@ const failureColor = "rgb(221, 51, 29)";
 const userKey = "buzz-user";
 
 export default function BuzzerPage() {
-  const [currentBuzz, _, reset] = useBuzzIn();
+  const [currentBuzz, buzzList, reset] = useBuzzIn();
   const [scores, isLocked, isHostConnected] = useBuzzerBox();
   const [user, setUser] = useState<TeamMember | null>(() => {
     const stored = window.localStorage.getItem(userKey);
@@ -179,6 +179,8 @@ export default function BuzzerPage() {
     (connection) => connection.team === team.value
   );
 
+  const myBuzz = buzzList.find((buzz) => buzz.user.value === user?.value);
+
   if (status === "naming") {
     return (
       <>
@@ -328,9 +330,20 @@ export default function BuzzerPage() {
         <div className="no-buzz absolute bottom-0 left-0 w-full flex flex-col gap-2">
           {currentBuzz && (
             <span className="text-center text-lg">
-              {currentBuzz.user.value === user.value
-                ? "You buzzed in!"
-                : `${currentBuzz.user.label} has buzzed in!`}
+              {currentBuzz.user.value === user.value ? (
+                "You buzzed in!"
+              ) : (
+                <span>
+                  {currentBuzz.user.label} has buzzed in!
+                  {myBuzz && (
+                    <>
+                      <br />
+                      {(myBuzz.timestamp - currentBuzz.timestamp) / 1000}{" "}
+                      seconds later
+                    </>
+                  )}
+                </span>
+              )}
             </span>
           )}
           {canReset && (
