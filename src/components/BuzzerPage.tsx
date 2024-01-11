@@ -346,7 +346,7 @@ export default function BuzzerPage() {
               )}
             </span>
           )}
-          {canReset && (
+          {canReset && false && (
             <button
               onClick={() => {
                 reset();
