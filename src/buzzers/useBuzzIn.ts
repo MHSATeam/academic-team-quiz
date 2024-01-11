@@ -11,21 +11,27 @@ export function useBuzzIn(
   useEffect(() => {
     const unsubscribeBuzzerClick = RealtimeStatus.buzzerClick.subscribe(
       (buzzerMessage) => {
-        if (
-          buzzList.findIndex(
-            (buzz) => buzz.user.value === buzzerMessage.user.value
-          ) === -1
-        ) {
-          setBuzzList([...buzzList, buzzerMessage]);
-        }
+        setBuzzList((currentList) => {
+          if (
+            currentList.findIndex(
+              (buzz) => buzz.user.value === buzzerMessage.user.value
+            ) === -1
+          ) {
+            return [...currentList, buzzerMessage];
+          }
+          return currentList;
+        });
         let isFirst = false;
-        if (
-          currentBuzz === null ||
-          buzzerMessage.timestamp < currentBuzz.timestamp
-        ) {
-          isFirst = true;
-          setCurrentClick(buzzerMessage);
-        }
+        isFirst = true;
+        setCurrentClick((currentClick) => {
+          if (
+            currentClick === null ||
+            buzzerMessage.timestamp < currentClick.timestamp
+          ) {
+            return buzzerMessage;
+          }
+          return currentClick;
+        });
         onBuzzIn?.(buzzerMessage, isFirst);
       }
     );
@@ -41,7 +47,7 @@ export function useBuzzIn(
       unsubscribeBuzzerClick();
       unsubscribeBox();
     };
-  }, [currentBuzz, buzzList, onBuzzIn]);
+  }, [onBuzzIn]);
 
   function reset() {
     setCurrentClick(null);
