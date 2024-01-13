@@ -50,4 +50,8 @@ export const TeamMembers: TeamMember[] = [
     label: "Wesley Nelson",
     value: "wesley.nelson.student@madeiracityschools.org",
   },
+  {
+    label: "Omri Ayoub",
+    value: "omri.ayoub.student@madeiracityschools.org",
+  },
 ];
