@@ -36,7 +36,7 @@ export const useUserList = () => {
     return () => {
       unsubscribe();
     };
-  });
+  }, []);
 
   return Object.values(otherUsers);
 };
