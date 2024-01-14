@@ -6,4 +6,5 @@ dist-ssr
 .vercel
 .env*.local
 .env
+.next
 google-token.json

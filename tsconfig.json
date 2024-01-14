@@ -7,7 +7,11 @@
         "name": "next"
       }
     ],
-    "lib": ["DOM", "DOM.Iterable", "ESNext"],
+    "lib": [
+      "DOM",
+      "DOM.Iterable",
+      "ESNext"
+    ],
     "allowJs": true,
     "skipLibCheck": true,
     "esModuleInterop": true,
@@ -22,17 +26,32 @@
     "jsx": "preserve",
     "baseUrl": ".",
     "paths": {
-      "@/api-lib/*": ["src/api-lib/*"],
-      "@/components/*": ["src/components/*"],
-      "@/src/*": ["src/*"]
+      "@/api-lib/*": [
+        "src/api-lib/*"
+      ],
+      "@/components/*": [
+        "src/components/*"
+      ],
+      "@/src/*": [
+        "src/*"
+      ]
     },
     "incremental": true,
-    "types": ["dom-screen-wake-lock"]
+    "types": [
+      "dom-screen-wake-lock"
+    ]
   },
   "ts-node": {
     "esm": true,
     "experimentalSpecifierResolution": "node"
   },
-  "exclude": ["./node_modules"],
-  "include": ["src", "./next-env.d.ts", "./dist/types/**/*.ts"]
+  "exclude": [
+    "./node_modules"
+  ],
+  "include": [
+    "src",
+    "./next-env.d.ts",
+    "./dist/types/**/*.ts",
+    ".next/types/**/*.ts"
+  ]
 }

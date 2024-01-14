@@ -1,7 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   output: "standalone",
-  distDir: "./dist",
   webpack: (config) => {
     if (!("ignoreWarnings" in config)) {
       config.ignoreWarnings = [];
