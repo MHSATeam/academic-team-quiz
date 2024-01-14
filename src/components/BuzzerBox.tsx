@@ -10,9 +10,8 @@ import {
 import { getTeamColors } from "../buzzers/get-team-colors";
 import { useBuzzIn } from "../buzzers/useBuzzIn";
 import { useUserList } from "../buzzers/useUserList";
-import beepSoundUrl from "/beep.mp3?url";
 
-const beepSound = new Audio(beepSoundUrl);
+const beepSound = new Audio("/beep.mp3");
 const scoresStorageKey = "scores";
 
 export default function BuzzerBox() {

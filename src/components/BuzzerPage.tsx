@@ -10,8 +10,8 @@ import { ArrowLeft } from "lucide-react";
 import AblyStatusSymbol from "./AblyStatusSymbol";
 import { useBuzzerBox } from "../buzzers/useBuzzerBox";
 import { getTeamColors } from "../buzzers/get-team-colors";
-import { useNavigate } from "react-router-dom";
 import { useDebounce } from "../buzzers/useDebounce";
+import Link from "next/link";
 
 type JoinStatus = "joined" | "joining" | "naming";
 
@@ -38,7 +38,6 @@ export default function BuzzerPage() {
   const [canReset, setCanReset] = useState(false);
   const [currentlyClicking, setCurrentlyClicking] = useState(false);
   const otherUsers = useUserList();
-  const navigate = useNavigate();
   // const wakeLock = useRef<null | WakeLockSentinel>(null);
 
   useEffect(() => {
@@ -185,17 +184,12 @@ export default function BuzzerPage() {
     return (
       <>
         <div className="no-buzz absolute top-0 left-0 p-1">
-          <button
-            onClick={() => {
-              navigate("/");
-            }}
-            className="p-3"
-          >
+          <Link href="/" className="p-3 flex">
             <div className="bg-gray-400 p-2 rounded-md flex gap-2">
               <ArrowLeft />
               <span>Back to Quiz</span>
             </div>
-          </button>
+          </Link>
         </div>
         <div className="flex flex-col gap-3 justify-center p-2 absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-lg border-2">
           <label className="text-center">Choose Your Name</label>

@@ -1,6 +1,19 @@
-import { type Set, sets } from "@/api-lib/_set-list";
+"use client";
+import { type Set, sets } from "@/api-lib/set-list";
 import Select from "react-select";
-import { displayNames } from "../setNames";
+
+const displayNames: { [key: string]: string } = {
+  "american-government-and-economics": "American Government and Economics",
+  "american-history": "American History",
+  "american-literature": "American Literature",
+  "fine-arts": "Fine Arts",
+  geography: "Geography",
+  "life-science": "Life Science",
+  math: "Math",
+  "physical-science": "Physical Science",
+  "world-history": "World History",
+  "world-literature": "World Literature",
+};
 
 type SetPickerProps = {
   setList: SetLabel[];

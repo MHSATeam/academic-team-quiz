@@ -1,0 +1,19 @@
+import { MetadataRoute } from "next";
+
+export default function manifest(): MetadataRoute.Manifest {
+  return {
+    name: "A-Team",
+    short_name: "A-Team",
+    icons: [
+      {
+        src: "favicon.ico",
+        type: "image/x-icon",
+        sizes: "48x48",
+      },
+    ],
+    start_url: "/",
+    display: "standalone",
+    theme_color: "#000000",
+    background_color: "#ffffff",
+  };
+}
