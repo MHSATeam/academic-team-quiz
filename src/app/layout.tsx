@@ -16,6 +16,13 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
+      <head>
+        <link
+          rel="manifest"
+          href="manifest.json"
+          crossOrigin="use-credentials"
+        />
+      </head>
       <UserProvider>
         <body>
           <div id="app">{children}</div>
