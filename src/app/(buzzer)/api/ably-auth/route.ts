@@ -24,6 +24,8 @@ async function getAblyToken(): Promise<Ably.Types.TokenRequest> {
   });
 }
 
+export const revalidate = 0;
+
 export async function GET(req: Request) {
   if (ablyRest === null) {
     console.warn(
