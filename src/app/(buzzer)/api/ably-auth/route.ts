@@ -1,4 +1,3 @@
-import { withApiAuthRequired } from "@auth0/nextjs-auth0";
 import Ably from "ably";
 import { nanoid } from "nanoid";
 import { NextResponse } from "next/server";
@@ -25,7 +24,7 @@ async function getAblyToken(): Promise<Ably.Types.TokenRequest> {
   });
 }
 
-export const GET = withApiAuthRequired(async function GET(req: Request) {
+export async function GET(req: Request) {
   if (ablyRest === null) {
     console.warn(
       "You have not setup an api key for ably realtime, so features related to it will be disabled."
@@ -44,4 +43,4 @@ export const GET = withApiAuthRequired(async function GET(req: Request) {
       status: 500,
     });
   }
-});
+}

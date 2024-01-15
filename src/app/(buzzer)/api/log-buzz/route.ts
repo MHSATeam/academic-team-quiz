@@ -1,7 +1,6 @@
 import { google } from "googleapis";
 import { NextRequest, NextResponse } from "next/server";
 import type { BuzzerClickMessage } from "@/src/buzzers/ably-realtime";
-import { withApiAuthRequired } from "@auth0/nextjs-auth0";
 const private_key = process.env.PRIVATE_KEY?.split(String.raw`\n`).join("\n");
 
 const auth = new google.auth.GoogleAuth({
@@ -19,7 +18,7 @@ const sheets = google.sheets({
 });
 const spreadsheetId = "1GVp5t7rZzk64-YMGURvfq_oVjNa_BudmTHWz7j_geZ8";
 
-export const POST = withApiAuthRequired(async function POST(req: NextRequest) {
+export async function POST(req: NextRequest) {
   const { buzzList, sessionId } = (await req.json()) as {
     buzzList: BuzzerClickMessage[];
     sessionId: string;
@@ -51,4 +50,4 @@ export const POST = withApiAuthRequired(async function POST(req: NextRequest) {
     console.error(e);
   }
   return NextResponse.json({ success: false });
-});
+}

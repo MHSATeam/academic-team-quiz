@@ -1,9 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { Set, sets } from "@/api-lib/set-list";
 import { getQuestion, getAnswer } from "@/api-lib/utils";
-import { withApiAuthRequired } from "@auth0/nextjs-auth0";
 
-export const POST = withApiAuthRequired(async function POST(req: NextRequest) {
+export async function POST(req: NextRequest) {
   const body = await req.json();
   if (!body || !body.sets) {
     return NextResponse.json("Missing sets", { status: 400 });
@@ -23,4 +22,4 @@ export const POST = withApiAuthRequired(async function POST(req: NextRequest) {
   const question = await getQuestion(filteredSets);
   const answer = await getAnswer(question.id);
   return NextResponse.json({ term: answer, ...question });
-});
+}
