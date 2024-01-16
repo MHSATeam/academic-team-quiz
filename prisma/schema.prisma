@@ -7,3 +7,93 @@ datasource db {
   url       = env("POSTGRES_PRISMA_URL") // uses connection pooling
   directUrl = env("POSTGRES_URL_NON_POOLING") // uses a direct connection
 }
+
+model Question {
+  id          Int      @id @default(autoincrement())
+  question    String
+  answer      String
+  createdYear Int      @db.SmallInt
+  catagory    Catagory @relation(fields: [catagoryId], references: [id])
+  catagoryId  Int
+  round       Round    @relation(fields: [roundId], references: [id])
+  roundId     Int
+  createdOn   DateTime @default(now())
+  modifiedOn  DateTime @default(now()) @updatedAt
+}
+
+model Set {
+  id               Int            @id @default(autoincrement())
+  name             String
+  author           String?
+  difficulty       Int
+  categoryRoundId  Int?
+  categoryRound    CategoryRound? @relation(fields: [categoryRoundId], references: [id])
+  alphabetRoundId  Int?
+  alphabetRound    AlphabetRound? @relation(fields: [alphabetRoundId], references: [roundId])
+  lightningRoundId Int?
+  lightningRound   Round?         @relation(fields: [lightningRoundId], references: [id])
+  themeRoundId     Int?
+  themeRound       ThemeRound?    @relation(fields: [themeRoundId], references: [roundId])
+  createdOn        DateTime       @default(now())
+  modifiedOn       DateTime       @default(now()) @updatedAt
+}
+
+model Catagory {
+  id                Int                 @id @default(autoincrement())
+  name              String
+  questions         Question[]
+  categoryTeamGroup CategoryTeamGroup[]
+  createdOn         DateTime            @default(now())
+  modifiedOn        DateTime            @default(now()) @updatedAt
+}
+
+model Round {
+  id                Int                @id @default(autoincrement())
+  name              String?
+  questions         Question[]
+  alphabetRound     AlphabetRound?
+  categoryTeamGroup CategoryTeamGroup?
+  themeRound        ThemeRound?
+  sets              Set[]
+  createdOn         DateTime           @default(now())
+  modifiedOn        DateTime           @default(now()) @updatedAt
+}
+
+model AlphabetRound {
+  roundId    Int      @id
+  round      Round    @relation(fields: [roundId], references: [id])
+  letter     String   @db.Char()
+  sets       Set[]
+  createdOn  DateTime @default(now())
+  modifiedOn DateTime @default(now()) @updatedAt
+}
+
+model ThemeRound {
+  roundId    Int      @id
+  round      Round    @relation(fields: [roundId], references: [id])
+  theme      String
+  sets       Set[]
+  createdOn  DateTime @default(now())
+  modifiedOn DateTime @default(now()) @updatedAt
+}
+
+model CategoryRound {
+  id         Int                 @id @default(autoincrement())
+  teamGroups CategoryTeamGroup[]
+  sets       Set[]
+  createdOn  DateTime            @default(now())
+  modifiedOn DateTime            @default(now()) @updatedAt
+}
+
+model CategoryTeamGroup {
+  int             Int           @id @default(autoincrement())
+  team            String        @db.Char()
+  roundId         Int           @unique
+  round           Round         @relation(fields: [roundId], references: [id])
+  categoryRoundId Int
+  categoryRound   CategoryRound @relation(fields: [categoryRoundId], references: [id])
+  categoryId      Int
+  category        Catagory      @relation(fields: [categoryId], references: [id])
+  createdOn       DateTime      @default(now())
+  modifiedOn      DateTime      @default(now()) @updatedAt
+}
