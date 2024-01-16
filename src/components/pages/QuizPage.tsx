@@ -4,9 +4,9 @@ import SetPicker, {
   convertSetLabelsToSetArray,
   DefaultSetLabels,
   SetLabel,
-} from "./SetPicker";
-import QuestionBox from "./QuestionBox";
-import ScrollToTop from "./ScrollToTop";
+} from "../SetPicker";
+import QuestionBox from "../QuestionBox";
+import ScrollToTop from "../utils/ScrollToTop";
 
 export default function QuizPage() {
   const [questions, setQuestions] = useState<

@@ -3,10 +3,10 @@ import {
   ALLOWED_PROBLEM_TYPES,
   Problem,
   ProblemType,
-} from "../math/math-types";
-import { generateProblems } from "../math/generateMath";
+} from "@/src/math/math-types";
+import { generateProblems } from "@/src/math/generateMath";
 import { MathJaxContext } from "better-react-mathjax";
-import MathProblem from "./MathProblem";
+import MathProblem from "../MathProblem";
 import { ArrowRight } from "lucide-react";
 import Select from "react-select";
 import { ErrorBoundary } from "react-error-boundary";

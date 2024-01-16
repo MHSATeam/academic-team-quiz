@@ -1,7 +1,7 @@
 import { QuestionSet } from "@/api-lib/utils";
 import { useEffect, useRef, useState } from "react";
 import { Set, sets } from "@/api-lib/set-list";
-import SetPicker from "./SetPicker";
+import SetPicker from "../SetPicker";
 import { Loader2 } from "lucide-react";
 
 const displayNames: { [key: string]: string } = {

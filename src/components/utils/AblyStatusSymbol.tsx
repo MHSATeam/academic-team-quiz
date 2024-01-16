@@ -1,14 +1,7 @@
 import { Types } from "ably";
-import {
-  Cloud,
-  CloudCog,
-  CloudOff,
-  Server,
-  ServerCog,
-  ServerOff,
-} from "lucide-react";
+import { Cloud, CloudCog, CloudOff } from "lucide-react";
 import { useEffect, useState } from "react";
-import { RealtimeStatus } from "../buzzers/ably-realtime";
+import { RealtimeStatus } from "@/src/buzzers/ably-realtime";
 
 type StatusSymbol = "server" | "server-off" | "server-cog";
 

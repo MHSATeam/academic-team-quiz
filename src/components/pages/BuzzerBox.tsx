@@ -6,10 +6,10 @@ import {
   BuzzerClickMessage,
   RealtimeStatus,
   TeamScore,
-} from "../buzzers/ably-realtime";
-import { getTeamColors } from "../buzzers/get-team-colors";
-import { useBuzzIn } from "../buzzers/useBuzzIn";
-import { useUserList } from "../buzzers/useUserList";
+} from "@/src/buzzers/ably-realtime";
+import { getTeamColors } from "@/src/buzzers/get-team-colors";
+import { useBuzzIn } from "@/src/buzzers/useBuzzIn";
+import { useUserList } from "@/src/buzzers/useUserList";
 
 const beepSound = new Audio("/beep.mp3");
 const scoresStorageKey = "scores";

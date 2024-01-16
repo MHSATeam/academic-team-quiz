@@ -1,16 +1,16 @@
 import { useCallback, useEffect, useState } from "react";
 import Creatable from "react-select/creatable";
 import Select from "react-select";
-import { RealtimeStatus } from "../buzzers/ably-realtime";
-import { TeamMember, TeamMembers, TeamName } from "../buzzers/team-members";
-import { useUserList } from "../buzzers/useUserList";
-import { useBuzzIn } from "../buzzers/useBuzzIn";
+import { RealtimeStatus } from "@/src/buzzers/ably-realtime";
+import { TeamMember, TeamMembers, TeamName } from "@/src/buzzers/team-members";
+import { useUserList } from "@/src/buzzers/useUserList";
+import { useBuzzIn } from "@/src/buzzers/useBuzzIn";
 import classNames from "classnames";
 import { ArrowLeft } from "lucide-react";
-import AblyStatusSymbol from "./AblyStatusSymbol";
-import { useBuzzerBox } from "../buzzers/useBuzzerBox";
-import { getTeamColors } from "../buzzers/get-team-colors";
-import { useDebounce } from "../buzzers/useDebounce";
+import AblyStatusSymbol from "../utils/AblyStatusSymbol";
+import { useBuzzerBox } from "@/src/buzzers/useBuzzerBox";
+import { getTeamColors } from "@/src/buzzers/get-team-colors";
+import { useDebounce } from "@/src/buzzers/useDebounce";
 import Link from "next/link";
 
 type JoinStatus = "joined" | "joining" | "naming";

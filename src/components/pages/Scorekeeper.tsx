@@ -1,9 +1,9 @@
 import classNames from "classnames";
 import { useState } from "react";
-import { RealtimeStatus } from "../buzzers/ably-realtime";
-import { getTeamColors } from "../buzzers/get-team-colors";
-import { useBuzzerBox } from "../buzzers/useBuzzerBox";
-import ExpandingInput from "./ExpandingInput";
+import { RealtimeStatus } from "@/src/buzzers/ably-realtime";
+import { getTeamColors } from "@/src/buzzers/get-team-colors";
+import { useBuzzerBox } from "@/src/buzzers/useBuzzerBox";
+import ExpandingInput from "../utils/ExpandingInput";
 
 export default function Scorekeeper() {
   const [teamScores, _, isHostConnected] = useBuzzerBox();

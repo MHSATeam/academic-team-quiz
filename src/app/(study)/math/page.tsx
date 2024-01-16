@@ -2,7 +2,7 @@
 
 import dynamic from "next/dynamic";
 
-const MathPage = dynamic(() => import("../../../components/MathPage"), {
+const MathPage = dynamic(() => import("../../../components/pages/MathPage"), {
   ssr: false,
 });
 
