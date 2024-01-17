@@ -13,8 +13,8 @@ model Question {
   question    String
   answer      String
   createdYear Int      @db.SmallInt
-  catagory    Catagory @relation(fields: [catagoryId], references: [id])
-  catagoryId  Int
+  category    Category @relation(fields: [categoryId], references: [id])
+  categoryId  Int
   round       Round?   @relation(fields: [roundId], references: [id])
   roundId     Int?
   createdOn   DateTime @default(now())
@@ -38,7 +38,7 @@ model Set {
   modifiedOn       DateTime       @default(now()) @updatedAt
 }
 
-model Catagory {
+model Category {
   id                Int                 @id @default(autoincrement())
   name              String
   questions         Question[]
@@ -93,7 +93,7 @@ model CategoryTeamGroup {
   categoryRoundId Int
   categoryRound   CategoryRound @relation(fields: [categoryRoundId], references: [id])
   categoryId      Int
-  category        Catagory      @relation(fields: [categoryId], references: [id])
+  category        Category      @relation(fields: [categoryId], references: [id])
   createdOn       DateTime      @default(now())
   modifiedOn      DateTime      @default(now()) @updatedAt
 }

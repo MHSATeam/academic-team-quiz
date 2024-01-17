@@ -4,7 +4,7 @@ CREATE TABLE "Question" (
     "question" TEXT NOT NULL,
     "answer" TEXT NOT NULL,
     "createdYear" SMALLINT NOT NULL,
-    "catagoryId" INTEGER NOT NULL,
+    "categoryId" INTEGER NOT NULL,
     "roundId" INTEGER,
     "createdOn" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "modifiedOn" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -29,13 +29,13 @@ CREATE TABLE "Set" (
 );
 
 -- CreateTable
-CREATE TABLE "Catagory" (
+CREATE TABLE "Category" (
     "id" SERIAL NOT NULL,
     "name" TEXT NOT NULL,
     "createdOn" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "modifiedOn" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
-    CONSTRAINT "Catagory_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "Category_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -94,7 +94,7 @@ CREATE TABLE "CategoryTeamGroup" (
 CREATE UNIQUE INDEX "CategoryTeamGroup_roundId_key" ON "CategoryTeamGroup"("roundId");
 
 -- AddForeignKey
-ALTER TABLE "Question" ADD CONSTRAINT "Question_catagoryId_fkey" FOREIGN KEY ("catagoryId") REFERENCES "Catagory"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Question" ADD CONSTRAINT "Question_categoryId_fkey" FOREIGN KEY ("categoryId") REFERENCES "Category"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Question" ADD CONSTRAINT "Question_roundId_fkey" FOREIGN KEY ("roundId") REFERENCES "Round"("id") ON DELETE SET NULL ON UPDATE CASCADE;
@@ -124,4 +124,4 @@ ALTER TABLE "CategoryTeamGroup" ADD CONSTRAINT "CategoryTeamGroup_roundId_fkey" 
 ALTER TABLE "CategoryTeamGroup" ADD CONSTRAINT "CategoryTeamGroup_categoryRoundId_fkey" FOREIGN KEY ("categoryRoundId") REFERENCES "CategoryRound"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "CategoryTeamGroup" ADD CONSTRAINT "CategoryTeamGroup_categoryId_fkey" FOREIGN KEY ("categoryId") REFERENCES "Catagory"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "CategoryTeamGroup" ADD CONSTRAINT "CategoryTeamGroup_categoryId_fkey" FOREIGN KEY ("categoryId") REFERENCES "Category"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
