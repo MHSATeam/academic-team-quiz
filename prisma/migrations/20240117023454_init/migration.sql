@@ -5,7 +5,7 @@ CREATE TABLE "Question" (
     "answer" TEXT NOT NULL,
     "createdYear" SMALLINT NOT NULL,
     "catagoryId" INTEGER NOT NULL,
-    "roundId" INTEGER NOT NULL,
+    "roundId" INTEGER,
     "createdOn" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "modifiedOn" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
@@ -97,7 +97,7 @@ CREATE UNIQUE INDEX "CategoryTeamGroup_roundId_key" ON "CategoryTeamGroup"("roun
 ALTER TABLE "Question" ADD CONSTRAINT "Question_catagoryId_fkey" FOREIGN KEY ("catagoryId") REFERENCES "Catagory"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Question" ADD CONSTRAINT "Question_roundId_fkey" FOREIGN KEY ("roundId") REFERENCES "Round"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Question" ADD CONSTRAINT "Question_roundId_fkey" FOREIGN KEY ("roundId") REFERENCES "Round"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Set" ADD CONSTRAINT "Set_categoryRoundId_fkey" FOREIGN KEY ("categoryRoundId") REFERENCES "CategoryRound"("id") ON DELETE SET NULL ON UPDATE CASCADE;

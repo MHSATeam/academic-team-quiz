@@ -3,6 +3,7 @@ import React from "react";
 import { Analytics } from "@vercel/analytics/react";
 import { UserProvider } from "@auth0/nextjs-auth0/client";
 import "../assets/scss/main.scss";
+import { BottomNav } from "@/components/layout/BottomNav";
 
 export const metadata: Metadata = {
   title: "Academic Quiz",
@@ -15,7 +16,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
+    <html lang="en" className="h-full">
       <head>
         <link
           rel="manifest"
@@ -24,8 +25,9 @@ export default function RootLayout({
         />
       </head>
       <UserProvider>
-        <body>
-          <div id="app">{children}</div>
+        <body className="h-full flex flex-col dark:bg-slate-800">
+          <div className="pb-16 max-sm:pb-20 grow relative">{children}</div>
+          <BottomNav />
           <Analytics />
         </body>
       </UserProvider>

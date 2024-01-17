@@ -15,8 +15,8 @@ model Question {
   createdYear Int      @db.SmallInt
   catagory    Catagory @relation(fields: [catagoryId], references: [id])
   catagoryId  Int
-  round       Round    @relation(fields: [roundId], references: [id])
-  roundId     Int
+  round       Round?   @relation(fields: [roundId], references: [id])
+  roundId     Int?
   createdOn   DateTime @default(now())
   modifiedOn  DateTime @default(now()) @updatedAt
 }

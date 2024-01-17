@@ -44,7 +44,7 @@ export function convertSetLabelsToSetArray(setList: SetLabel[]) {
 export default function SetPicker(props: SetPickerProps) {
   return (
     <Select
-      className="m-2"
+      className="m-2 dark:text-black"
       isMulti
       isClearable={false}
       blurInputOnSelect={false}

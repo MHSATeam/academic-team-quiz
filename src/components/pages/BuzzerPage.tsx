@@ -11,7 +11,6 @@ import AblyStatusSymbol from "../utils/AblyStatusSymbol";
 import { useBuzzerBox } from "@/src/buzzers/useBuzzerBox";
 import { getTeamColors } from "@/src/buzzers/get-team-colors";
 import { useDebounce } from "@/src/buzzers/useDebounce";
-import Link from "next/link";
 
 type JoinStatus = "joined" | "joining" | "naming";
 
@@ -43,7 +42,7 @@ export default function BuzzerPage() {
   useEffect(() => {
     if (status === "joined") {
       if (currentBuzz === null) {
-        document.body.style.backgroundColor = "unset";
+        document.body.style.backgroundColor = "";
       } else if (currentBuzz.team === team.value) {
         document.body.style.backgroundColor = successColor;
       } else {
@@ -62,7 +61,7 @@ export default function BuzzerPage() {
     }
     return () => {
       active = false;
-      document.body.style.backgroundColor = "unset";
+      document.body.style.backgroundColor = "";
     };
   }, [currentBuzz, status]);
 
@@ -183,15 +182,7 @@ export default function BuzzerPage() {
   if (status === "naming") {
     return (
       <>
-        <div className="no-buzz absolute top-0 left-0 p-1">
-          <Link href="/" className="p-3 flex">
-            <div className="bg-gray-400 p-2 rounded-md flex gap-2">
-              <ArrowLeft />
-              <span>Back to Quiz</span>
-            </div>
-          </Link>
-        </div>
-        <div className="flex flex-col gap-3 justify-center p-2 absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-lg border-2">
+        <div className="flex flex-col gap-3 justify-center p-2 absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-lg border-2 bg-slate-200 dark:bg-slate-500 dark:border-slate-600 dark:text-white">
           <label className="text-center">Choose Your Name</label>
           <Creatable
             className="min-w-[16em]"
@@ -244,7 +235,7 @@ export default function BuzzerPage() {
     );
   } else if (user !== null) {
     const topBar = (
-      <div className="no-buzz absolute top-0 left-0 p-1 w-full flex gap-4 items-center">
+      <div className="no-buzz absolute top-0 left-0 p-1 w-full flex gap-4 items-center dark:text-white">
         <button
           onClick={(e) => {
             e.stopPropagation();
@@ -274,7 +265,8 @@ export default function BuzzerPage() {
               "-translate-x-1/2",
               "-translate-y-1/2",
               "flex",
-              "flex-col"
+              "flex-col",
+              "dark:text-white"
             )}
           >
             <span>Waiting for host to connect...</span>

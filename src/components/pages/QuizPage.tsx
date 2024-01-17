@@ -127,8 +127,8 @@ export default function QuizPage() {
     window.localStorage.setItem("autoNext", JSON.stringify(autoNext));
   }, [autoNext]);
   return (
-    <main className="mb-12">
-      <div className="flex flex-col border-2 rounded-lg grow shrink">
+    <main className="mb-12 dark:text-white">
+      <div className="flex flex-col border-2 rounded-lg grow shrink bg-slate-200 dark:bg-slate-500 dark:border-slate-600">
         <button
           className={
             "flex gap-2 p-2 text-lg font-bold" +
