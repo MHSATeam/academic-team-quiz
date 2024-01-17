@@ -27,7 +27,7 @@ export default function ScrollToTop(props: ScrollToTopProps) {
       }}
       tabIndex={-1}
       className={
-        "fixed m-2 p-2 bottom-0 right-0 rounded-lg border-2 bg-slate-400 active:scale-95 transition-opacity" +
+        "fixed m-2 p-2 max-sm:bottom-20 bottom-16 right-0 rounded-lg border-2 bg-slate-400 active:scale-95 transition-opacity" +
         (active ? " opacity-50" : " opacity-0")
       }
     >

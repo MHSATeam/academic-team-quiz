@@ -185,7 +185,7 @@ export default function BuzzerPage() {
         <div className="flex flex-col gap-3 justify-center p-2 absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-lg border-2 bg-slate-200 dark:bg-slate-500 dark:border-slate-600 dark:text-white">
           <label className="text-center">Choose Your Name</label>
           <Creatable
-            className="min-w-[16em]"
+            className="min-w-[16em] dark:text-black"
             options={TeamMembers}
             isClearable={false}
             value={user}
@@ -201,6 +201,7 @@ export default function BuzzerPage() {
             }}
           />
           <Select
+            className="dark:text-black"
             options={"ab".split("").map((char) => ({
               value: char,
               label: `Team ${char.toUpperCase()}`,

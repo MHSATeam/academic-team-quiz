@@ -6,6 +6,7 @@ import {
   AreaChart,
   Bold,
   Card,
+  Col,
   Flex,
   Grid,
   List,
@@ -33,9 +34,14 @@ export default async function Page() {
     user = session.user;
   }
   const question = await getQuestion(Math.floor(Math.random() * 2) + 1);
+  const firstname = user.name
+    ?.replace(/\w\S*/g, function (txt) {
+      return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+    })
+    .split(" ")[0];
   return (
     <main className="py-12 px-6">
-      <Metric>Welcome {user.name as string}!</Metric>
+      <Metric>Welcome {firstname}!</Metric>
       <Grid numItems={1} numItemsMd={2} numItemsLg={3} className="gap-2 mt-4">
         {question && (
           <Card>
