@@ -8,10 +8,12 @@ import {
   AreaChart,
   Bold,
   Card,
+  Col,
   Flex,
   Grid,
   Metric,
   ProgressBar,
+  Subtitle,
   Text,
   Title,
 } from "@tremor/react";
@@ -42,6 +44,9 @@ export default async function Page() {
   }
   const questionOfTheDay = await getRandomQuestion();
   const { streaks, isActive: isStreakActive } = await getStreaks(user.sub);
+  const activeStreak = isStreakActive ? streaks[0] : undefined;
+  const goalPercent =
+    Math.round(Number(activeStreak?.days_count ?? 0) * (100 / 0.6)) / 100;
 
   const daysActive = await getDaysActive(user.sub);
   const numDaysInTimeFrame = 31;
@@ -52,31 +57,33 @@ export default async function Page() {
     <main className="py-12 px-6">
       <Metric>Welcome {formatUserName(user.name).split(" ")[0]}!</Metric>
       <Grid numItems={1} numItemsMd={2} numItemsLg={3} className="gap-2 mt-4">
-        <Card>
-          <Title>Question of the Day</Title>
-          {questionOfTheDay ? (
-            <QuestionDisplay question={questionOfTheDay} />
-          ) : (
-            <Text>Couldn't find question of the day!</Text>
-          )}
-        </Card>
+        <Col numColSpan={1} numColSpanSm={2}>
+          <Card>
+            <Title>Question of the Day</Title>
+            {questionOfTheDay ? (
+              <QuestionDisplay question={questionOfTheDay} />
+            ) : (
+              <Text>Couldn't find question of the day!</Text>
+            )}
+          </Card>
+        </Col>
         <Card>
           <Title>Current Streak</Title>
           <Metric className="mt-2">
-            {isStreakActive ? String(streaks[0].days_count) : "0"} Days!
+            {activeStreak ? String(activeStreak.days_count) : "0"} Days!
           </Metric>
-          <StreakTracker user={user} />
+          <StreakTracker user={user} isStreakActive={isStreakActive} />
         </Card>
         <Card>
-          <Title>Streak Goal</Title>
+          <Flex>
+            <Title>Streak Goal</Title>
+            <Subtitle color="blue">Keep Going!</Subtitle>
+          </Flex>
           <Flex className="mt-2 mb-1">
             <Text>Goal: 2 Month</Text>
-            <Text>50%</Text>
+            <Text>{goalPercent}%</Text>
           </Flex>
-          <ProgressBar value={50} />
-          <Title className="mt-4">
-            <Bold>Half way there!</Bold>
-          </Title>
+          <ProgressBar value={goalPercent} />
         </Card>
         <Card>
           <Title>Streak Leaderboard</Title>

@@ -6,7 +6,13 @@ import {
 import { UserProfile } from "@auth0/nextjs-auth0/client";
 import { Flex, Text, Tracker } from "@tremor/react";
 
-export default async function StreakTracker({ user }: { user: UserProfile }) {
+export default async function StreakTracker({
+  user,
+  isStreakActive,
+}: {
+  user: UserProfile;
+  isStreakActive: boolean;
+}) {
   if (!user.sub) {
     throw new Error("Missing user id");
   }
@@ -27,7 +33,11 @@ export default async function StreakTracker({ user }: { user: UserProfile }) {
           );
 
           return {
-            color: activeDay ? "emerald" : isToday ? "yellow" : "gray",
+            color: activeDay
+              ? "emerald"
+              : isToday && isStreakActive
+              ? "yellow"
+              : "gray",
             tooltip: isToday ? "Today" : formatMonthDateShort(date),
           };
         })}
