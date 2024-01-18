@@ -3,8 +3,8 @@ import {
   ALLOWED_PROBLEM_TYPES,
   Problem,
   ProblemType,
-} from "@/src/math/math-types";
-import { generateProblems } from "@/src/math/generateMath";
+} from "@/src/lib/math/math-types";
+import { generateProblems } from "@/src/lib/math/generateMath";
 import { MathJaxContext } from "better-react-mathjax";
 import MathProblem from "../MathProblem";
 import { ArrowRight } from "lucide-react";

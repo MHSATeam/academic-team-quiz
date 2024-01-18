@@ -88,9 +88,9 @@ export default function QuizPage() {
       if (questions.find((q) => q.id === response.id)) {
         return getNextQuestion(quiet, errorCount + 0.5);
       }
-      question.question = response.definition;
+      question.question = response.question;
       question.id = response.id;
-      question.answer = response.term;
+      question.answer = response.answer;
     } catch (e) {
       console.error(e);
       if (errorCount < 3) {

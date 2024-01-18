@@ -1,4 +1,4 @@
-import { prismaClient } from "@/api-lib/clients";
+import { prismaClient } from "@/src/utils/clients";
 import "server-only";
 
 export async function getQuestion(id?: number) {

@@ -1,23 +1,27 @@
+import StreakTracker from "@/components/dashboard/StreakTracker";
 import QuestionDisplay from "@/components/utils/QuestionDisplay";
-import { getQuestion } from "@/src/questions/get-question";
+import { getRandomQuestion } from "@/src/lib/questions/get-random-question";
+import getStreaks from "@/src/lib/streaks/get-streak";
 import { getSession } from "@auth0/nextjs-auth0";
 import { UserProfile } from "@auth0/nextjs-auth0/client";
 import {
   AreaChart,
   Bold,
   Card,
-  Col,
   Flex,
   Grid,
-  List,
-  ListItem,
   Metric,
   ProgressBar,
   Text,
   Title,
-  Tracker,
 } from "@tremor/react";
-import { Medal } from "lucide-react";
+import formatUserName from "@/src/lib/users/format-user-name";
+import StreakLeaderBoard from "@/components/dashboard/StreakLeaderBoard";
+import getDaysActive from "@/src/lib/streaks/get-days-active";
+import {
+  compareDateWithoutTime,
+  formatMonthDateShort,
+} from "@/src/utils/date-utils";
 
 export default async function Page() {
   const session = await getSession();
@@ -33,35 +37,35 @@ export default async function Page() {
   } else {
     user = session.user;
   }
-  const question = await getQuestion(Math.floor(Math.random() * 2) + 1);
-  const firstname = user.name
-    ?.replace(/\w\S*/g, function (txt) {
-      return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
-    })
-    .split(" ")[0];
+  if (!user.sub || !user.name) {
+    throw new Error("Missing user data!");
+  }
+  const questionOfTheDay = await getRandomQuestion();
+  const { streaks, isActive: isStreakActive } = await getStreaks(user.sub);
+
+  const daysActive = await getDaysActive(user.sub);
+  const numDaysInTimeFrame = 31;
+  const startDate = new Date();
+  startDate.setDate(startDate.getDate() - numDaysInTimeFrame);
+
   return (
     <main className="py-12 px-6">
-      <Metric>Welcome {firstname}!</Metric>
+      <Metric>Welcome {formatUserName(user.name).split(" ")[0]}!</Metric>
       <Grid numItems={1} numItemsMd={2} numItemsLg={3} className="gap-2 mt-4">
-        {question && (
-          <Card>
-            <Title>Question of the Day</Title>
-            <QuestionDisplay question={question} />
-          </Card>
-        )}
+        <Card>
+          <Title>Question of the Day</Title>
+          {questionOfTheDay ? (
+            <QuestionDisplay question={questionOfTheDay} />
+          ) : (
+            <Text>Couldn't find question of the day!</Text>
+          )}
+        </Card>
         <Card>
           <Title>Current Streak</Title>
-          <Metric className="mt-2">31 Days!</Metric>
-          <Tracker
-            data={new Array(15).fill(0).map((_, i) => {
-              return { color: "emerald", tooltip: `Jan ${i + 17}` };
-            })}
-            className="mt-4"
-          />
-          <Flex>
-            <Text>Jan 17</Text>
-            <Text>Jan 31</Text>
-          </Flex>
+          <Metric className="mt-2">
+            {isStreakActive ? String(streaks[0].days_count) : "0"} Days!
+          </Metric>
+          <StreakTracker user={user} />
         </Card>
         <Card>
           <Title>Streak Goal</Title>
@@ -76,50 +80,35 @@ export default async function Page() {
         </Card>
         <Card>
           <Title>Streak Leaderboard</Title>
-          <Flex className="mt-4">
-            <Text>Name</Text>
-            <Text>Streak</Text>
-          </Flex>
-          <List>
-            {[
-              { name: "Test User", streak: 31 },
-              { name: "Sasha Pinyayev", streak: 30 },
-              { name: "Ben Turcotte", streak: 28 },
-              { name: "Seth Rane", streak: 26 },
-            ].map(({ name, streak }, i) => (
-              <ListItem key={name}>
-                <Text>
-                  {i + 1 <= 3 ? (
-                    <Medal
-                      className="inline"
-                      style={{
-                        color: i === 0 ? "gold" : i === 1 ? "silver" : "brown",
-                      }}
-                    />
-                  ) : (
-                    `#${i + 1}. `
-                  )}{" "}
-                  {name}
-                </Text>
-                <Text>
-                  {i === 0 ? <Bold className="text-xl">{streak}</Bold> : streak}
-                </Text>
-              </ListItem>
-            ))}
-          </List>
+          <StreakLeaderBoard
+            includeSelf
+            currentUserId={user.sub}
+            currentUserName={user.name}
+          />
         </Card>
         <Card>
           <Title>Questions Studied Per Day</Title>
           <AreaChart
             className="h-72 mt-4"
-            data={new Array(31).fill(0).map((_, i) => ({
-              date: `Jan ${i + 1}`,
-              Questions: Math.floor((Math.cos(i * (1 / 4) + 2) + 1) * 3) + 4,
-            }))}
-            colors={["blue"]}
+            data={new Array(numDaysInTimeFrame).fill(0).map((_, i) => {
+              const date = new Date();
+              date.setDate(date.getDate() - (numDaysInTimeFrame - 1) + i);
+              const activeDay = daysActive.find((activeDay) =>
+                compareDateWithoutTime(activeDay.date, date)
+              );
+              const Answered = Number(activeDay?.question_count ?? 0);
+              const Correct = Number(activeDay?.correct_count ?? 0);
+
+              return {
+                date: formatMonthDateShort(date),
+                Correct,
+                Answered,
+              };
+            })}
+            colors={["blue", "green"]}
             index="date"
             yAxisWidth={30}
-            categories={["Questions"]}
+            categories={["Answered", "Correct"]}
           />
         </Card>
       </Grid>

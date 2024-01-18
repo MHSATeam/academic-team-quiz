@@ -9,16 +9,17 @@ datasource db {
 }
 
 model Question {
-  id          Int      @id @default(autoincrement())
+  id          Int                 @id @default(autoincrement())
   question    String
   answer      String
-  createdYear Int      @db.SmallInt
-  category    Category @relation(fields: [categoryId], references: [id])
+  createdYear Int                 @db.SmallInt
   categoryId  Int
-  round       Round?   @relation(fields: [roundId], references: [id])
+  category    Category            @relation(fields: [categoryId], references: [id])
   roundId     Int?
-  createdOn   DateTime @default(now())
-  modifiedOn  DateTime @default(now()) @updatedAt
+  round       Round?              @relation(fields: [roundId], references: [id])
+  userAnswers UserQuestionTrack[]
+  createdOn   DateTime            @default(now())
+  modifiedOn  DateTime            @default(now()) @updatedAt
 }
 
 model Set {
@@ -86,7 +87,7 @@ model CategoryRound {
 }
 
 model CategoryTeamGroup {
-  int             Int           @id @default(autoincrement())
+  id              Int           @id @default(autoincrement())
   team            String        @db.Char()
   roundId         Int           @unique
   round           Round         @relation(fields: [roundId], references: [id])
@@ -96,4 +97,25 @@ model CategoryTeamGroup {
   category        Category      @relation(fields: [categoryId], references: [id])
   createdOn       DateTime      @default(now())
   modifiedOn      DateTime      @default(now()) @updatedAt
+}
+
+model UserQuestionTrack {
+  id         Int       @id @default(autoincrement())
+  userId     String
+  questionId Int?
+  question   Question? @relation(fields: [questionId], references: [id], onDelete: SetNull)
+  result     Result
+  createdOn  DateTime  @default(now())
+}
+
+enum Result {
+  Correct
+  Incorrect
+}
+
+model ManagementTokens {
+  id        Int      @id @default(autoincrement())
+  token     String   @unique
+  expiresOn DateTime
+  createdOn DateTime @default(now())
 }
