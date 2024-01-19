@@ -19,7 +19,7 @@ export default async function StreakTracker({
   const daysActive = await getDaysActive(user.sub);
   const numDaysInTimeFrame = 15;
   const startDate = new Date();
-  startDate.setDate(startDate.getDate() - numDaysInTimeFrame);
+  startDate.setUTCDate(startDate.getUTCDate() - (numDaysInTimeFrame - 1));
   const today = new Date();
   return (
     <>
@@ -27,9 +27,12 @@ export default async function StreakTracker({
         data={new Array(numDaysInTimeFrame).fill(0).map((_, i) => {
           const date = new Date();
           const isToday = i === numDaysInTimeFrame - 1;
-          date.setDate(date.getDate() - (numDaysInTimeFrame - 1) + i);
+          date.setUTCDate(date.getUTCDate() - (numDaysInTimeFrame - 1) + i);
           const activeDay = daysActive.find((activeDay) =>
-            compareDateWithoutTime(activeDay.date, date)
+            compareDateWithoutTime(
+              activeDay.date,
+              new Date(date.toDateString())
+            )
           );
 
           return {
@@ -38,14 +41,16 @@ export default async function StreakTracker({
               : isToday && isStreakActive
               ? "yellow"
               : "gray",
-            tooltip: isToday ? "Today" : formatMonthDateShort(date),
+            tooltip: isToday
+              ? "Today"
+              : formatMonthDateShort(new Date(date.toDateString())),
           };
         })}
         className="mt-4"
       />
       <Flex>
-        <Text>{formatMonthDateShort(startDate)}</Text>
-        <Text>{formatMonthDateShort(today)}</Text>
+        <Text>{formatMonthDateShort(new Date(startDate.toDateString()))}</Text>
+        <Text>{formatMonthDateShort(new Date(today.toDateString()))}</Text>
       </Flex>
     </>
   );

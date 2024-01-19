@@ -24,6 +24,7 @@ import {
   compareDateWithoutTime,
   formatMonthDateShort,
 } from "@/src/utils/date-utils";
+import Link from "next/link";
 
 export default async function Page() {
   const session = await getSession();
@@ -51,7 +52,7 @@ export default async function Page() {
   const daysActive = await getDaysActive(user.sub);
   const numDaysInTimeFrame = 31;
   const startDate = new Date();
-  startDate.setDate(startDate.getDate() - numDaysInTimeFrame);
+  startDate.setUTCDate(startDate.getUTCDate() - numDaysInTimeFrame);
 
   return (
     <main className="py-12 px-6">
@@ -59,7 +60,18 @@ export default async function Page() {
       <Grid numItems={1} numItemsMd={2} numItemsLg={3} className="gap-2 mt-4">
         <Col numColSpan={1} numColSpanSm={2}>
           <Card>
-            <Title>Question of the Day</Title>
+            <Title>
+              {questionOfTheDay ? (
+                <Link
+                  href={`/question/${questionOfTheDay.id}`}
+                  className="text-blue-500"
+                >
+                  Question of the Day
+                </Link>
+              ) : (
+                "Question of the Day"
+              )}
+            </Title>
             {questionOfTheDay ? (
               <QuestionDisplay question={questionOfTheDay} />
             ) : (
@@ -101,13 +113,16 @@ export default async function Page() {
               const date = new Date();
               date.setDate(date.getDate() - (numDaysInTimeFrame - 1) + i);
               const activeDay = daysActive.find((activeDay) =>
-                compareDateWithoutTime(activeDay.date, date)
+                compareDateWithoutTime(
+                  activeDay.date,
+                  new Date(date.toDateString())
+                )
               );
               const Answered = Number(activeDay?.question_count ?? 0);
               const Correct = Number(activeDay?.correct_count ?? 0);
 
               return {
-                date: formatMonthDateShort(date),
+                date: formatMonthDateShort(new Date(date.toDateString())),
                 Correct,
                 Answered,
               };

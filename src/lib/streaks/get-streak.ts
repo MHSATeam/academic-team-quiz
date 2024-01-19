@@ -47,13 +47,20 @@ export default async function getStreaks(userId?: string): Promise<{
 
   const today = new Date();
   const yesterday = new Date();
-  yesterday.setDate(today.getDate() - 1);
+  yesterday.setUTCDate(today.getUTCDate() - 1);
   const isActive =
     streaks.length !== 0 &&
-    (compareDateWithoutTime(streaks[0].end_at, today) ||
-      compareDateWithoutTime(streaks[0].end_at, yesterday));
+    (compareDateWithoutTime(
+      streaks[0].end_at,
+      new Date(today.toDateString())
+    ) ||
+      compareDateWithoutTime(
+        streaks[0].end_at,
+        new Date(yesterday.toDateString())
+      ));
   const hasCompletedToday =
-    streaks.length !== 0 && compareDateWithoutTime(streaks[0].end_at, today);
+    streaks.length !== 0 &&
+    compareDateWithoutTime(streaks[0].end_at, new Date(today.toDateString()));
   return {
     streaks,
     isActive,
