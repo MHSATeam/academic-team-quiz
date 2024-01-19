@@ -6,34 +6,15 @@ import {
 } from "@/src/lib/math/math-types";
 import { generateProblems } from "@/src/lib/math/generateMath";
 import { MathJaxContext } from "better-react-mathjax";
-import MathProblem from "../MathProblem";
-import { ArrowRight } from "lucide-react";
+import MathProblem from "../display/MathProblem";
 import { ErrorBoundary } from "react-error-boundary";
-import {
-  Accordion,
-  AccordionBody,
-  AccordionHeader,
-  MultiSelect,
-  MultiSelectItem,
-  Select,
-} from "@tremor/react";
-import { createPortal } from "react-dom";
+import { MultiSelect, MultiSelectItem } from "@tremor/react";
 
 const STARTING_QUESTION_COUNT = 20;
 const NEW_LOAD_QUESTION_COUNT = 8;
 
-const mapToSelectFormat = (problemType: ProblemType) => ({
-  value: problemType,
-  label: problemType,
-});
-const mapFromSelectFormat = (problemType: {
-  value: ProblemType;
-  label: ProblemType;
-}) => problemType.value as ProblemType;
-
 export default function MathPage() {
   const [problemSet, setProblemSet] = useState<Problem[]>([]);
-  const [optionsOpen, setOptionsOpen] = useState(false);
   const [selectedProblemTypes, setSelectedProblemTypes] = useState<
     ProblemType[]
   >(() => {
@@ -100,7 +81,7 @@ export default function MathPage() {
             })}
           </MultiSelect>
           <hr className="my-2" />
-          <div className="flex flex-row flex-wrap gap-4 justify-center">
+          <div className="flex flex-row flex-wrap gap-4 justify-center items-stretch">
             {problemSet.map((problem, index) => {
               return (
                 <MathProblem
