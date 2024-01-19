@@ -26,7 +26,9 @@ export default function RootLayout({
       </head>
       <UserProvider>
         <body className="h-full flex flex-col dark:bg-slate-800">
-          <div className="pb-16 max-sm:pb-20 grow relative">{children}</div>
+          <div className="pb-16 max-sm:pb-20 grow relative overflow-auto">
+            {children}
+          </div>
           <BottomNav />
           <Analytics />
         </body>

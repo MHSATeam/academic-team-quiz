@@ -53,6 +53,7 @@ export default async function Page() {
   const numDaysInTimeFrame = 31;
   const startDate = new Date();
   startDate.setUTCDate(startDate.getUTCDate() - numDaysInTimeFrame);
+  console.log(daysActive);
 
   return (
     <main className="py-12 px-6">
@@ -116,7 +117,7 @@ export default async function Page() {
               const date = new Date();
               date.setDate(date.getDate() - (numDaysInTimeFrame - 1) + i);
               const activeDay = daysActive.find((activeDay) =>
-                compareDateWithoutTime(activeDay.date, date)
+                compareDateWithoutTime(activeDay.date, date, false)
               );
               const Answered = Number(activeDay?.question_count ?? 0);
               const Correct = Number(activeDay?.correct_count ?? 0);

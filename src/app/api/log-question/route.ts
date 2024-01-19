@@ -24,6 +24,7 @@ export async function POST(req: NextRequest) {
   if (!["Incorrect", "Correct"].includes(result)) {
     return NextResponse.json("Incorrect result enum", { status: 400 });
   }
+
   return NextResponse.json(
     await prismaClient.userQuestionTrack.create({
       data: {

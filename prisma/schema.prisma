@@ -18,8 +18,8 @@ model Question {
   roundId     Int?
   round       Round?              @relation(fields: [roundId], references: [id])
   userAnswers UserQuestionTrack[]
-  createdOn   DateTime            @default(now())
-  modifiedOn  DateTime            @default(now()) @updatedAt
+  createdOn   DateTime            @default(now()) @db.Timestamptz(3)
+  modifiedOn  DateTime            @default(now()) @updatedAt @db.Timestamptz(3)
 }
 
 model Set {
@@ -35,8 +35,8 @@ model Set {
   lightningRound   Round?         @relation(fields: [lightningRoundId], references: [id])
   themeRoundId     Int?
   themeRound       ThemeRound?    @relation(fields: [themeRoundId], references: [roundId])
-  createdOn        DateTime       @default(now())
-  modifiedOn       DateTime       @default(now()) @updatedAt
+  createdOn        DateTime       @default(now()) @db.Timestamptz(3)
+  modifiedOn       DateTime       @default(now()) @updatedAt @db.Timestamptz(3)
 }
 
 model Category {
@@ -44,8 +44,8 @@ model Category {
   name              String
   questions         Question[]
   categoryTeamGroup CategoryTeamGroup[]
-  createdOn         DateTime            @default(now())
-  modifiedOn        DateTime            @default(now()) @updatedAt
+  createdOn         DateTime            @default(now()) @db.Timestamptz(3)
+  modifiedOn        DateTime            @default(now()) @updatedAt @db.Timestamptz(3)
 }
 
 model Round {
@@ -56,8 +56,8 @@ model Round {
   categoryTeamGroup CategoryTeamGroup?
   themeRound        ThemeRound?
   sets              Set[]
-  createdOn         DateTime           @default(now())
-  modifiedOn        DateTime           @default(now()) @updatedAt
+  createdOn         DateTime           @default(now()) @db.Timestamptz(3)
+  modifiedOn        DateTime           @default(now()) @updatedAt @db.Timestamptz(3)
 }
 
 model AlphabetRound {
@@ -65,8 +65,8 @@ model AlphabetRound {
   round      Round    @relation(fields: [roundId], references: [id])
   letter     String   @db.Char()
   sets       Set[]
-  createdOn  DateTime @default(now())
-  modifiedOn DateTime @default(now()) @updatedAt
+  createdOn  DateTime @default(now()) @db.Timestamptz(3)
+  modifiedOn DateTime @default(now()) @updatedAt @db.Timestamptz(3)
 }
 
 model ThemeRound {
@@ -74,16 +74,16 @@ model ThemeRound {
   round      Round    @relation(fields: [roundId], references: [id])
   theme      String
   sets       Set[]
-  createdOn  DateTime @default(now())
-  modifiedOn DateTime @default(now()) @updatedAt
+  createdOn  DateTime @default(now()) @db.Timestamptz(3)
+  modifiedOn DateTime @default(now()) @updatedAt @db.Timestamptz(3)
 }
 
 model CategoryRound {
   id         Int                 @id @default(autoincrement())
   teamGroups CategoryTeamGroup[]
   sets       Set[]
-  createdOn  DateTime            @default(now())
-  modifiedOn DateTime            @default(now()) @updatedAt
+  createdOn  DateTime            @default(now()) @db.Timestamptz(3)
+  modifiedOn DateTime            @default(now()) @updatedAt @db.Timestamptz(3)
 }
 
 model CategoryTeamGroup {
@@ -95,8 +95,8 @@ model CategoryTeamGroup {
   categoryRound   CategoryRound @relation(fields: [categoryRoundId], references: [id])
   categoryId      Int
   category        Category      @relation(fields: [categoryId], references: [id])
-  createdOn       DateTime      @default(now())
-  modifiedOn      DateTime      @default(now()) @updatedAt
+  createdOn       DateTime      @default(now()) @db.Timestamptz(3)
+  modifiedOn      DateTime      @default(now()) @updatedAt @db.Timestamptz(3)
 }
 
 model UserQuestionTrack {
@@ -105,7 +105,7 @@ model UserQuestionTrack {
   questionId Int?
   question   Question? @relation(fields: [questionId], references: [id], onDelete: SetNull)
   result     Result
-  createdOn  DateTime  @default(now())
+  createdOn  DateTime  @default(now()) @db.Timestamptz(3)
 }
 
 enum Result {
@@ -116,6 +116,6 @@ enum Result {
 model ManagementTokens {
   id        Int      @id @default(autoincrement())
   token     String   @unique
-  expiresOn DateTime
-  createdOn DateTime @default(now())
+  expiresOn DateTime @db.Timestamptz(3)
+  createdOn DateTime @default(now()) @db.Timestamptz(3)
 }

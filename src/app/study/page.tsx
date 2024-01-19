@@ -22,7 +22,7 @@ export default function Page() {
         {links.map((link) => {
           const Icon = link.icon;
           return (
-            <Link href={link.href}>
+            <Link href={link.href} key={link.name}>
               <Card className="hover:bg-blue-500">
                 <Flex flexDirection="col" className="gap-2">
                   <Icon className="dark:text-white" />

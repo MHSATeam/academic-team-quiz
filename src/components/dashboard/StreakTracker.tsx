@@ -27,9 +27,9 @@ export default async function StreakTracker({
         data={new Array(numDaysInTimeFrame).fill(0).map((_, i) => {
           const date = new Date();
           const isToday = i === numDaysInTimeFrame - 1;
-          date.setUTCDate(date.getUTCDate() - (numDaysInTimeFrame - 1) + i);
+          date.setDate(date.getDate() - (numDaysInTimeFrame - 1) + i);
           const activeDay = daysActive.find((activeDay) =>
-            compareDateWithoutTime(activeDay.date, date)
+            compareDateWithoutTime(activeDay.date, date, false)
           );
 
           return {
