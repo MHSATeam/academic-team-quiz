@@ -1,4 +1,4 @@
-import QuestionDisplay from "@/components/utils/QuestionDisplay";
+import QuestionDisplay from "@/components/display/QuestionDisplay";
 import { prismaClient } from "@/src/utils/clients";
 import { Subtitle, Title } from "@tremor/react";
 import Link from "next/link";

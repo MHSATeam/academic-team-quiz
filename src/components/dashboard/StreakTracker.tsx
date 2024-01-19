@@ -19,7 +19,7 @@ export default async function StreakTracker({
   const daysActive = await getDaysActive(user.sub);
   const numDaysInTimeFrame = 15;
   const startDate = new Date();
-  startDate.setUTCDate(startDate.getUTCDate() - (numDaysInTimeFrame - 1));
+  startDate.setDate(startDate.getDate() - (numDaysInTimeFrame - 1));
   const today = new Date();
   return (
     <>
@@ -29,10 +29,7 @@ export default async function StreakTracker({
           const isToday = i === numDaysInTimeFrame - 1;
           date.setUTCDate(date.getUTCDate() - (numDaysInTimeFrame - 1) + i);
           const activeDay = daysActive.find((activeDay) =>
-            compareDateWithoutTime(
-              activeDay.date,
-              new Date(date.toDateString())
-            )
+            compareDateWithoutTime(activeDay.date, date)
           );
 
           return {
@@ -41,16 +38,14 @@ export default async function StreakTracker({
               : isToday && isStreakActive
               ? "yellow"
               : "gray",
-            tooltip: isToday
-              ? "Today"
-              : formatMonthDateShort(new Date(date.toDateString())),
+            tooltip: isToday ? "Today" : formatMonthDateShort(date),
           };
         })}
         className="mt-4"
       />
       <Flex>
-        <Text>{formatMonthDateShort(new Date(startDate.toDateString()))}</Text>
-        <Text>{formatMonthDateShort(new Date(today.toDateString()))}</Text>
+        <Text>{formatMonthDateShort(startDate)}</Text>
+        <Text>{formatMonthDateShort(today)}</Text>
       </Flex>
     </>
   );

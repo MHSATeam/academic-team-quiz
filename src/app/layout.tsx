@@ -20,7 +20,7 @@ export default function RootLayout({
       <head>
         <link
           rel="manifest"
-          href="manifest.json"
+          href="/manifest.json"
           crossOrigin="use-credentials"
         />
       </head>

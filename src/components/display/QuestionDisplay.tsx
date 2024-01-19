@@ -1,7 +1,6 @@
 "use client";
 
 import { Question } from "@prisma/client";
-import { Text } from "@tremor/react";
 import { useState } from "react";
 
 export default function QuestionDisplay({ question }: { question: Question }) {

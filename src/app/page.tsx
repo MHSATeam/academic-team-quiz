@@ -1,5 +1,5 @@
 import StreakTracker from "@/components/dashboard/StreakTracker";
-import QuestionDisplay from "@/components/utils/QuestionDisplay";
+import QuestionDisplay from "@/components/display/QuestionDisplay";
 import { getRandomQuestion } from "@/src/lib/questions/get-random-question";
 import getStreaks from "@/src/lib/streaks/get-streak";
 import { getSession } from "@auth0/nextjs-auth0";
@@ -113,16 +113,13 @@ export default async function Page() {
               const date = new Date();
               date.setDate(date.getDate() - (numDaysInTimeFrame - 1) + i);
               const activeDay = daysActive.find((activeDay) =>
-                compareDateWithoutTime(
-                  activeDay.date,
-                  new Date(date.toDateString())
-                )
+                compareDateWithoutTime(activeDay.date, date)
               );
               const Answered = Number(activeDay?.question_count ?? 0);
               const Correct = Number(activeDay?.correct_count ?? 0);
 
               return {
-                date: formatMonthDateShort(new Date(date.toDateString())),
+                date: formatMonthDateShort(date),
                 Correct,
                 Answered,
               };

@@ -7,6 +7,7 @@ import SetPicker, {
 } from "../SetPicker";
 import QuestionBox from "../QuestionBox";
 import ScrollToTop from "../utils/ScrollToTop";
+import Link from "next/link";
 
 export default function QuizPage() {
   const [questions, setQuestions] = useState<
@@ -128,6 +129,7 @@ export default function QuizPage() {
   }, [autoNext]);
   return (
     <main className="mb-12 dark:text-white">
+      <Link href={"/study/flashcards"}>Flashcards</Link>
       <div className="flex flex-col border-2 rounded-lg grow shrink bg-slate-200 dark:bg-slate-500 dark:border-slate-600">
         <button
           className={

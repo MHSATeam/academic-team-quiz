@@ -5,5 +5,5 @@ export default function StudyLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return <div className="p-8 md:mx-32 mx-auto">{children}</div>;
+  return <div className="h-full w-full">{children}</div>;
 }
