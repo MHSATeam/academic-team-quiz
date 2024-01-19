@@ -8,8 +8,16 @@ import { generateProblems } from "@/src/lib/math/generateMath";
 import { MathJaxContext } from "better-react-mathjax";
 import MathProblem from "../MathProblem";
 import { ArrowRight } from "lucide-react";
-import Select from "react-select";
 import { ErrorBoundary } from "react-error-boundary";
+import {
+  Accordion,
+  AccordionBody,
+  AccordionHeader,
+  MultiSelect,
+  MultiSelectItem,
+  Select,
+} from "@tremor/react";
+import { createPortal } from "react-dom";
 
 const STARTING_QUESTION_COUNT = 20;
 const NEW_LOAD_QUESTION_COUNT = 8;
@@ -69,53 +77,29 @@ export default function MathPage() {
           },
         }}
       >
-        <main className="flex flex-col gap-4">
-          <span className="text-2xl font-bold">Computational Math</span>
-          <div className="flex flex-col border-2 rounded-lg grow shrink">
-            <button
-              className={
-                "flex gap-2 p-2 text-lg font-bold" +
-                (optionsOpen ? " border-b-2" : "")
+        <main className="flex flex-col gap-4 py-12 px-6">
+          <span className="text-2xl font-bold dark:text-white">
+            Computational Math
+          </span>
+          <hr className="my-2" />
+          <span className="text-xl dark:text-white">Options</span>
+          <MultiSelect
+            value={selectedProblemTypes}
+            onValueChange={(problemList) => {
+              if (problemList.length > 0) {
+                setSelectedProblemTypes(problemList as ProblemType[]);
               }
-              onClick={() => {
-                setOptionsOpen(!optionsOpen);
-              }}
-              tabIndex={-1}
-            >
-              <span className="my-auto">Options</span>
-              <ArrowRight
-                className={
-                  "transition-transform my-auto" +
-                  (optionsOpen ? " rotate-90" : "")
-                }
-              />
-            </button>
-            <div className="flex">
-              <div
-                className={
-                  "overflow-hidden transition-[max-height]" +
-                  (optionsOpen ? " max-h-screen" : " max-h-0")
-                }
-              >
-                <Select
-                  className="m-2"
-                  isMulti
-                  isClearable={false}
-                  closeMenuOnSelect={false}
-                  menuPortalTarget={document.body}
-                  options={ALLOWED_PROBLEM_TYPES.map(mapToSelectFormat)}
-                  value={selectedProblemTypes.map(mapToSelectFormat)}
-                  onChange={(problemList) => {
-                    if (problemList.length > 0) {
-                      setSelectedProblemTypes(
-                        problemList.map(mapFromSelectFormat)
-                      );
-                    }
-                  }}
-                />
-              </div>
-            </div>
-          </div>
+            }}
+          >
+            {ALLOWED_PROBLEM_TYPES.map((problemType) => {
+              return (
+                <MultiSelectItem key={problemType} value={problemType}>
+                  {problemType}
+                </MultiSelectItem>
+              );
+            })}
+          </MultiSelect>
+          <hr className="my-2" />
           <div className="flex flex-row flex-wrap gap-4 justify-center">
             {problemSet.map((problem, index) => {
               return (
@@ -127,7 +111,7 @@ export default function MathPage() {
             })}
           </div>
           <button
-            className="p-2 my-3 bg-gray-400 rounded-md active:bg-gray-500"
+            className="p-2 my-3 dark:bg-gray-600 dark:text-white bg-gray-400 rounded-md active:bg-gray-500 dark:active:bg-gray-700"
             onClick={() => {
               setProblemSet(
                 generateProblems(

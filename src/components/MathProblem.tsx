@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { AnswerType, Problem } from "../lib/math/math-types";
 import { MathJax } from "better-react-mathjax";
+import { Card } from "@tremor/react";
 
 type MathProblemProps = {
   problem: Problem;
@@ -9,10 +10,10 @@ type MathProblemProps = {
 export default function MathProblem({ problem }: MathProblemProps) {
   const [answerShown, setAnswerShown] = useState(false);
   return (
-    <div className="flex flex-col border-2 rounded-md p-2 basis-1/5 grow">
-      <MathJax>{problem.question}</MathJax>
+    <Card>
+      <MathJax className="dark:text-white">{problem.question}</MathJax>
       <div className="mt-auto">
-        <div className="mt-4">
+        <div className="mt-4 dark:text-white">
           {!answerShown ? (
             <button
               onClick={() => {
@@ -38,6 +39,6 @@ export default function MathProblem({ problem }: MathProblemProps) {
           )}
         </div>
       </div>
-    </div>
+    </Card>
   );
 }

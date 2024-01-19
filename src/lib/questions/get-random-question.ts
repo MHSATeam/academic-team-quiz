@@ -17,6 +17,9 @@ export async function getRandomQuestion(categories?: number[]) {
   const skip = Math.floor(Math.random() * questionCount);
   return await prismaClient.question.findFirst({
     ...where,
+    include: {
+      category: true,
+    },
     skip,
   });
 }

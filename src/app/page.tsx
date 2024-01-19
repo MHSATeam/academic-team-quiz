@@ -72,6 +72,9 @@ export default async function Page() {
                 "Question of the Day"
               )}
             </Title>
+            {questionOfTheDay && (
+              <Subtitle>{questionOfTheDay.category.name}</Subtitle>
+            )}
             {questionOfTheDay ? (
               <QuestionDisplay question={questionOfTheDay} />
             ) : (
