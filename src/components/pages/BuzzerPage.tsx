@@ -11,6 +11,7 @@ import AblyStatusSymbol from "../utils/AblyStatusSymbol";
 import { useBuzzerBox } from "@/src/buzzers/useBuzzerBox";
 import { getTeamColors } from "@/src/buzzers/get-team-colors";
 import { useDebounce } from "@/src/buzzers/useDebounce";
+import { Button, Card, Title } from "@tremor/react";
 
 type JoinStatus = "joined" | "joining" | "naming";
 
@@ -182,8 +183,8 @@ export default function BuzzerPage() {
   if (status === "naming") {
     return (
       <>
-        <div className="flex flex-col gap-3 justify-center p-2 absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-lg border-2 bg-slate-200 dark:bg-slate-500 dark:border-slate-600 dark:text-white">
-          <label className="text-center">Choose Your Name</label>
+        <Card className="flex flex-col gap-4 justify-center absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-fit">
+          <Title className="text-center">Choose Your Name</Title>
           <Creatable
             className="min-w-[16em] dark:text-black"
             options={TeamMembers}
@@ -213,7 +214,7 @@ export default function BuzzerPage() {
               }
             }}
           />
-          <button
+          <Button
             disabled={user === null}
             onClick={() => {
               if (user === null) {
@@ -227,11 +228,11 @@ export default function BuzzerPage() {
               }
               setStatus("joined");
             }}
-            className="bg-blue-400 rounded-md active:bg-blue-500 p-2"
+            size="lg"
           >
             Join
-          </button>
-        </div>
+          </Button>
+        </Card>
       </>
     );
   } else if (user !== null) {

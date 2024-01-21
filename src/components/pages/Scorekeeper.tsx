@@ -51,7 +51,8 @@ export default function Scorekeeper() {
           "-translate-y-1/2",
           "flex",
           "flex-col",
-          "text-center"
+          "text-center",
+          "dark:text-white"
         )}
       >
         <span>Scorekeeper</span>
@@ -61,7 +62,7 @@ export default function Scorekeeper() {
   }
   return (
     <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 p-2 flex flex-col gap-2">
-      <span className="text-3xl text-center">Scorekeeper</span>
+      <span className="text-3xl text-center dark:text-white">Scorekeeper</span>
       <div className="flex gap-4 text-xl flex-wrap">
         {(["a", "b"] as ("a" | "b")[]).map((team) => (
           <div
