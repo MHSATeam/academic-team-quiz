@@ -44,6 +44,7 @@ model Category {
   name              String
   questions         Question[]
   categoryTeamGroup CategoryTeamGroup[]
+  quizSessions      UserQuizSession[]
   createdOn         DateTime            @default(now()) @db.Timestamptz(3)
   modifiedOn        DateTime            @default(now()) @updatedAt @db.Timestamptz(3)
 }
@@ -100,17 +101,29 @@ model CategoryTeamGroup {
 }
 
 model UserQuestionTrack {
-  id         Int       @id @default(autoincrement())
-  userId     String
-  questionId Int?
-  question   Question? @relation(fields: [questionId], references: [id], onDelete: SetNull)
-  result     Result
-  createdOn  DateTime  @default(now()) @db.Timestamptz(3)
+  id            Int              @id @default(autoincrement())
+  userId        String
+  questionId    Int?
+  question      Question?        @relation(fields: [questionId], references: [id], onDelete: SetNull)
+  result        Result           @default(Incomplete)
+  quizSessionId Int?
+  quizSession   UserQuizSession? @relation(fields: [quizSessionId], references: [id])
+  createdOn     DateTime         @default(now()) @db.Timestamptz(3)
 }
 
 enum Result {
   Correct
   Incorrect
+  Incomplete
+}
+
+model UserQuizSession {
+  id                Int                 @id @default(autoincrement())
+  userId            String
+  categories        Category[]
+  questionsTrackers UserQuestionTrack[]
+  completedOn       DateTime?           @db.Timestamptz(3)
+  createdOn         DateTime            @default(now()) @db.Timestamptz(3)
 }
 
 model ManagementTokens {
