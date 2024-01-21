@@ -1,9 +1,10 @@
 import { prismaClient } from "@/src/utils/clients";
+import { redirect } from "next/navigation";
 
 export default async function Page({ params }: { params: { id: string } }) {
   const numberId = parseInt(params.id);
   if (Number.isNaN(numberId)) {
-    return null;
+    return redirect("/404");
   }
 
   const set = await prismaClient.set.findFirst({
@@ -13,15 +14,15 @@ export default async function Page({ params }: { params: { id: string } }) {
   });
 
   if (set === null) {
-    return null;
+    return redirect("/404");
   }
 
   return (
-    <main className="py-12 px-6 flex flex-col">
+    <div className="flex flex-col">
       <span className="dark:text-white text-2xl">Set: {set.name}</span>
       <span className="dark:text-white">
         This page has not been implemented yet!
       </span>
-    </main>
+    </div>
   );
 }

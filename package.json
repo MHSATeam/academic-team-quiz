@@ -26,6 +26,7 @@
     "jose": "^4.14.4",
     "lucide-react": "^0.292.0",
     "mathjax": "^3.2.2",
+    "minisearch": "^6.3.0",
     "nanoid": "^5.0.3",
     "nerdamer": "^1.1.13",
     "next": "^14.0.4",

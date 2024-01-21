@@ -4,11 +4,11 @@ import path from "path";
 
 const prisma = new PrismaClient();
 
-const pathToSet = "/public/data/physical-science-(all).json";
+const pathToSet = "/public/data/world-literature-(all).json";
 
-const CategoryID = 1; // Physical Science (on local)
+const CategoryID = 10; //  (on local)
 
-const RoundID = 1; // Luke Knull's Quizlets: Physical Science (on local)
+const RoundID = 10; // Luke Knull's Quizlets: (on local)
 
 const set = JSON.parse(
   fs.readFileSync(path.join(process.cwd(), pathToSet), "utf-8")
@@ -33,3 +33,5 @@ for (const question of set) {
     break;
   }
 }
+
+console.log(`Successfully uploaded ${newQuestions.length} questions`);

@@ -1,12 +1,22 @@
 import QuestionList from "@/components/display/QuestionList";
 import { prismaClient } from "@/src/utils/clients";
 import { Title } from "@tremor/react";
+import { redirect } from "next/navigation";
 
-export default async function Page({ params }: { params: { id: string } }) {
+export default async function Page({
+  params,
+  searchParams,
+}: {
+  params: { id: string };
+  searchParams: { page: string };
+}) {
   const numberId = parseInt(params.id);
+  const pageNumber = Number(searchParams.page ?? "1");
   if (Number.isNaN(numberId)) {
-    return null;
+    return redirect("/404");
   }
+
+  const QuestionsPerPage = 20;
 
   const category = await prismaClient.category.findFirst({
     where: {
@@ -14,6 +24,7 @@ export default async function Page({ params }: { params: { id: string } }) {
     },
     include: {
       questions: {
+        skip: QuestionsPerPage * (pageNumber - 1),
         take: 20,
       },
       _count: {
@@ -25,20 +36,19 @@ export default async function Page({ params }: { params: { id: string } }) {
   });
 
   if (category === null) {
-    return null;
+    return redirect("/404");
   }
 
+  const totalPages = Math.ceil(category._count.questions / QuestionsPerPage);
+
   return (
-    <main className="py-12 px-6 flex flex-col">
+    <div className="flex flex-col">
       <span className="dark:text-white text-2xl">
         Category: {category.name}
       </span>
       <hr className="my-2" />
       <Title>Related Questions:</Title>
-      <QuestionList
-        questions={category.questions}
-        totalQuestions={category._count.questions}
-      />
-    </main>
+      <QuestionList questions={category.questions} totalPages={totalPages} />
+    </div>
   );
 }

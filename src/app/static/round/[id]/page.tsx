@@ -3,12 +3,22 @@ import getRoundName from "@/src/lib/round/getRoundName";
 import { prismaClient } from "@/src/utils/clients";
 import { Flex, List, ListItem, Subtitle, Text, Title } from "@tremor/react";
 import Link from "next/link";
+import { redirect } from "next/navigation";
 
-export default async function Page({ params }: { params: { id: string } }) {
+export default async function Page({
+  params,
+  searchParams,
+}: {
+  params: { id: string };
+  searchParams: { page: string };
+}) {
   const numberId = parseInt(params.id);
+  const pageNumber = Number(searchParams.page ?? "1");
   if (Number.isNaN(numberId)) {
-    return null;
+    return redirect("/404");
   }
+
+  const QuestionsPerPage = 20;
 
   const round = await prismaClient.round.findFirst({
     where: {
@@ -16,7 +26,8 @@ export default async function Page({ params }: { params: { id: string } }) {
     },
     include: {
       questions: {
-        take: 20,
+        skip: QuestionsPerPage * (pageNumber - 1),
+        take: QuestionsPerPage,
       },
       _count: {
         select: {
@@ -35,11 +46,13 @@ export default async function Page({ params }: { params: { id: string } }) {
   });
 
   if (!round) {
-    return null;
+    return redirect("/404");
   }
 
+  const totalPages = Math.ceil(round._count.questions / QuestionsPerPage);
+
   return (
-    <main className="py-12 px-6">
+    <>
       <span className="dark:text-white text-2xl">
         {getRoundName(round).roundType}
       </span>
@@ -51,10 +64,10 @@ export default async function Page({ params }: { params: { id: string } }) {
           <List>
             {round.sets.map((set) => (
               <ListItem key={set.id}>
-                <Link href={`/set/${set.id}`}>
+                <Link href={`/static/set/${set.id}`}>
                   <Flex className="gap-2">
                     <Title>#{set.id}</Title>
-                    <Text>{set.name}</Text>
+                    <Text color="blue">{set.name}</Text>
                   </Flex>
                 </Link>
               </ListItem>
@@ -64,11 +77,7 @@ export default async function Page({ params }: { params: { id: string } }) {
       )}
       <hr className="my-2" />
       <Title>Questions:</Title>
-      <QuestionList
-        questions={round.questions}
-        totalQuestions={round._count.questions}
-      />
-      <pre className="dark:text-white">{JSON.stringify(round, null, 2)}</pre>
-    </main>
+      <QuestionList questions={round.questions} totalPages={totalPages} />
+    </>
   );
 }

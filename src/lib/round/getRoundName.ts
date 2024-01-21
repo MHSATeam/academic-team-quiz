@@ -26,16 +26,17 @@ export default function getRoundName(
   } else {
     roundType = "Lightning Round";
   }
+  const name = round.name && round.name.length > 0 ? round.name : null;
   let fullName: string;
-  if (round.name) {
-    fullName = `${roundType}: ${round.name}`;
+  if (name) {
+    fullName = `${roundType}: ${name}`;
   } else {
-    fullName = roundType;
+    fullName = `${roundType}: Unnamed`;
   }
 
   return {
     roundType,
     fullName,
-    name: round.name,
+    name,
   };
 }

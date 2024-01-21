@@ -1,9 +1,14 @@
 import { Card, Flex, Grid, Metric, Title } from "@tremor/react";
-import { Layers, Sigma } from "lucide-react";
+import { FolderSearch, Layers, Sigma } from "lucide-react";
 import Link from "next/link";
 
 export default function Page() {
   const links = [
+    {
+      name: "Round Explorer",
+      icon: FolderSearch,
+      href: "/static/round",
+    },
     {
       name: "Flashcards",
       icon: Layers,
@@ -26,7 +31,7 @@ export default function Page() {
               <Card className="hover:bg-blue-500">
                 <Flex flexDirection="col" className="gap-2">
                   <Icon className="dark:text-white" />
-                  <Title>{link.name}</Title>
+                  <Title className="text-center">{link.name}</Title>
                 </Flex>
               </Card>
             </Link>

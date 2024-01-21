@@ -53,18 +53,17 @@ export default async function Page() {
   const numDaysInTimeFrame = 31;
   const startDate = new Date();
   startDate.setUTCDate(startDate.getUTCDate() - numDaysInTimeFrame);
-  console.log(daysActive);
 
   return (
     <main className="py-12 px-6">
       <Metric>Welcome {formatUserName(user.name).split(" ")[0]}!</Metric>
-      <Grid numItems={1} numItemsMd={2} numItemsLg={3} className="gap-2 mt-4">
+      <Grid numItems={1} numItemsMd={2} numItemsLg={3} className="gap-4 mt-4">
         <Col numColSpan={1} numColSpanSm={2}>
           <Card>
             <Title>
               {questionOfTheDay ? (
                 <Link
-                  href={`/question/${questionOfTheDay.id}`}
+                  href={`/static/question/${questionOfTheDay.id}`}
                   className="text-blue-500"
                 >
                   Question of the Day
