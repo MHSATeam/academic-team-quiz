@@ -27,23 +27,17 @@ export default async function getStreaks(userId: string): Promise<{
       (("date")::date - row_number() over (partition by "userId" order by "date"::date)::integer) as streak_group
       from "user_day_questions"
       order by "date"
-    ),
-    
-    streak_groups AS (
-      select
-        "userId",
-        MIN("last_created") AS start_at,
-        MAX("last_created") AS end_at,
-        COUNT(*) AS days_count,
-        SUM(question_count) as question_count
-      FROM user_question_streaks
-      GROUP BY streak_group, "userId"
-      HAVING COUNT(*) >= 1
-      order by end_at DESC
     )
-    
-    select *
-    from "streak_groups";`) ?? [];
+    select
+      "userId",
+      MIN("last_created") AS start_at,
+      MAX("last_created") AS end_at,
+      COUNT(*) AS days_count,
+      SUM(question_count) as question_count
+    FROM user_question_streaks
+    GROUP BY streak_group, "userId"
+    HAVING COUNT(*) >= 1
+    order by end_at DESC;`) ?? [];
 
   const today = new Date();
   const yesterday = new Date();

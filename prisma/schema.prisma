@@ -108,6 +108,7 @@ model UserQuestionTrack {
   result        Result           @default(Incomplete)
   quizSessionId Int?
   quizSession   UserQuizSession? @relation(fields: [quizSessionId], references: [id])
+  modifiedOn    DateTime         @default(now()) @updatedAt @db.Timestamptz(3)
   createdOn     DateTime         @default(now()) @db.Timestamptz(3)
 }
 
@@ -122,8 +123,15 @@ model UserQuizSession {
   userId            String
   categories        Category[]
   questionsTrackers UserQuestionTrack[]
+  quizType          QuizType
   completedOn       DateTime?           @db.Timestamptz(3)
   createdOn         DateTime            @default(now()) @db.Timestamptz(3)
+}
+
+enum QuizType {
+  Flashcards
+  Written
+  Test
 }
 
 model ManagementTokens {

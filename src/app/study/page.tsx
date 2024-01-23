@@ -1,23 +1,33 @@
 import { Card, Flex, Grid, Metric, Title } from "@tremor/react";
-import { FolderSearch, Layers, Sigma } from "lucide-react";
+import { FileText, FolderSearch, Layers, Pencil, Sigma } from "lucide-react";
 import Link from "next/link";
 
 export default function Page() {
   const links = [
     {
-      name: "Round Explorer",
-      icon: FolderSearch,
-      href: "/static/round",
-    },
-    {
       name: "Flashcards",
       icon: Layers,
-      href: "/study/flashcards",
+      href: "/study/quiz-session?type=Flashcards",
+    },
+    {
+      name: "Writing",
+      icon: Pencil,
+      href: "/study/quiz-session?type=Written",
+    },
+    {
+      name: "Test",
+      icon: FileText,
+      href: "/study/quiz-session?type=Test",
     },
     {
       name: "Math",
       icon: Sigma,
       href: "/study/math",
+    },
+    {
+      name: "Round Explorer",
+      icon: FolderSearch,
+      href: "/static/round",
     },
   ];
   return (

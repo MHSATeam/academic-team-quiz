@@ -162,7 +162,7 @@ function Flashcard({ question, isDisappearing, onDisappear }: FlashcardProps) {
         }}
       >
         <div
-          className="front w-full h-full overflow-hidden p-4 absolute top-0 left-0 z-10 bg-slate-100 dark:bg-slate-400 rounded-lg flex flex-col justify-center"
+          className="front w-full h-full overflow-hidden p-4 absolute top-0 left-0 z-10 bg-slate-100 shadow-lg dark:bg-dark-tremor-background rounded-lg flex flex-col justify-center"
           style={{
             backfaceVisibility: "hidden",
           }}
@@ -172,7 +172,7 @@ function Flashcard({ question, isDisappearing, onDisappear }: FlashcardProps) {
           </span>
         </div>
         <div
-          className="back w-full h-full overflow-hidden p-4 absolute top-0 left-0 bg-slate-100 dark:bg-slate-400 rounded-lg flex flex-col justify-center"
+          className="back w-full h-full overflow-hidden p-4 absolute top-0 left-0 bg-slate-100 shadow-lg dark:bg-dark-tremor-background rounded-lg flex flex-col justify-center"
           style={{
             backfaceVisibility: "hidden",
             transform: "rotateX(180deg)",

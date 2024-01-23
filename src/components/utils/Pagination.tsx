@@ -26,7 +26,7 @@ export default function Pagination({ totalPages }: { totalPages: number }) {
 
   const changePageNumber = useCallback(
     (change: number) => {
-      router.push(
+      router.replace(
         pathname +
           "?" +
           createQueryString(

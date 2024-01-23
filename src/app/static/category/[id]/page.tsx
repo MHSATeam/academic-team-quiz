@@ -1,6 +1,6 @@
 import QuestionList from "@/components/display/QuestionList";
 import { prismaClient } from "@/src/utils/clients";
-import { Title } from "@tremor/react";
+import { Divider, Title } from "@tremor/react";
 import { redirect } from "next/navigation";
 
 export default async function Page({
@@ -46,7 +46,7 @@ export default async function Page({
       <span className="dark:text-white text-2xl">
         Category: {category.name}
       </span>
-      <hr className="my-2" />
+      <Divider />
       <Title>Related Questions:</Title>
       <QuestionList questions={category.questions} totalPages={totalPages} />
     </div>
