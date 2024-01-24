@@ -53,9 +53,6 @@ export default async function StreakLeaderBoard({
   oneWeekAgo.setUTCDate(oneWeekAgo.getUTCDate() - 7);
   const activeUsers = topUsers.filter((user) => {
     const userStreaks = streaks[user.user_id];
-    if (userStreaks.streaks.length === 0) {
-      return false;
-    }
     return (
       userStreaks.isActive ||
       (activeDays[user.user_id].length > 0 &&

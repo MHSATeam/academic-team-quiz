@@ -6,7 +6,7 @@ import {
   formatMonthDateShort,
 } from "@/src/utils/date-utils";
 import { AreaChart, Flex, Legend, Switch } from "@tremor/react";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 
 type QuestionsPerDayProps = {
   timeFrameDays: number;
@@ -28,16 +28,28 @@ export default function QuestionsPerDay(props: QuestionsPerDayProps) {
     );
   };
 
-  const otherUsersSorted = props.otherUsers.sort(
-    (a, b) => averageDayCount(b.days) - averageDayCount(a.days)
+  const otherUsersSorted = useMemo(
+    () =>
+      props.otherUsers.sort(
+        (a, b) => averageDayCount(b.days) - averageDayCount(a.days)
+      ),
+    [props.otherUsers]
   );
 
-  const categories = showAll
-    ? ["You", ...otherUsersSorted.map(({ name }) => name)]
-    : ["Answered", "Correct"];
-  const colors = showAll
-    ? ["blue", ...otherUsersSorted.map(() => "gray")]
-    : ["blue", "green"];
+  const categories = useMemo(
+    () =>
+      showAll
+        ? ["You", ...otherUsersSorted.map(({ name }) => name)]
+        : ["Answered", "Correct"],
+    [showAll, otherUsersSorted]
+  );
+  const colors = useMemo(
+    () =>
+      showAll
+        ? ["blue", ...otherUsersSorted.map(() => "gray")]
+        : ["blue", "green"],
+    [showAll, otherUsersSorted]
+  );
 
   return (
     <Flex
