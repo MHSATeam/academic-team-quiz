@@ -19,11 +19,24 @@ export default function QuestionsPerDay(props: QuestionsPerDayProps) {
   startDate.setUTCDate(startDate.getUTCDate() - props.timeFrameDays);
   const [showAll, setShowAll] = useState(false);
 
+  const averageDayCount = (days: ActiveDay[]) => {
+    return (
+      days
+        .slice(0, props.timeFrameDays)
+        .reduce((sum, day) => sum + Number(day.question_count), 0) /
+      props.timeFrameDays
+    );
+  };
+
+  const otherUsersSorted = props.otherUsers.sort(
+    (a, b) => averageDayCount(b.days) - averageDayCount(a.days)
+  );
+
   const categories = showAll
-    ? ["You", ...props.otherUsers.map(({ name }) => name)]
+    ? ["You", ...otherUsersSorted.map(({ name }) => name)]
     : ["Answered", "Correct"];
   const colors = showAll
-    ? ["blue", ...props.otherUsers.map(() => "gray")]
+    ? ["blue", ...otherUsersSorted.map(() => "gray")]
     : ["blue", "green"];
 
   return (
