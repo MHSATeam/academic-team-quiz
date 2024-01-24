@@ -4,8 +4,16 @@ import { updateQuestionStatus } from "@/src/lib/quiz-sessions/update-question-st
 import { filterNotEmpty } from "@/src/utils/array-utils";
 import { QuizSessionWithQuestions } from "@/src/utils/quiz-session-type-extension";
 import { Question, Result } from "@prisma/client";
-import { Button, Flex, ProgressBar, Title } from "@tremor/react";
-import { Check, Settings2, Undo2, X } from "lucide-react";
+import {
+  Button,
+  Dialog,
+  DialogPanel,
+  Flex,
+  ProgressBar,
+  Subtitle,
+  Title,
+} from "@tremor/react";
+import { Check, HelpCircle, Settings2, Undo2, X } from "lucide-react";
 import Link from "next/link";
 import { useMemo, useState } from "react";
 
@@ -53,6 +61,7 @@ export default function Flashcards(props: FlashcardsProps) {
   const [correctQuestions, setCorrectQuestions] = useState(initialCorrect);
   const [incorrectQuestions, setIncorrectQuestions] =
     useState(initialIncorrect);
+  const [isInfoOpen, setIsInfoOpen] = useState(false);
 
   const currentQuestionIndex = useMemo(() => {
     return correctQuestions.length + incorrectQuestions.length;
@@ -209,15 +218,41 @@ export default function Flashcards(props: FlashcardsProps) {
         </div>
         <button
           onClick={() => {
-            alert(
-              "There are currently no options to change on flashcards. If you think there should be, contact your team captain."
-            );
+            if (currentQuestion) {
+              setIsInfoOpen(true);
+            }
           }}
           className="rounded-full aspect-square border-2 p-2 dark:border-dark-tremor-border border-tremor-border dark:text-dark-tremor-content text-tremor-content"
         >
-          <Settings2 />
+          <HelpCircle />
         </button>
       </div>
+      <Dialog
+        onClick={(e) => {
+          e.preventDefault();
+        }}
+        onClose={() => {
+          setIsInfoOpen(false);
+        }}
+        open={isInfoOpen}
+        className="z-50"
+      >
+        <DialogPanel>
+          {currentQuestion && (
+            <Flex flexDirection="col" className="items-start gap-2">
+              <Title>Category: {currentQuestion.category.name}</Title>
+              <Title>Created in: {currentQuestion.createdYear}</Title>
+              <Button
+                onClick={() => {
+                  setIsInfoOpen(false);
+                }}
+              >
+                Close
+              </Button>
+            </Flex>
+          )}
+        </DialogPanel>
+      </Dialog>
     </main>
   );
 }
@@ -245,11 +280,7 @@ function Flashcard({
         transition: "all cubic-bezier(0.4, 0, 0.2, 1) 400ms",
         transform: isDisappearing ? "scale(0)" : "scale(1)",
         bottom: isDisappearing ? "100%" : "0%",
-        ...(isDisappearing
-          ? { zIndex: 1000 }
-          : isCurrent
-          ? { zIndex: 900 }
-          : {}),
+        ...(isDisappearing ? { zIndex: 40 } : isCurrent ? { zIndex: 30 } : {}),
       }}
       onTransitionEnd={(e) => {
         if (isDisappearing) {

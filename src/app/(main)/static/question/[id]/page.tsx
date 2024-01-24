@@ -53,9 +53,9 @@ export default async function Page({ params }: { params: { id: string } }) {
           </Link>
         </Title>
       )}
+      <Title>Created in: {question.createdYear}</Title>
       <hr className="my-2" />
       <QuestionDisplay question={question} />
-      {/* <pre className="dark:text-white">{JSON.stringify(question, null, 2)}</pre> */}
     </>
   );
 }

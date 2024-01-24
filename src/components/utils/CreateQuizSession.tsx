@@ -73,18 +73,11 @@ export default function CreateQuizSession({
 
   return (
     <>
-      <Card
-        className="flex flex-col justify-center items-center gap-4 hover:bg-tremor-background-muted hover:dark:bg-dark-tremor-background-muted"
-        role="button"
-        onClick={() => {
-          setIsOpen(true);
-        }}
-      >
-        <Plus className="dark:text-white" />
-        <Title>Start a new quiz!</Title>
-      </Card>
       <Dialog
         open={isOpen}
+        onClick={(e) => {
+          e.preventDefault();
+        }}
         onClose={() => {
           setIsOpen(false);
         }}
@@ -175,6 +168,16 @@ export default function CreateQuizSession({
           </Button>
         </DialogPanel>
       </Dialog>
+      <Card
+        className="flex flex-col justify-center items-center gap-4 hover:bg-tremor-background-muted hover:dark:bg-dark-tremor-background-muted"
+        role="button"
+        onClick={() => {
+          setIsOpen(true);
+        }}
+      >
+        <Plus className="dark:text-white" />
+        <Title>Start a new quiz!</Title>
+      </Card>
     </>
   );
 }
