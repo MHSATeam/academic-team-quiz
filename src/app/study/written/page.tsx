@@ -1,4 +1,4 @@
-import Flashcards from "@/components/pages/Flashcards";
+import Written from "@/components/pages/Written";
 import { prismaClient } from "@/src/utils/clients";
 import { getSession } from "@auth0/nextjs-auth0";
 import { UserProfile } from "@auth0/nextjs-auth0/client";
@@ -31,7 +31,7 @@ export default async function Page({
       const quizSession = await prismaClient.userQuizSession.findUnique({
         where: {
           id: idNum,
-          quizType: "Flashcards",
+          quizType: "Written",
           userId: user.sub,
         },
         include: {
@@ -51,13 +51,13 @@ export default async function Page({
       });
 
       if (quizSession) {
-        return <Flashcards quizSession={quizSession} />;
+        return <Written quizSession={quizSession} />;
       }
     }
   }
   return (
     <main className="px-6 py-12">
-      <Title>This flashcard set doesn't exist!</Title>
+      <Title>This writing quiz doesn't exist!</Title>
       <Button className="w-fit">
         <Link href="/">Go Home</Link>
       </Button>

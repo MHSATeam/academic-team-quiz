@@ -74,6 +74,14 @@ export default async function Page({
         numItemsMd={3}
         className="gap-4 justify-normal items-stretch"
       >
+        <CreateQuizSession
+          defaultQuizType={
+            QuizTypes.includes(searchParams.type as QuizType)
+              ? (searchParams.type as QuizType)
+              : undefined
+          }
+          categories={categories}
+        />
         {quizSessions.map((quizSession) => {
           const Icon = {
             Flashcards: Layers,
@@ -132,14 +140,6 @@ export default async function Page({
             </Card>
           );
         })}
-        <CreateQuizSession
-          defaultQuizType={
-            QuizTypes.includes(searchParams.type as QuizType)
-              ? (searchParams.type as QuizType)
-              : undefined
-          }
-          categories={categories}
-        />
       </Grid>
     </main>
   );

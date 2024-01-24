@@ -1,41 +1,17 @@
 "use client";
 
-import { Prisma, PrismaClient, Question, Result } from "@prisma/client";
+import { updateQuestionStatus } from "@/src/lib/quiz-sessions/update-question-status";
+import { filterNotEmpty } from "@/src/utils/array-utils";
+import { QuizSessionWithQuestions } from "@/src/utils/quiz-session-type-extension";
+import { Question, Result } from "@prisma/client";
 import { Button, Flex, ProgressBar, Title } from "@tremor/react";
 import { Check, Settings2, Undo2, X } from "lucide-react";
 import Link from "next/link";
 import { useMemo, useState } from "react";
 
-type QuizSessionWithQuestions = NonNullable<
-  Prisma.Result<
-    PrismaClient["userQuizSession"],
-    {
-      include: {
-        questionsTrackers: {
-          orderBy: {
-            id: "asc";
-          };
-          include: {
-            question: {
-              include: {
-                category: true;
-              };
-            };
-          };
-        };
-      };
-    },
-    "findFirst"
-  >
->;
-
 type FlashcardsProps = {
   quizSession: QuizSessionWithQuestions;
 };
-
-function notEmpty<Value>(value: Value | null): value is Value {
-  return value !== null;
-}
 
 export default function Flashcards(props: FlashcardsProps) {
   // Initialize values from database
@@ -43,7 +19,7 @@ export default function Flashcards(props: FlashcardsProps) {
     () =>
       props.quizSession.questionsTrackers
         .map(({ question }) => question)
-        .filter(notEmpty),
+        .filter(filterNotEmpty),
     [props.quizSession]
   );
 
@@ -83,29 +59,6 @@ export default function Flashcards(props: FlashcardsProps) {
   }, [correctQuestions, incorrectQuestions]);
 
   const currentQuestion = questions[currentQuestionIndex];
-
-  // Helper functions for updating the database
-  async function updateQuestionStatus(
-    questionTrackerId: number,
-    result: Result
-  ) {
-    const res = await fetch("/api/update-question-track", {
-      method: "POST",
-      body: JSON.stringify({
-        result,
-        questionTrackerId,
-      }),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-    if (!res.ok) {
-      alert("Failed to save question response!");
-      return false;
-    }
-
-    return true;
-  }
 
   async function markQuestion(correct: boolean) {
     if (currentQuestion !== undefined) {
