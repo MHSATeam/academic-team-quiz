@@ -12,7 +12,7 @@ export default function Page() {
     {
       name: "Writing",
       icon: Pencil,
-      href: "/study/quiz-session?type=Written",
+      href: "/study/quiz-session?type=Writing",
     },
     {
       name: "Math",

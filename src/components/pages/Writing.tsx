@@ -21,10 +21,10 @@ import {
 import Link from "next/link";
 import { useMemo, useState } from "react";
 
-type WrittenProps = {
+type WritingProps = {
   quizSession: QuizSessionWithQuestions;
 };
-export default function Written(props: WrittenProps) {
+export default function Writing(props: WritingProps) {
   // Initialize values from database
   const questions = useMemo(
     () =>
@@ -206,7 +206,7 @@ export default function Written(props: WrittenProps) {
         <>
           <Flex flexDirection="col">
             <Title>All Done!</Title>
-            <Link href={"/study/quiz-session?type=Written"}>
+            <Link href={"/study/quiz-session?type=Writing"}>
               <Button>Study Again?</Button>
             </Link>
           </Flex>

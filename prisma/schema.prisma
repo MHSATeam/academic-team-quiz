@@ -130,7 +130,7 @@ model UserQuizSession {
 
 enum QuizType {
   Flashcards
-  Written
+  Writing
   Test
 }
 

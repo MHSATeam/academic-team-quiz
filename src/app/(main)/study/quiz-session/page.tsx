@@ -88,7 +88,7 @@ export default async function Page({
         {quizSessions.map((quizSession) => {
           const Icon = {
             Flashcards: Layers,
-            Written: Pencil,
+            Writing: Pencil,
             Test: FileText,
           }[quizSession.quizType];
           const cardBody = (

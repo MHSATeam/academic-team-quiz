@@ -1,4 +1,4 @@
-import Written from "@/components/pages/Written";
+import Writing from "@/components/pages/Writing";
 import { prismaClient } from "@/src/utils/clients";
 import { getSession } from "@auth0/nextjs-auth0";
 import { UserProfile } from "@auth0/nextjs-auth0/client";
@@ -33,7 +33,7 @@ export default async function Page({
       const quizSession = await prismaClient.userQuizSession.findUnique({
         where: {
           id: idNum,
-          quizType: "Written",
+          quizType: "Writing",
           userId: user.sub,
         },
         include: {
@@ -53,7 +53,7 @@ export default async function Page({
       });
 
       if (quizSession) {
-        return <Written quizSession={quizSession} />;
+        return <Writing quizSession={quizSession} />;
       }
     }
   }
