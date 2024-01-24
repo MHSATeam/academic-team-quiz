@@ -1,7 +1,7 @@
 import StreakTracker from "@/components/dashboard/StreakTracker";
 import QuestionDisplay from "@/components/display/QuestionDisplay";
 import { getRandomQuestion } from "@/src/lib/questions/get-random-question";
-import getStreaks from "@/src/lib/streaks/get-streak";
+import getStreaks, { Streak } from "@/src/lib/streaks/get-streak";
 import { getSession } from "@auth0/nextjs-auth0";
 import { UserProfile } from "@auth0/nextjs-auth0/client";
 import {
@@ -23,6 +23,14 @@ import RefreshButton from "@/components/utils/RefreshButton";
 import QuestionsPerDay from "@/components/dashboard/QuestionsPerDay";
 import getUserList from "@/src/lib/users/get-user-ids";
 import { formatMonthDateShort } from "@/src/utils/date-utils";
+
+export type UserStreaks = {
+  [key: string]: {
+    streaks: Streak[];
+    isActive: boolean;
+    hasCompletedToday: boolean;
+  };
+};
 
 export default async function Page() {
   const session = await getSession();
@@ -76,6 +84,13 @@ export default async function Page() {
     );
   });
 
+  const otherStreaks: UserStreaks = {};
+
+  for (const user of users) {
+    const userStreaks = await getStreaks(user.user_id);
+    otherStreaks[user.user_id] = userStreaks;
+  }
+
   return (
     <main className="py-12 px-6">
       <Flex>
@@ -126,18 +141,24 @@ export default async function Page() {
           <ProgressBar value={goalPercent} />
         </Card>
         <Card>
+          <Title>Questions Studied Per Day</Title>
+          <QuestionsPerDay
+            showAll={false}
+            streaks={otherStreaks}
+            timeFrameDays={numDaysInTimeFrame}
+            currentUserDays={currentUserDaysActive}
+            otherUsers={otherUserDays}
+          />
+        </Card>
+        <Card>
           <Flex>
             <Title>Streak Tracker</Title>
             <Title>{formatMonthDateShort(new Date())}</Title>
           </Flex>
-          <StreakLeaderBoard
-            currentUserId={user.sub}
-            currentUserName={user.name}
-          />
-        </Card>
-        <Card>
-          <Title>Questions Studied Per Day</Title>
+          <StreakLeaderBoard streaks={otherStreaks} />
           <QuestionsPerDay
+            showAll={true}
+            streaks={otherStreaks}
             timeFrameDays={numDaysInTimeFrame}
             currentUserDays={currentUserDaysActive}
             otherUsers={otherUserDays}
