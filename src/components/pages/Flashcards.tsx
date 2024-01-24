@@ -185,8 +185,9 @@ export default function Flashcards(props: FlashcardsProps) {
       </div>
       <div className="flex justify-between">
         <button
+          disabled={!currentQuestion}
           onClick={() => undoQuestion()}
-          className="rounded-full aspect-square border-2 p-2 dark:border-dark-tremor-border border-tremor-border dark:text-dark-tremor-content text-tremor-content active:bg-tremor-content-subtle dark:active:bg-dark-tremor-content-subtle "
+          className="rounded-full aspect-square border-2 p-2 dark:border-dark-tremor-border border-tremor-border dark:text-dark-tremor-content text-tremor-content active:bg-tremor-content-subtle disabled:bg-tremor-content-subtle disabled:dark:bg-dark-tremor-content-subtle dark:active:bg-dark-tremor-content-subtle "
         >
           <Undo2 />
         </button>
@@ -206,9 +207,16 @@ export default function Flashcards(props: FlashcardsProps) {
             <Check />
           </button>
         </div>
-        {/* <button className="rounded-full aspect-square border-2 p-2 dark:border-dark-tremor-border border-tremor-border dark:text-dark-tremor-content text-tremor-content">
+        <button
+          onClick={() => {
+            alert(
+              "There are currently no options to change on flashcards. If you think there should be, contact your team captain."
+            );
+          }}
+          className="rounded-full aspect-square border-2 p-2 dark:border-dark-tremor-border border-tremor-border dark:text-dark-tremor-content text-tremor-content"
+        >
           <Settings2 />
-        </button> */}
+        </button>
       </div>
     </main>
   );
