@@ -3,7 +3,7 @@
 import dynamic from "next/dynamic";
 
 const BuzzerPage = dynamic(
-  () => import("../../../components/pages/BuzzerPage"),
+  () => import("../../../../components/pages/BuzzerPage"),
   {
     ssr: false,
   }

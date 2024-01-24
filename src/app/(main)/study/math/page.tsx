@@ -2,12 +2,13 @@
 
 import dynamic from "next/dynamic";
 
-const Scorekeeper = dynamic(
-  () => import("../../../components/pages/Scorekeeper"),
+const MathPage = dynamic(
+  () => import("../../../../components/pages/MathPage"),
   {
     ssr: false,
   }
 );
+
 export default function Page() {
-  return <Scorekeeper />;
+  return <MathPage />;
 }

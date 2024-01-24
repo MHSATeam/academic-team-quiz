@@ -1,9 +1,8 @@
-import { Metadata, Viewport } from "next";
+import { Metadata } from "next";
 import React from "react";
 import { Analytics } from "@vercel/analytics/react";
 import { UserProvider } from "@auth0/nextjs-auth0/client";
 import "../assets/scss/main.scss";
-import { BottomNav } from "@/components/layout/BottomNav";
 
 export const metadata: Metadata = {
   title: "Academic Quiz",
@@ -26,10 +25,7 @@ export default function RootLayout({
       </head>
       <UserProvider>
         <body className="h-full flex flex-col dark:bg-slate-800">
-          <div className="mb-16 max-sm:mb-20 grow relative overflow-auto">
-            {children}
-          </div>
-          <BottomNav />
+          {children}
           <Analytics />
         </body>
       </UserProvider>

@@ -1,7 +1,7 @@
 "use client";
 
 import { RealtimeStatus } from "@/src/buzzers/ably-realtime";
-import React, { useEffect } from "react";
+import React from "react";
 
 if (typeof window !== "undefined") {
   RealtimeStatus.connect();
@@ -12,8 +12,5 @@ export default function BuzzerLayout({
 }: {
   children: React.ReactNode;
 }) {
-  useEffect(() => {
-    document.body.style.backgroundColor = "unset";
-  }, []);
   return <>{children}</>;
 }
