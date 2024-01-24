@@ -206,9 +206,9 @@ export default function Flashcards(props: FlashcardsProps) {
             <Check />
           </button>
         </div>
-        <button className="rounded-full aspect-square border-2 p-2 dark:border-dark-tremor-border border-tremor-border dark:text-dark-tremor-content text-tremor-content">
+        {/* <button className="rounded-full aspect-square border-2 p-2 dark:border-dark-tremor-border border-tremor-border dark:text-dark-tremor-content text-tremor-content">
           <Settings2 />
-        </button>
+        </button> */}
       </div>
     </main>
   );

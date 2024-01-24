@@ -5,6 +5,8 @@ import { UserProfile } from "@auth0/nextjs-auth0/client";
 import { Button, Title } from "@tremor/react";
 import Link from "next/link";
 
+export const revalidate = 0;
+
 export default async function Page({
   searchParams,
 }: {
