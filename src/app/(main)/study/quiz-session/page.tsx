@@ -78,6 +78,9 @@ export default async function Page({
         className="gap-4 justify-normal items-stretch"
       >
         <CreateQuizSession
+          defaultOpen={quizSessions.every(
+            (quizSession) => quizSession.completedOn !== null
+          )}
           defaultQuizType={
             QuizTypes.includes(searchParams.type as QuizType)
               ? (searchParams.type as QuizType)

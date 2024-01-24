@@ -23,13 +23,15 @@ import { useCallback, useMemo, useState } from "react";
 
 export default function CreateQuizSession({
   defaultQuizType,
+  defaultOpen,
   categories,
 }: {
   defaultQuizType?: QuizType;
+  defaultOpen: boolean;
   categories: Category[];
 }) {
   const router = useRouter();
-  const [isOpen, setIsOpen] = useState(true);
+  const [isOpen, setIsOpen] = useState(defaultOpen);
   const [quizType, setQuizType] = useState<QuizType>(
     defaultQuizType ?? "Flashcards"
   );
