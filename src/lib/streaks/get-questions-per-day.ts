@@ -20,6 +20,6 @@ export default async function getQuestionsPerDay(
   	from "UserQuestionTrack"
   	where "userId" = ${userId}
   	group by "modifiedOn"::date, "userId"
-    order by "modifiedOn"::date;`) ?? []
+    order by "modifiedOn"::date desc`) ?? []
   );
 }

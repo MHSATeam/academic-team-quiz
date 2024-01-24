@@ -51,13 +51,17 @@ export default async function StreakLeaderBoard({
 
   const oneWeekAgo = new Date();
   oneWeekAgo.setUTCDate(oneWeekAgo.getUTCDate() - 7);
-  const activeUsers = topUsers.filter((user) => {
-    const userStreaks = streaks[user.user_id];
+
+  const isUserActive = (userId: string) => {
+    const userStreaks = streaks[userId];
     return (
       userStreaks.isActive ||
-      (activeDays[user.user_id].length > 0 &&
-        activeDays[user.user_id][0].date.getTime() >= oneWeekAgo.getTime())
+      (activeDays[userId].length > 0 &&
+        activeDays[userId][0].date.getTime() >= oneWeekAgo.getTime())
     );
+  };
+  const activeUsers = topUsers.filter((user) => {
+    return isUserActive(user.user_id);
   });
 
   const notCompletedTodayUsers = activeUsers.filter((user) => {
@@ -65,7 +69,7 @@ export default async function StreakLeaderBoard({
     if (user.user_id === currentUserId) {
       return false;
     }
-    return userStreaks.isActive && !userStreaks.hasCompletedToday;
+    return !userStreaks.hasCompletedToday;
   });
 
   const motivationUser =
