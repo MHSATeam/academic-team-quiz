@@ -125,9 +125,8 @@ export default async function Page() {
           <ProgressBar value={goalPercent} />
         </Card>
         <Card>
-          <Title>Streak Leaderboard</Title>
+          <Title>Streak Tracker</Title>
           <StreakLeaderBoard
-            includeSelf
             currentUserId={user.sub}
             currentUserName={user.name}
           />
