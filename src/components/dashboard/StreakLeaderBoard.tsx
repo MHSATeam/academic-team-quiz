@@ -1,18 +1,10 @@
+import getQuestionsPerDay, {
+  ActiveDay,
+} from "@/src/lib/streaks/get-questions-per-day";
 import getStreaks, { Streak } from "@/src/lib/streaks/get-streak";
 import formatUserName from "@/src/lib/users/format-user-name";
 import getUserList from "@/src/lib/users/get-user-ids";
-import {
-  Bold,
-  Color,
-  Flex,
-  List,
-  ListItem,
-  Subtitle,
-  Text,
-  Tracker,
-} from "@tremor/react";
-import { Medal } from "lucide-react";
-import { stderr } from "process";
+import { Bold, Subtitle, Text, Tracker } from "@tremor/react";
 
 type UserStreaks = {
   [key: string]: {
@@ -32,10 +24,13 @@ export default async function StreakLeaderBoard({
   const users = await getUserList();
 
   const streaks: UserStreaks = {};
+  const activeDays: { [userId: string]: ActiveDay[] } = {};
 
   for (const user of users) {
     const userStreaks = await getStreaks(user.user_id);
+    const questions = await getQuestionsPerDay(user.user_id);
     streaks[user.user_id] = userStreaks;
+    activeDays[user.user_id] = questions;
   }
 
   function getMostRecentStreak(userId: string) {
@@ -63,7 +58,8 @@ export default async function StreakLeaderBoard({
     }
     return (
       userStreaks.isActive ||
-      userStreaks.streaks[0].end_at.getTime() >= oneWeekAgo.getTime()
+      (activeDays[user.user_id].length > 0 &&
+        activeDays[user.user_id][0].date.getTime() >= oneWeekAgo.getTime())
     );
   });
 
