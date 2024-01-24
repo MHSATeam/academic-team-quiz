@@ -22,6 +22,7 @@ import Link from "next/link";
 import RefreshButton from "@/components/utils/RefreshButton";
 import QuestionsPerDay from "@/components/dashboard/QuestionsPerDay";
 import getUserList from "@/src/lib/users/get-user-ids";
+import { formatMonthDateShort } from "@/src/utils/date-utils";
 
 export default async function Page() {
   const session = await getSession();
@@ -125,7 +126,10 @@ export default async function Page() {
           <ProgressBar value={goalPercent} />
         </Card>
         <Card>
-          <Title>Streak Tracker</Title>
+          <Flex>
+            <Title>Streak Tracker</Title>
+            <Title>{formatMonthDateShort(new Date())}</Title>
+          </Flex>
           <StreakLeaderBoard
             currentUserId={user.sub}
             currentUserName={user.name}
