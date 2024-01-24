@@ -2,11 +2,12 @@ import { prismaClient } from "@/src/utils/clients";
 import { compareDateWithoutTime } from "@/src/utils/date-utils";
 import "server-only";
 
-type Streak = {
+export type Streak = {
   userId: string;
   start_at: Date;
   end_at: Date;
   days_count: BigInt;
+  question_count: BigInt;
 };
 
 export default async function getStreaks(userId: string): Promise<{
@@ -16,12 +17,19 @@ export default async function getStreaks(userId: string): Promise<{
 }> {
   const streaks: Streak[] =
     (await prismaClient.$queryRaw`with
+    session_with_count as (
+      select u.*, COUNT(t.id) as question_count 
+      from "UserQuizSession" u 
+      left join "UserQuestionTrack" t 
+      on u.id = t."quizSessionId" and t."quizSessionId" is not null 
+      group by u.id
+    ),
     user_day_sessions as (
-      select "completedOn"::date as date, "userId", COUNT(*) as session_count, MAX("completedOn") as last_created
-      from "UserQuizSession"
-      where "userId" = ${userId}
+      select "completedOn"::date as date, s."userId", COUNT(*) as session_count, SUM(s.question_count) as question_count, MAX("completedOn") as last_created
+      from session_with_count s
+      where s."userId" = ${userId}
       and "completedOn" is not null
-      group by "completedOn"::date, "userId"
+      group by "completedOn"::date, s."userId"
     ),
     user_session_streaks as (
       select *, row_number() over (partition by "userId" order by "date"::date)::integer,
@@ -33,7 +41,8 @@ export default async function getStreaks(userId: string): Promise<{
       "userId",
       MIN("last_created") AS start_at,
       MAX("last_created") AS end_at,
-      COUNT(*) AS days_count
+      COUNT(*) AS days_count,
+      SUM(question_count) as question_count
     FROM user_session_streaks
     GROUP BY streak_group, "userId"
     HAVING COUNT(*) >= 1

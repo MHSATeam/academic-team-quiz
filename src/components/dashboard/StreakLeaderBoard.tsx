@@ -1,10 +1,10 @@
-import getStreaks from "@/src/lib/streaks/get-streak";
+import getStreaks, { Streak } from "@/src/lib/streaks/get-streak";
 import formatUserName from "@/src/lib/users/format-user-name";
 import getUserList from "@/src/lib/users/get-user-ids";
 import { Bold, Color, Flex, List, ListItem, Text } from "@tremor/react";
 import { Medal } from "lucide-react";
 
-type UserStreaks = { [key: string]: number };
+type UserStreaks = { [key: string]: Streak | null };
 
 function createLeaderboardListItem(
   userId: string,
@@ -14,6 +14,7 @@ function createLeaderboardListItem(
   isCurrent = false
 ) {
   const textColor: Color = isCurrent ? "blue" : "gray";
+  const streakCount = Number(streaks[userId]?.days_count ?? 0);
   return (
     <ListItem key={userId}>
       <span className="gap-2 flex">
@@ -30,9 +31,9 @@ function createLeaderboardListItem(
       </span>
       <Text color={textColor}>
         {place === 1 ? (
-          <Bold className="text-xl">{streaks[userId] ?? NaN}</Bold>
+          <Bold className="text-xl">{streakCount ?? NaN}</Bold>
         ) : (
-          streaks[userId] ?? NaN
+          streakCount ?? NaN
         )}
       </Text>
     </ListItem>
@@ -55,24 +56,66 @@ export default async function StreakLeaderBoard({
   for (const user of users) {
     const userStreaks = await getStreaks(user.user_id);
     streaks[user.user_id] = userStreaks.isActive
-      ? Number(userStreaks.streaks[0].days_count)
-      : 0;
+      ? userStreaks.streaks[0]
+      : null;
   }
 
-  const topUsers = users.sort(
-    (a, b) => streaks[b.user_id] - streaks[a.user_id]
-  );
+  const topUsers = users.sort((a, b) => {
+    const diff =
+      Number(streaks[b.user_id]?.days_count ?? 0) -
+      Number(streaks[a.user_id]?.days_count ?? 0);
+    if (diff === 0) {
+      return (
+        Number(streaks[b.user_id]?.question_count ?? 0) -
+        Number(streaks[a.user_id]?.question_count ?? 0)
+      );
+    }
+    return diff;
+  });
+
+  const userPlaces = topUsers.reduce(
+    (placeLeaderBoard, user) => {
+      const streak = streaks[user.user_id] ?? { days_count: 0n };
+      const days = Number(streak.days_count);
+      if (placeLeaderBoard.currentStreak === -1) {
+        placeLeaderBoard.currentStreak = days;
+      }
+      if (days !== placeLeaderBoard.currentStreak) {
+        placeLeaderBoard.currentPlace++;
+        placeLeaderBoard.currentStreak = days;
+      }
+      placeLeaderBoard.userPlaces.push({
+        place: placeLeaderBoard.currentPlace,
+        streak: days,
+        userId: user.user_id,
+        name: user.name,
+      });
+      return placeLeaderBoard;
+    },
+    { currentPlace: 1, currentStreak: -1, userPlaces: [] } as {
+      currentPlace: number;
+      currentStreak: number;
+      userPlaces: {
+        place: number;
+        streak: number;
+        userId: string;
+        name: string;
+      }[];
+    }
+  ).userPlaces;
 
   const currentPlace =
-    1 + topUsers.findIndex((user) => user.user_id === currentUserId);
+    userPlaces.find((place) => place.userId === currentUserId)?.place ??
+    userPlaces?.[userPlaces.length]?.place ??
+    1;
 
   const shouldAppendSelf =
     includeSelf &&
     currentUserId &&
     currentUserName &&
-    (currentPlace > 6 || streaks[currentUserId] === 0);
+    (currentPlace > 6 || Number(streaks[currentUserId]?.days_count ?? 0) === 0);
 
-  const nonZeroUsers = topUsers.filter((user) => streaks[user.user_id] !== 0);
+  const nonZeroUsers = userPlaces.filter((user) => user.streak !== 0);
 
   return (
     <>
@@ -83,13 +126,13 @@ export default async function StreakLeaderBoard({
       <List>
         {nonZeroUsers
           .slice(0, Math.min(nonZeroUsers.length, shouldAppendSelf ? 5 : 6))
-          .map((user, i) =>
+          .map((user) =>
             createLeaderboardListItem(
-              user.user_id,
+              user.userId,
               user.name,
-              i + 1,
+              user.place,
               streaks,
-              user.user_id === currentUserId
+              user.userId === currentUserId
             )
           )}
         {shouldAppendSelf &&
