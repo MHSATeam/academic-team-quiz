@@ -5,8 +5,6 @@ import getStreaks from "@/src/lib/streaks/get-streak";
 import { getSession } from "@auth0/nextjs-auth0";
 import { UserProfile } from "@auth0/nextjs-auth0/client";
 import {
-  AreaChart,
-  Bold,
   Card,
   Col,
   Flex,
@@ -20,12 +18,10 @@ import {
 import formatUserName from "@/src/lib/users/format-user-name";
 import StreakLeaderBoard from "@/components/dashboard/StreakLeaderBoard";
 import getQuestionsPerDay from "@/src/lib/streaks/get-questions-per-day";
-import {
-  compareDateWithoutTime,
-  formatMonthDateShort,
-} from "@/src/utils/date-utils";
 import Link from "next/link";
 import RefreshButton from "@/components/utils/RefreshButton";
+import QuestionsPerDay from "@/components/dashboard/QuestionsPerDay";
+import getUserList from "@/src/lib/users/get-user-ids";
 
 export default async function Page() {
   const session = await getSession();
@@ -44,16 +40,40 @@ export default async function Page() {
   if (!user.sub || !user.name) {
     throw new Error("Missing user data!");
   }
+
+  const users = await getUserList();
+
   const questionOfTheDay = await getRandomQuestion();
   const { streaks, isActive: isStreakActive } = await getStreaks(user.sub);
   const activeStreak = isStreakActive ? streaks[0] : undefined;
   const goalPercent =
     Math.round(Number(activeStreak?.days_count ?? 0) * (100 / 0.6)) / 100;
 
-  const daysActive = await getQuestionsPerDay(user.sub);
+  const currentUserDaysActive = await getQuestionsPerDay(user.sub);
   const numDaysInTimeFrame = 31;
   const startDate = new Date();
   startDate.setUTCDate(startDate.getUTCDate() - numDaysInTimeFrame);
+  const otherUserDays = (
+    await Promise.all(
+      users
+        .filter((u) => u.user_id !== user.sub)
+        .map(async (u) => {
+          return {
+            name: formatUserName(u.name),
+            userId: u.user_id,
+            days: await getQuestionsPerDay(u.user_id),
+          };
+        })
+    )
+  ).filter((userDays) => {
+    if (userDays.days.length === 0) {
+      return false;
+    }
+    return (
+      userDays.days[userDays.days.length - 1].date.getTime() >=
+      startDate.getTime()
+    );
+  });
 
   return (
     <main className="py-12 px-6">
@@ -114,27 +134,10 @@ export default async function Page() {
         </Card>
         <Card>
           <Title>Questions Studied Per Day</Title>
-          <AreaChart
-            className="h-72 mt-4"
-            data={new Array(numDaysInTimeFrame).fill(0).map((_, i) => {
-              const date = new Date();
-              date.setDate(date.getDate() - (numDaysInTimeFrame - 1) + i);
-              const activeDay = daysActive.find((activeDay) =>
-                compareDateWithoutTime(activeDay.date, date, false)
-              );
-              const Answered = Number(activeDay?.question_count ?? 0);
-              const Correct = Number(activeDay?.correct_count ?? 0);
-
-              return {
-                date: formatMonthDateShort(date),
-                Correct,
-                Answered,
-              };
-            })}
-            colors={["blue", "green"]}
-            index="date"
-            yAxisWidth={30}
-            categories={["Answered", "Correct"]}
+          <QuestionsPerDay
+            timeFrameDays={numDaysInTimeFrame}
+            currentUserDays={currentUserDaysActive}
+            otherUsers={otherUserDays}
           />
         </Card>
       </Grid>
