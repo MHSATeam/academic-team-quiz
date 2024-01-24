@@ -131,7 +131,11 @@ export default function CreateQuizSession({
           >
             <TabList variant="solid">
               {QuizTypes.map((type) => (
-                <Tab disabled={isCreatingQuiz} key={type}>
+                <Tab
+                  className="disabled:bg-slate-200 disabled:dark:bg-slate-700"
+                  disabled={isCreatingQuiz || type === "Test"}
+                  key={type}
+                >
                   {type}
                 </Tab>
               ))}
