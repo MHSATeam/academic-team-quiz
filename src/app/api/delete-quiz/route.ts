@@ -24,19 +24,17 @@ export async function POST(req: NextRequest) {
   const { quizSessionId }: { quizSessionId: number } = body;
 
   try {
-    const updateResponse = await prismaClient.userQuizSession.update({
+    const updateResponse = await prismaClient.userQuizSession.delete({
       where: {
         id: quizSessionId,
         userId: user.sub,
-      },
-      data: {
-        completedOn: new Date(),
+        completedOn: null,
       },
     });
     return NextResponse.json(updateResponse);
   } catch (e) {
     console.error(e);
-    return NextResponse.json("Quiz session does not exist", {
+    return NextResponse.json("Quiz does not exist", {
       status: 400,
     });
   }

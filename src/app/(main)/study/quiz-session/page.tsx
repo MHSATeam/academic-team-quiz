@@ -1,4 +1,5 @@
 import CreateQuizSession from "@/components/utils/CreateQuizSession";
+import DeleteSession from "@/components/utils/DeleteSession";
 import QuizTypes from "@/src/lib/quiz-sessions/QuizTypes";
 import { prismaClient } from "@/src/utils/clients";
 import { getSession } from "@auth0/nextjs-auth0";
@@ -101,21 +102,28 @@ export default async function Page({
                   .map((category) => category.name)
                   .join(", ")}
               </Subtitle>
-              <Flex justifyContent="end">
-                <Text>
-                  {quizSession._count.questionsTrackers} /{" "}
-                  {quizSession.questionsTrackers.length}
-                </Text>
+              <Flex className="gap-2">
+                <Flex flexDirection="col" alignItems="start">
+                  <Flex justifyContent="end">
+                    <Text>
+                      {quizSession._count.questionsTrackers} /{" "}
+                      {quizSession.questionsTrackers.length}
+                    </Text>
+                  </Flex>
+                  <ProgressBar
+                    value={
+                      (quizSession._count.questionsTrackers * 100) /
+                      quizSession.questionsTrackers.length
+                    }
+                  />
+                  <Text className="mt-2">
+                    Started: {quizSession.createdOn.toLocaleDateString()}
+                  </Text>
+                </Flex>
+                {quizSession.completedOn === null && (
+                  <DeleteSession sessionId={quizSession.id} />
+                )}
               </Flex>
-              <ProgressBar
-                value={
-                  (quizSession._count.questionsTrackers * 100) /
-                  quizSession.questionsTrackers.length
-                }
-              />
-              <Text className="mt-2">
-                Started: {quizSession.createdOn.toLocaleDateString()}
-              </Text>
             </Flex>
           );
           return (
