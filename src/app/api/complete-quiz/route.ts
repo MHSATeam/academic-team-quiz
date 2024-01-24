@@ -11,27 +11,33 @@ export async function POST(req: NextRequest) {
   }
   const { user }: { user: UserProfile } = session;
 
+  if (!user.sub) {
+    return NextResponse.json("User profile was malformed", { status: 500 });
+  }
+
   const body = await req.json();
 
-  if (
-    !("result" in body && typeof body.result === "string") ||
-    !("questionId" in body && typeof body.questionId === "number")
-  ) {
+  if (!("quizSessionId" in body && typeof body.quizSessionId === "number")) {
     return NextResponse.json("Missing tracking data", { status: 400 });
   }
 
-  const { result, questionId }: { result: string; questionId: number } = body;
-  if (!["Incorrect", "Correct"].includes(result)) {
-    return NextResponse.json("Incorrect result enum", { status: 400 });
-  }
+  const { quizSessionId }: { quizSessionId: number } = body;
 
-  return NextResponse.json(
-    await prismaClient.userQuestionTrack.create({
-      data: {
-        result: result as "Incorrect" | "Correct",
-        questionId: questionId,
-        userId: user.sub!,
+  try {
+    const updateResponse = await prismaClient.userQuizSession.update({
+      where: {
+        id: quizSessionId,
+        userId: user.sub,
       },
-    })
-  );
+      data: {
+        completedOn: new Date(),
+      },
+    });
+    return NextResponse.json(updateResponse);
+  } catch (e) {
+    console.error(e);
+    return NextResponse.json("User question track does not exist", {
+      status: 400,
+    });
+  }
 }

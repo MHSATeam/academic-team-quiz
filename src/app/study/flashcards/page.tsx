@@ -1,43 +1,67 @@
 import Flashcards from "@/components/pages/Flashcards";
+import NotFound from "@/src/app/not-found";
+import { prismaClient } from "@/src/utils/clients";
+import { getSession } from "@auth0/nextjs-auth0";
+import { UserProfile } from "@auth0/nextjs-auth0/client";
+import { Button, Title } from "@tremor/react";
+import Link from "next/link";
 
 export default async function Page({
   searchParams,
 }: {
   searchParams: {
-    [key: string]: string | string[];
+    id?: string;
   };
 }) {
-  let categoryIds: number[] | undefined = undefined;
-  let roundIds: number[] | undefined = undefined;
-  if ("category" in searchParams) {
-    const categories = Array.isArray(searchParams.category)
-      ? searchParams.category
-      : [searchParams.category];
-    categories.forEach((category) => {
-      const id = parseInt(category);
-      if (!Number.isNaN(id)) {
-        if (categoryIds === undefined) {
-          categoryIds = [];
-        }
-        categoryIds.push(id);
-      }
-    });
+  const session = await getSession();
+  let user: UserProfile;
+  if (!session) {
+    user = {
+      name: "Test User",
+      sub: "google-oauth2|113895089668351284797",
+      email: "test@example.com",
+      email_verified: true,
+      nickname: "Test",
+    };
+  } else {
+    user = session.user;
   }
+  if (user.sub && searchParams.id && typeof searchParams.id === "string") {
+    const idNum = Number(searchParams.id);
+    if (!Number.isNaN(idNum)) {
+      const quizSession = await prismaClient.userQuizSession.findUnique({
+        where: {
+          id: idNum,
+          quizType: "Flashcards",
+          userId: user.sub,
+        },
+        include: {
+          questionsTrackers: {
+            orderBy: {
+              id: "asc",
+            },
+            include: {
+              question: {
+                include: {
+                  category: true,
+                },
+              },
+            },
+          },
+        },
+      });
 
-  if ("round" in searchParams) {
-    const rounds = Array.isArray(searchParams.round)
-      ? searchParams.round
-      : [searchParams.round];
-    rounds.forEach((round) => {
-      const id = parseInt(round);
-      if (!Number.isNaN(id)) {
-        if (roundIds === undefined) {
-          roundIds = [];
-        }
-        roundIds.push(id);
+      if (quizSession) {
+        return <Flashcards quizSession={quizSession} />;
       }
-    });
+    }
   }
-
-  return <Flashcards categories={categoryIds} rounds={roundIds} />;
+  return (
+    <main className="px-6 py-12">
+      <Title>This flashcard set doesn't exist!</Title>
+      <Button className="w-fit">
+        <Link href="/">Go Home</Link>
+      </Button>
+    </main>
+  );
 }

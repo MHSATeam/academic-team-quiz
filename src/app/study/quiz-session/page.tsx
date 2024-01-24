@@ -43,7 +43,6 @@ export default async function Page({
   const quizSessions = await prismaClient.userQuizSession.findMany({
     where: {
       userId: user.sub,
-      completedOn: null,
     },
     orderBy: {
       createdOn: "desc",
@@ -70,69 +69,78 @@ export default async function Page({
   return (
     <main className="px-6 py-12 flex flex-col gap-4">
       <Metric>In Progress Sessions</Metric>
-      {quizSessions.length > 0 && (
-        <Grid
-          numItems={1}
-          numItemsMd={3}
-          className="gap-4 justify-normal items-stretch"
-        >
-          {quizSessions.map((quizSession) => {
-            const Icon = {
-              Flashcards: Layers,
-              Written: Pencil,
-              Test: FileText,
-            }[quizSession.quizType];
-            return (
-              <Card key={quizSession.id}>
+      <Grid
+        numItems={1}
+        numItemsMd={3}
+        className="gap-4 justify-normal items-stretch"
+      >
+        {quizSessions.map((quizSession) => {
+          const Icon = {
+            Flashcards: Layers,
+            Written: Pencil,
+            Test: FileText,
+          }[quizSession.quizType];
+          const cardBody = (
+            <Flex className="h-full" flexDirection="col" alignItems="start">
+              <Flex justifyContent="start" className="gap-2">
+                <Icon className="dark:text-white" />
+                <Title>{quizSession.quizType}</Title>
+              </Flex>
+              <Subtitle className="mb-auto">
+                {quizSession.categories
+                  .map((category) => category.name)
+                  .join(", ")}
+              </Subtitle>
+              <Flex justifyContent="end">
+                <Text>
+                  {quizSession._count.questionsTrackers} /{" "}
+                  {quizSession.questionsTrackers.length}
+                </Text>
+              </Flex>
+              <ProgressBar
+                value={
+                  (quizSession._count.questionsTrackers * 100) /
+                  quizSession.questionsTrackers.length
+                }
+              />
+              <Text className="mt-2">
+                Started: {quizSession.createdOn.toLocaleDateString()}
+              </Text>
+            </Flex>
+          );
+          return (
+            <Card className="overflow-hidden" key={quizSession.id}>
+              {quizSession.completedOn !== null && (
+                <div className="absolute top-0 left-0 w-full h-full z-10 bg-opacity-50 bg-gray-500 flex flex-col justify-center items-center">
+                  <Title>Completed</Title>
+                  <Subtitle color="blue">
+                    On {quizSession.completedOn.toLocaleDateString()}
+                  </Subtitle>
+                </div>
+              )}
+              {quizSession.completedOn === null ? (
                 <Link
                   href={`/study/${quizSession.quizType.toLowerCase()}?id=${
                     quizSession.id
                   }`}
                 >
-                  <Flex
-                    className="h-full"
-                    flexDirection="col"
-                    alignItems="start"
-                  >
-                    <Flex justifyContent="start" className="gap-2">
-                      <Icon className="dark:text-white" />
-                      <Title>{quizSession.quizType}</Title>
-                    </Flex>
-                    <Subtitle className="mb-auto">
-                      {quizSession.categories
-                        .map((category) => category.name)
-                        .join(", ")}
-                    </Subtitle>
-                    <Flex justifyContent="end">
-                      <Text>
-                        {quizSession._count.questionsTrackers} /{" "}
-                        {quizSession.questionsTrackers.length}
-                      </Text>
-                    </Flex>
-                    <ProgressBar
-                      value={
-                        (quizSession._count.questionsTrackers * 100) /
-                        quizSession.questionsTrackers.length
-                      }
-                    />
-                    <Text className="mt-2">
-                      Started: {quizSession.createdOn.toLocaleDateString()}
-                    </Text>
-                  </Flex>
+                  {cardBody}
                 </Link>
-              </Card>
-            );
-          })}
-          <CreateQuizSession
-            defaultQuizType={
-              QuizTypes.includes(searchParams.type as QuizType)
-                ? (searchParams.type as QuizType)
-                : undefined
-            }
-            categories={categories}
-          />
-        </Grid>
-      )}
+              ) : (
+                cardBody
+              )}
+            </Card>
+          );
+        })}
+        <CreateQuizSession
+          defaultQuizType={
+            QuizTypes.includes(searchParams.type as QuizType)
+              ? (searchParams.type as QuizType)
+              : undefined
+          }
+          categories={categories}
+        />
+      </Grid>
     </main>
   );
 }

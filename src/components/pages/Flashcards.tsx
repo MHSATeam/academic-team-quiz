@@ -1,121 +1,260 @@
 "use client";
 
-import { Question } from "@prisma/client";
-import { Check, Loader2, X } from "lucide-react";
-import { useEffect, useState } from "react";
+import { Prisma, PrismaClient, Question, Result } from "@prisma/client";
+import { Button, Flex, ProgressBar, Title } from "@tremor/react";
+import { Check, Settings2, Undo2, X } from "lucide-react";
+import Link from "next/link";
+import { useMemo, useState } from "react";
+
+type QuizSessionWithQuestions = NonNullable<
+  Prisma.Result<
+    PrismaClient["userQuizSession"],
+    {
+      include: {
+        questionsTrackers: {
+          orderBy: {
+            id: "asc";
+          };
+          include: {
+            question: {
+              include: {
+                category: true;
+              };
+            };
+          };
+        };
+      };
+    },
+    "findFirst"
+  >
+>;
 
 type FlashcardsProps = {
-  categories?: number[];
-  rounds?: number[];
+  quizSession: QuizSessionWithQuestions;
 };
 
+function notEmpty<Value>(value: Value | null): value is Value {
+  return value !== null;
+}
+
 export default function Flashcards(props: FlashcardsProps) {
-  const [questions, setQuestions] = useState<Question[]>([]);
-  const [disappearing, setDisappearing] = useState(false);
-  const [loadingNewQuestion, setLoadingNewQuestion] = useState(false);
-  const [numIncorrect, setNumIncorrect] = useState(0);
-  const [numCorrect, setNumCorrect] = useState(0);
+  // Initialize values from database
+  const questions = useMemo(
+    () =>
+      props.quizSession.questionsTrackers
+        .map(({ question }) => question)
+        .filter(notEmpty),
+    [props.quizSession]
+  );
 
-  async function loadNextQuestion() {
-    setLoadingNewQuestion(true);
-    try {
-      const res = await fetch("/api/question", {
-        method: "POST",
-      });
-      if (!res.ok) {
-        throw new Error("Failed to load question!");
-      }
-      const newQuestion = await res.json();
-      setQuestions((prev) => [newQuestion, ...prev]);
-      if (questions.length > 0) {
-        setDisappearing(true);
-      }
-    } finally {
-      setLoadingNewQuestion(false);
-    }
-  }
+  const { initialCorrect, initialIncorrect } = useMemo(
+    () =>
+      props.quizSession.questionsTrackers.reduce(
+        (acc, tracker) => {
+          if (!tracker.question) {
+            return acc;
+          }
+          if (tracker.result === "Correct") {
+            acc.initialCorrect.push(tracker.question.id);
+          }
+          if (tracker.result === "Incorrect") {
+            acc.initialIncorrect.push(tracker.question.id);
+          }
+          return acc;
+        },
+        { initialCorrect: [], initialIncorrect: [] } as {
+          initialCorrect: number[];
+          initialIncorrect: number[];
+        }
+      ),
+    [props.quizSession]
+  );
 
-  async function markQuestion(correct: boolean) {
-    const currentQuestion = questions[0];
-    if (correct) {
-      setNumCorrect((prev) => prev + 1);
-    } else {
-      setNumIncorrect((prev) => prev + 1);
-    }
-    loadNextQuestion();
-    const res = await fetch("/api/log-question", {
+  // Setup program state based on loaded values
+  const [hiddenCards, setHiddenCards] = useState<number[]>(
+    initialCorrect.concat(initialIncorrect)
+  );
+  const [correctQuestions, setCorrectQuestions] = useState(initialCorrect);
+  const [incorrectQuestions, setIncorrectQuestions] =
+    useState(initialIncorrect);
+
+  const currentQuestionIndex = useMemo(() => {
+    return correctQuestions.length + incorrectQuestions.length;
+  }, [correctQuestions, incorrectQuestions]);
+
+  const currentQuestion = questions[currentQuestionIndex];
+
+  // Helper functions for updating the database
+  async function updateQuestionStatus(
+    questionTrackerId: number,
+    result: Result
+  ) {
+    const res = await fetch("/api/update-question-track", {
       method: "POST",
       body: JSON.stringify({
-        result: correct ? "Correct" : "Incorrect",
-        questionId: currentQuestion.id,
+        result,
+        questionTrackerId,
       }),
       headers: {
         "Content-Type": "application/json",
       },
     });
-
     if (!res.ok) {
-      alert("There was an error while saving your question");
-      return;
+      alert("Failed to save question response!");
+      return false;
+    }
+
+    return true;
+  }
+
+  async function markQuestion(correct: boolean) {
+    if (currentQuestion !== undefined) {
+      const tracker = props.quizSession.questionsTrackers.find(
+        ({ questionId }) => questionId === currentQuestion.id
+      );
+      if (!tracker) {
+        alert("Failed to save question response!");
+        return;
+      }
+      if (
+        await updateQuestionStatus(
+          tracker.id,
+          correct ? "Correct" : "Incorrect"
+        )
+      ) {
+        if (currentQuestionIndex === questions.length - 1) {
+          const res = await fetch("/api/complete-quiz", {
+            method: "POST",
+            body: JSON.stringify({
+              quizSessionId: props.quizSession.id,
+            }),
+            headers: {
+              "Content-Type": "application/json",
+            },
+          });
+          if (!res.ok) {
+            alert("Failed to mark quiz as completed!");
+            return;
+          }
+        }
+        if (correct) {
+          setCorrectQuestions((prev) => [...prev, currentQuestion.id]);
+        } else {
+          setIncorrectQuestions((prev) => [...prev, currentQuestion.id]);
+        }
+      }
     }
   }
 
-  useEffect(() => {
-    loadNextQuestion();
-  }, []);
-
-  if (questions.length === 0) {
-    return (
-      <span className="dark:text-white text-3xl absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 flex gap-2 items-center">
-        Loading <Loader2 className="animate-spin" />
-      </span>
-    );
+  async function undoQuestion() {
+    const lastQuestion = questions[currentQuestionIndex - 1];
+    if (lastQuestion) {
+      const tracker = props.quizSession.questionsTrackers.find(
+        ({ questionId }) => questionId === lastQuestion.id
+      );
+      if (!tracker) {
+        alert("Failed to undo question!");
+        return;
+      }
+      if (await updateQuestionStatus(tracker.id, "Incomplete")) {
+        setHiddenCards((prev) => prev.filter((id) => lastQuestion.id !== id));
+        setCorrectQuestions((prev) =>
+          prev.filter((id) => lastQuestion.id !== id)
+        );
+        setIncorrectQuestions((prev) =>
+          prev.filter((id) => lastQuestion.id !== id)
+        );
+      }
+    }
   }
 
   return (
     <main className="h-full w-full flex flex-col p-8 gap-4">
-      <div className="flex justify-between p-2">
-        <span className="flex gap-2 items-center text-red-500 font-bold text-lg">
-          <span className="text-red-200 bg-red-500 rounded-md px-2 py-1 ">
-            {numIncorrect}
+      <Flex className="w-full gap-2" justifyContent="start" flexDirection="col">
+        <div className="flex w-full justify-between p-2 gap-16 whitespace-nowrap">
+          <span className="flex gap-2 items-center text-red-500 font-bold text-lg">
+            <span className="text-red-200 bg-red-500 rounded-md px-2 py-1 ">
+              {incorrectQuestions.length}
+            </span>
+            Still Learning
           </span>
-          Still Learning
-        </span>
-        <span className="flex gap-2 items-center text-green-500 font-bold text-lg">
-          Know
-          <span className="text-green-200 bg-green-500 rounded-md px-2 py-1">
-            {numCorrect}
+          <Flex className="max-sm:hidden" flexDirection="col">
+            <Title>
+              {currentQuestionIndex} / {questions.length}
+            </Title>
+            <ProgressBar
+              value={(currentQuestionIndex * 100) / questions.length}
+            />
+          </Flex>
+          <span className="flex gap-2 items-center text-green-500 font-bold text-lg whitespace-nowrap">
+            Know
+            <span className="text-green-200 bg-green-500 rounded-md px-2 py-1">
+              {correctQuestions.length}
+            </span>
           </span>
-        </span>
-      </div>
-      <div className="grow relative">
-        {(loadingNewQuestion || disappearing) && (
-          <Flashcard
-            question={questions[disappearing ? 1 : 0]}
-            isDisappearing={disappearing}
-            onDisappear={() => {
-              setDisappearing(false);
-            }}
+        </div>
+        <Flex className="hidden max-sm:flex" flexDirection="col">
+          <ProgressBar
+            value={(currentQuestionIndex * 100) / questions.length}
           />
+        </Flex>
+      </Flex>
+      <div className="grow relative">
+        {!currentQuestion && (
+          <div className="w-full h-full absolute left-0 text-center flex flex-col justify-center">
+            <Title>All Done!</Title>
+            <Link href={"/study/quiz-session?type=Flashcards"}>
+              <Button>Study Again?</Button>
+            </Link>
+          </div>
         )}
-        <Flashcard
-          key={questions[0].id}
-          question={questions[0]}
-          isDisappearing={false}
-        />
+        {currentQuestion &&
+          questions.map((question, index) => {
+            if (hiddenCards.includes(question.id)) {
+              return null;
+            }
+            return (
+              <Flashcard
+                key={question.id}
+                isCurrent={question.id === currentQuestion.id}
+                question={question}
+                isDisappearing={index < currentQuestionIndex}
+                onDisappear={() => {
+                  setHiddenCards((prev) =>
+                    [...prev, question.id].filter(
+                      (id, index, arr) => arr.indexOf(id) === index
+                    )
+                  );
+                }}
+              />
+            );
+          })}
       </div>
-      <div className="flex justify-center gap-16">
+      <div className="flex justify-between">
         <button
-          onClick={() => markQuestion(false)}
-          className="rounded-full aspect-square text-red-500 border-2 p-2 border-red-500 hover:bg-red-900"
+          onClick={() => undoQuestion()}
+          className="rounded-full aspect-square border-2 p-2 dark:border-dark-tremor-border border-tremor-border dark:text-dark-tremor-content text-tremor-content active:bg-tremor-content-subtle dark:active:bg-dark-tremor-content-subtle "
         >
-          <X />
+          <Undo2 />
         </button>
-        <button
-          onClick={() => markQuestion(true)}
-          className="rounded-full aspect-square text-green-500 border-2 p-2 border-green-500 hover:bg-green-800"
-        >
-          <Check />
+        <div className="flex justify-center gap-16 max-sm:gap-12 grow">
+          <button
+            disabled={currentQuestion === undefined}
+            onClick={() => markQuestion(false)}
+            className="rounded-full aspect-square text-red-500 border-2 p-2 border-red-500 active:bg-red-900"
+          >
+            <X />
+          </button>
+          <button
+            disabled={currentQuestion === undefined}
+            onClick={() => markQuestion(true)}
+            className="rounded-full aspect-square text-green-500 border-2 p-2 border-green-500 active:bg-green-800"
+          >
+            <Check />
+          </button>
+        </div>
+        <button className="rounded-full aspect-square border-2 p-2 dark:border-dark-tremor-border border-tremor-border dark:text-dark-tremor-content text-tremor-content">
+          <Settings2 />
         </button>
       </div>
     </main>
@@ -124,31 +263,37 @@ export default function Flashcards(props: FlashcardsProps) {
 
 type FlashcardProps = {
   question: Question;
+  isCurrent: boolean;
   isDisappearing: boolean;
   onDisappear?: () => void;
 };
-function Flashcard({ question, isDisappearing, onDisappear }: FlashcardProps) {
+function Flashcard({
+  question,
+  isCurrent,
+  isDisappearing,
+  onDisappear,
+}: FlashcardProps) {
   const [flipped, setFlipped] = useState(false);
-  const [actuallyDisappearing, setActuallyDisappearing] = useState(false);
-
-  useEffect(() => {
-    setTimeout(() => {
-      setActuallyDisappearing(isDisappearing);
-    }, 0);
-  }, [isDisappearing]);
 
   return (
     <div
+      data-question-id={question.id}
       className="w-full h-full absolute left-0 text-center rounded-lg cursor-pointer"
       style={{
         perspective: "1000px",
         transition: "all cubic-bezier(0.4, 0, 0.2, 1) 400ms",
-        transform: actuallyDisappearing ? "scale(0)" : "scale(1)",
-        bottom: actuallyDisappearing ? "100%" : "0%",
-        ...(actuallyDisappearing ? { zIndex: 1000 } : {}),
+        transform: isDisappearing ? "scale(0)" : "scale(1)",
+        bottom: isDisappearing ? "100%" : "0%",
+        ...(isDisappearing
+          ? { zIndex: 1000 }
+          : isCurrent
+          ? { zIndex: 900 }
+          : {}),
       }}
       onTransitionEnd={(e) => {
-        onDisappear?.();
+        if (isDisappearing) {
+          onDisappear?.();
+        }
       }}
       onClick={() => {
         setFlipped(!flipped);
@@ -161,27 +306,31 @@ function Flashcard({ question, isDisappearing, onDisappear }: FlashcardProps) {
           transformStyle: "preserve-3d",
         }}
       >
-        <div
-          className="front w-full h-full overflow-hidden p-4 absolute top-0 left-0 z-10 bg-slate-100 shadow-lg dark:bg-dark-tremor-background rounded-lg flex flex-col justify-center"
-          style={{
-            backfaceVisibility: "hidden",
-          }}
-        >
-          <span className="dark:text-white text-3xl overflow-auto">
-            {question.question}
-          </span>
-        </div>
-        <div
-          className="back w-full h-full overflow-hidden p-4 absolute top-0 left-0 bg-slate-100 shadow-lg dark:bg-dark-tremor-background rounded-lg flex flex-col justify-center"
-          style={{
-            backfaceVisibility: "hidden",
-            transform: "rotateX(180deg)",
-          }}
-        >
-          <span className="dark:text-white text-3xl overflow-auto">
-            {question.answer}
-          </span>
-        </div>
+        {(isCurrent || isDisappearing) && (
+          <>
+            <div
+              className="front w-full h-full overflow-hidden p-4 absolute top-0 left-0 z-10 bg-slate-100 shadow-lg dark:bg-dark-tremor-background rounded-lg flex flex-col justify-center"
+              style={{
+                backfaceVisibility: "hidden",
+              }}
+            >
+              <span className="dark:text-white max-sm:text-2xl text-3xl overflow-auto">
+                {question.question}
+              </span>
+            </div>
+            <div
+              className="back w-full h-full overflow-hidden p-4 absolute top-0 left-0 bg-slate-100 shadow-lg dark:bg-dark-tremor-background rounded-lg flex flex-col justify-center"
+              style={{
+                backfaceVisibility: "hidden",
+                transform: "rotateX(180deg)",
+              }}
+            >
+              <span className="dark:text-white max-sm:text-2xl text-3xl overflow-auto">
+                {question.answer}
+              </span>
+            </div>
+          </>
+        )}
       </div>
     </div>
   );
