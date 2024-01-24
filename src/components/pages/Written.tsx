@@ -18,6 +18,7 @@ import {
   TextInput,
   Title,
 } from "@tremor/react";
+import Link from "next/link";
 import { useMemo, useState } from "react";
 
 type WrittenProps = {
@@ -141,62 +142,75 @@ export default function Written(props: WrittenProps) {
           showLabels={false}
         />
       </Flex>
-      <span className="text-tremor-content-strong dark:text-dark-tremor-content-strong text-xl">
-        {currentQuestion.question}
-      </span>
-      <hr />
-      {!inAnswerState && (
-        <Flex className="gap-2">
-          <TextInput
-            value={currentAnswer}
-            onValueChange={(newValue) => setCurrentAnswer(newValue)}
-            onKeyDown={(e) => {
-              if (e.key === "Enter") {
-                onSubmitAnswer();
-              }
-            }}
-            placeholder="Answer..."
-            style={{
-              fontSize: "1.125rem",
-            }}
-          />
-          <Button
-            onClick={() => {
-              onSubmitAnswer();
-            }}
-          >
-            Submit
-          </Button>
-        </Flex>
-      )}
-      {inAnswerState && (
-        <Flex flexDirection="col" className="gap-2">
-          <Metric color={isCorrect ? "green" : "red"}>
-            {isCorrect ? "Correct!" : "Not quite"}
-          </Metric>
-          <Title color={isCorrect ? "green" : "red"}>
-            Your answer: {currentAnswer}
-          </Title>
-          <Title>Correct answer: {currentQuestion.answer}</Title>
-          <Flex>
-            <Button
-              onClick={() => {
-                onConfirmAnswer(!isCorrect);
-              }}
-              variant="light"
-              color={isCorrect ? "red" : "green"}
-            >
-              Override, I was {isCorrect ? "wrong" : "right"}
-            </Button>
-            <Button
-              onClick={() => {
-                onConfirmAnswer(isCorrect);
-              }}
-            >
-              Next
-            </Button>
+      {currentQuestion ? (
+        <>
+          <span className="text-tremor-content-strong dark:text-dark-tremor-content-strong text-xl">
+            {currentQuestion.question}
+          </span>
+          <hr />
+          {!inAnswerState && (
+            <Flex className="gap-2">
+              <TextInput
+                value={currentAnswer}
+                onValueChange={(newValue) => setCurrentAnswer(newValue)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    onSubmitAnswer();
+                  }
+                }}
+                placeholder="Answer..."
+                style={{
+                  fontSize: "1.125rem",
+                }}
+              />
+              <Button
+                onClick={() => {
+                  onSubmitAnswer();
+                }}
+              >
+                Submit
+              </Button>
+            </Flex>
+          )}
+          {inAnswerState && (
+            <Flex flexDirection="col" className="gap-2">
+              <Metric color={isCorrect ? "green" : "red"}>
+                {isCorrect ? "Correct!" : "Not quite"}
+              </Metric>
+              <Title color={isCorrect ? "green" : "red"}>
+                Your answer: {currentAnswer}
+              </Title>
+              <Title>Correct answer: {currentQuestion.answer}</Title>
+              <Flex>
+                <Button
+                  onClick={() => {
+                    onConfirmAnswer(!isCorrect);
+                  }}
+                  variant="light"
+                  color={isCorrect ? "red" : "green"}
+                >
+                  Override, I was {isCorrect ? "wrong" : "right"}
+                </Button>
+                <Button
+                  onClick={() => {
+                    onConfirmAnswer(isCorrect);
+                  }}
+                >
+                  Next
+                </Button>
+              </Flex>
+            </Flex>
+          )}
+        </>
+      ) : (
+        <>
+          <Flex flexDirection="col">
+            <Title>All Done!</Title>
+            <Link href={"/study/quiz-session?type=Written"}>
+              <Button>Study Again?</Button>
+            </Link>
           </Flex>
-        </Flex>
+        </>
       )}
     </main>
   );
