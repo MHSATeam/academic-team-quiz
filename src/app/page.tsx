@@ -19,12 +19,13 @@ import {
 } from "@tremor/react";
 import formatUserName from "@/src/lib/users/format-user-name";
 import StreakLeaderBoard from "@/components/dashboard/StreakLeaderBoard";
-import getDaysActive from "@/src/lib/streaks/get-days-active";
+import getQuestionsPerDay from "@/src/lib/streaks/get-questions-per-day";
 import {
   compareDateWithoutTime,
   formatMonthDateShort,
 } from "@/src/utils/date-utils";
 import Link from "next/link";
+import RefreshButton from "@/components/utils/RefreshButton";
 
 export default async function Page() {
   const session = await getSession();
@@ -49,14 +50,17 @@ export default async function Page() {
   const goalPercent =
     Math.round(Number(activeStreak?.days_count ?? 0) * (100 / 0.6)) / 100;
 
-  const daysActive = await getDaysActive(user.sub);
+  const daysActive = await getQuestionsPerDay(user.sub);
   const numDaysInTimeFrame = 31;
   const startDate = new Date();
   startDate.setUTCDate(startDate.getUTCDate() - numDaysInTimeFrame);
 
   return (
     <main className="py-12 px-6">
-      <Metric>Welcome {formatUserName(user.name).split(" ")[0]}!</Metric>
+      <Flex>
+        <Metric>Welcome {formatUserName(user.name).split(" ")[0]}!</Metric>
+        <RefreshButton />
+      </Flex>
       <Grid numItems={1} numItemsMd={2} numItemsLg={3} className="gap-4 mt-4">
         <Col numColSpan={1} numColSpanSm={2}>
           <Card>

@@ -1,4 +1,5 @@
-import getDaysActive from "@/src/lib/streaks/get-days-active";
+import getActiveStreakDays from "@/src/lib/streaks/get-active-streak-days";
+import getQuestionsPerDay from "@/src/lib/streaks/get-questions-per-day";
 import {
   compareDateWithoutTime,
   formatMonthDateShort,
@@ -16,7 +17,7 @@ export default async function StreakTracker({
   if (!user.sub) {
     throw new Error("Missing user id");
   }
-  const daysActive = await getDaysActive(user.sub);
+  const daysActive = await getActiveStreakDays(user.sub);
   const numDaysInTimeFrame = 15;
   const startDate = new Date();
   startDate.setDate(startDate.getDate() - (numDaysInTimeFrame - 1));
@@ -29,7 +30,7 @@ export default async function StreakTracker({
           const isToday = i === numDaysInTimeFrame - 1;
           date.setDate(date.getDate() - (numDaysInTimeFrame - 1) + i);
           const activeDay = daysActive.find((activeDay) =>
-            compareDateWithoutTime(activeDay.date, date, false)
+            compareDateWithoutTime(activeDay.completedOn, date, false)
           );
 
           return {

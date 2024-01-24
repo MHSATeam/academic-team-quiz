@@ -16,25 +16,25 @@ export default async function getStreaks(userId: string): Promise<{
 }> {
   const streaks: Streak[] =
     (await prismaClient.$queryRaw`with
-    user_day_questions as (
-      select "createdOn"::date as date, "userId", COUNT(*) as question_count, MAX("createdOn") as last_created
-      from "UserQuestionTrack"
+    user_day_sessions as (
+      select "completedOn"::date as date, "userId", COUNT(*) as session_count, MAX("completedOn") as last_created
+      from "UserQuizSession"
       where "userId" = ${userId}
-      group by "createdOn"::date, "userId"
+      and "completedOn" is not null
+      group by "completedOn"::date, "userId"
     ),
-    user_question_streaks as (
+    user_session_streaks as (
       select *, row_number() over (partition by "userId" order by "date"::date)::integer,
       (("date")::date - row_number() over (partition by "userId" order by "date"::date)::integer) as streak_group
-      from "user_day_questions"
+      from "user_day_sessions"
       order by "date"
     )
     select
       "userId",
       MIN("last_created") AS start_at,
       MAX("last_created") AS end_at,
-      COUNT(*) AS days_count,
-      SUM(question_count) as question_count
-    FROM user_question_streaks
+      COUNT(*) AS days_count
+    FROM user_session_streaks
     GROUP BY streak_group, "userId"
     HAVING COUNT(*) >= 1
     order by end_at DESC;`) ?? [];
