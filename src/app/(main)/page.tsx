@@ -59,7 +59,7 @@ export default async function Page() {
     Math.round(Number(activeStreak?.days_count ?? 0) * (100 / 0.6)) / 100;
 
   const currentUserDaysActive = await getQuestionsPerDay(user.sub);
-  const numDaysInTimeFrame = 31;
+  const numDaysInTimeFrame = 8;
   const startDate = new Date();
   startDate.setUTCDate(startDate.getUTCDate() - numDaysInTimeFrame);
   const otherUserDays = (
