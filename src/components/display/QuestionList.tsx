@@ -1,7 +1,6 @@
 import Pagination from "@/components/utils/Pagination";
 import { Question } from "@prisma/client";
-import { Flex, List, ListItem, Text, Title } from "@tremor/react";
-import { MoreVertical } from "lucide-react";
+import { Flex, List, ListItem, Text } from "@tremor/react";
 import Link from "next/link";
 
 type QuestionListProps = {
