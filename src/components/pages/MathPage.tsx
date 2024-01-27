@@ -11,7 +11,6 @@ import { ErrorBoundary } from "react-error-boundary";
 import { MultiSelect, MultiSelectItem } from "@tremor/react";
 
 const STARTING_QUESTION_COUNT = 20;
-const NEW_LOAD_QUESTION_COUNT = 8;
 
 export default function MathPage() {
   const [problemSet, setProblemSet] = useState<Problem[]>([]);
@@ -30,7 +29,7 @@ export default function MathPage() {
         }
       } catch (e) {}
     }
-    return ALLOWED_PROBLEM_TYPES;
+    return [];
   });
   useEffect(() => {
     window.localStorage.setItem(
@@ -67,9 +66,7 @@ export default function MathPage() {
           <MultiSelect
             value={selectedProblemTypes}
             onValueChange={(problemList) => {
-              if (problemList.length > 0) {
-                setSelectedProblemTypes(problemList as ProblemType[]);
-              }
+              setSelectedProblemTypes(problemList as ProblemType[]);
             }}
           >
             {ALLOWED_PROBLEM_TYPES.map((problemType) => {
