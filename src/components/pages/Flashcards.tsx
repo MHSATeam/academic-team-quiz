@@ -6,6 +6,7 @@ import { QuizSessionWithQuestions } from "@/src/utils/quiz-session-type-extensio
 import { Question, Result } from "@prisma/client";
 import {
   Button,
+  CategoryBar,
   Dialog,
   DialogPanel,
   Flex,
@@ -62,6 +63,7 @@ export default function Flashcards(props: FlashcardsProps) {
   const [incorrectQuestions, setIncorrectQuestions] =
     useState(initialIncorrect);
   const [isInfoOpen, setIsInfoOpen] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
 
   const currentQuestionIndex = useMemo(() => {
     return correctQuestions.length + incorrectQuestions.length;
@@ -78,32 +80,37 @@ export default function Flashcards(props: FlashcardsProps) {
         alert("Failed to save question response!");
         return;
       }
-      if (
-        await updateQuestionStatus(
-          tracker.id,
-          correct ? "Correct" : "Incorrect"
-        )
-      ) {
-        if (currentQuestionIndex === questions.length - 1) {
-          const res = await fetch("/api/complete-quiz", {
-            method: "POST",
-            body: JSON.stringify({
-              quizSessionId: props.quizSession.id,
-            }),
-            headers: {
-              "Content-Type": "application/json",
-            },
-          });
-          if (!res.ok) {
-            alert("Failed to mark quiz as completed!");
-            return;
+      setIsSaving(true);
+      try {
+        if (
+          await updateQuestionStatus(
+            tracker.id,
+            correct ? "Correct" : "Incorrect"
+          )
+        ) {
+          if (currentQuestionIndex === questions.length - 1) {
+            const res = await fetch("/api/complete-quiz", {
+              method: "POST",
+              body: JSON.stringify({
+                quizSessionId: props.quizSession.id,
+              }),
+              headers: {
+                "Content-Type": "application/json",
+              },
+            });
+            if (!res.ok) {
+              alert("Failed to mark quiz as completed!");
+              return;
+            }
+          }
+          if (correct) {
+            setCorrectQuestions((prev) => [...prev, currentQuestion.id]);
+          } else {
+            setIncorrectQuestions((prev) => [...prev, currentQuestion.id]);
           }
         }
-        if (correct) {
-          setCorrectQuestions((prev) => [...prev, currentQuestion.id]);
-        } else {
-          setIncorrectQuestions((prev) => [...prev, currentQuestion.id]);
-        }
+      } finally {
+        setIsSaving(false);
       }
     }
   }
@@ -118,17 +125,45 @@ export default function Flashcards(props: FlashcardsProps) {
         alert("Failed to undo question!");
         return;
       }
-      if (await updateQuestionStatus(tracker.id, "Incomplete")) {
-        setHiddenCards((prev) => prev.filter((id) => lastQuestion.id !== id));
-        setCorrectQuestions((prev) =>
-          prev.filter((id) => lastQuestion.id !== id)
-        );
-        setIncorrectQuestions((prev) =>
-          prev.filter((id) => lastQuestion.id !== id)
-        );
+      setIsSaving(true);
+      try {
+        if (await updateQuestionStatus(tracker.id, "Incomplete")) {
+          setHiddenCards((prev) => prev.filter((id) => lastQuestion.id !== id));
+          setCorrectQuestions((prev) =>
+            prev.filter((id) => lastQuestion.id !== id)
+          );
+          setIncorrectQuestions((prev) =>
+            prev.filter((id) => lastQuestion.id !== id)
+          );
+        }
+      } finally {
+        setIsSaving(false);
       }
     }
   }
+
+  const createProgressBar = (large: boolean) => (
+    <Flex
+      className={large ? "max-sm:hidden" : "hidden max-sm:flex"}
+      flexDirection="col"
+    >
+      {large && (
+        <Title>
+          {currentQuestionIndex} / {questions.length}
+        </Title>
+      )}
+      <CategoryBar
+        className="w-full"
+        values={[
+          (incorrectQuestions.length * 100) / questions.length,
+          (correctQuestions.length * 100) / questions.length,
+          ((questions.length - currentQuestionIndex) * 100) / questions.length,
+        ]}
+        colors={["red", "green", "neutral"]}
+        showLabels={false}
+      />
+    </Flex>
+  );
 
   return (
     <main className="h-full w-full flex flex-col p-8 gap-4">
@@ -140,14 +175,7 @@ export default function Flashcards(props: FlashcardsProps) {
             </span>
             Still Learning
           </span>
-          <Flex className="max-sm:hidden" flexDirection="col">
-            <Title>
-              {currentQuestionIndex} / {questions.length}
-            </Title>
-            <ProgressBar
-              value={(currentQuestionIndex * 100) / questions.length}
-            />
-          </Flex>
+          {createProgressBar(true)}
           <span className="flex gap-2 items-center text-green-500 font-bold text-lg whitespace-nowrap">
             Know
             <span className="text-green-200 bg-green-500 rounded-md px-2 py-1">
@@ -155,11 +183,7 @@ export default function Flashcards(props: FlashcardsProps) {
             </span>
           </span>
         </div>
-        <Flex className="hidden max-sm:flex" flexDirection="col">
-          <ProgressBar
-            value={(currentQuestionIndex * 100) / questions.length}
-          />
-        </Flex>
+        {createProgressBar(false)}
       </Flex>
       <div className="grow relative">
         {!currentQuestion && (
@@ -194,7 +218,7 @@ export default function Flashcards(props: FlashcardsProps) {
       </div>
       <div className="flex justify-between">
         <button
-          disabled={!currentQuestion}
+          disabled={!currentQuestion || isSaving}
           onClick={() => undoQuestion()}
           className="rounded-full aspect-square border-2 p-2 dark:border-dark-tremor-border border-tremor-border dark:text-dark-tremor-content text-tremor-content active:bg-tremor-content-subtle disabled:bg-tremor-content-subtle disabled:dark:bg-dark-tremor-content-subtle dark:active:bg-dark-tremor-content-subtle "
         >
@@ -202,16 +226,16 @@ export default function Flashcards(props: FlashcardsProps) {
         </button>
         <div className="flex justify-center gap-16 max-sm:gap-12 grow">
           <button
-            disabled={currentQuestion === undefined}
+            disabled={currentQuestion === undefined || isSaving}
             onClick={() => markQuestion(false)}
-            className="rounded-full aspect-square text-red-500 border-2 p-2 border-red-500 active:bg-red-900"
+            className="rounded-full aspect-square text-red-500 border-2 p-2 border-red-500 active:bg-red-900 disabled:bg-tremor-content-subtle disabled:dark:bg-dark-tremor-content-subtle"
           >
             <X />
           </button>
           <button
-            disabled={currentQuestion === undefined}
+            disabled={currentQuestion === undefined || isSaving}
             onClick={() => markQuestion(true)}
-            className="rounded-full aspect-square text-green-500 border-2 p-2 border-green-500 active:bg-green-800"
+            className="rounded-full aspect-square text-green-500 border-2 p-2 border-green-500 active:bg-green-800 disabled:bg-tremor-content-subtle disabled:dark:bg-dark-tremor-content-subtle"
           >
             <Check />
           </button>
@@ -222,7 +246,8 @@ export default function Flashcards(props: FlashcardsProps) {
               setIsInfoOpen(true);
             }
           }}
-          className="rounded-full aspect-square border-2 p-2 dark:border-dark-tremor-border border-tremor-border dark:text-dark-tremor-content text-tremor-content"
+          disabled={!currentQuestion}
+          className="rounded-full aspect-square border-2 p-2 dark:border-dark-tremor-border border-tremor-border dark:text-dark-tremor-content text-tremor-content disabled:bg-tremor-content-subtle disabled:dark:bg-dark-tremor-content-subtle"
         >
           <HelpCircle />
         </button>
