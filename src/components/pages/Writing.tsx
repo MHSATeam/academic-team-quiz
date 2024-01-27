@@ -18,6 +18,7 @@ import {
   TextInput,
   Title,
 } from "@tremor/react";
+import { Undo2 } from "lucide-react";
 import Link from "next/link";
 import { useMemo, useState } from "react";
 
@@ -64,6 +65,7 @@ export default function Writing(props: WritingProps) {
   const [currentAnswer, setCurrentAnswer] = useState("");
   const [isCorrect, setIsCorrect] = useState(false);
   const [inAnswerState, setInAnswerState] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
 
   const currentQuestionIndex = useMemo(() => {
     return correctQuestions.length + incorrectQuestions.length;
@@ -71,7 +73,13 @@ export default function Writing(props: WritingProps) {
 
   const currentQuestion = questions[currentQuestionIndex];
 
-  function onSubmitAnswer() {
+  function onSubmitAnswer(noAnswer = false) {
+    if (noAnswer) {
+      setCurrentAnswer("");
+      setIsCorrect(false);
+      setInAnswerState(true);
+      return;
+    }
     if (currentAnswer.trim().length > 0) {
       const isCorrect = compareUserAnswer(
         currentAnswer,
@@ -91,35 +99,71 @@ export default function Writing(props: WritingProps) {
         alert("Failed to save question response!");
         return;
       }
-      if (
-        await updateQuestionStatus(
-          tracker.id,
-          wasCorrect ? "Correct" : "Incorrect"
-        )
-      ) {
-        if (currentQuestionIndex === questions.length - 1) {
-          const res = await fetch("/api/complete-quiz", {
-            method: "POST",
-            body: JSON.stringify({
-              quizSessionId: props.quizSession.id,
-            }),
-            headers: {
-              "Content-Type": "application/json",
-            },
-          });
-          if (!res.ok) {
-            alert("Failed to mark quiz as completed!");
-            return;
+      setIsSaving(true);
+      try {
+        if (
+          await updateQuestionStatus(
+            tracker.id,
+            wasCorrect ? "Correct" : "Incorrect"
+          )
+        ) {
+          if (currentQuestionIndex === questions.length - 1) {
+            const res = await fetch("/api/complete-quiz", {
+              method: "POST",
+              body: JSON.stringify({
+                quizSessionId: props.quizSession.id,
+              }),
+              headers: {
+                "Content-Type": "application/json",
+              },
+            });
+            if (!res.ok) {
+              alert("Failed to mark quiz as completed!");
+              return;
+            }
           }
+          if (wasCorrect) {
+            setCorrectQuestions((prev) => [...prev, currentQuestion.id]);
+          } else {
+            setIncorrectQuestions((prev) => [...prev, currentQuestion.id]);
+          }
+          setCurrentAnswer("");
+          setIsCorrect(false);
+          setInAnswerState(false);
         }
-        if (wasCorrect) {
-          setCorrectQuestions((prev) => [...prev, currentQuestion.id]);
-        } else {
-          setIncorrectQuestions((prev) => [...prev, currentQuestion.id]);
+      } finally {
+        setIsSaving(false);
+      }
+    }
+  }
+
+  async function undoQuestion() {
+    const lastQuestion = questions[currentQuestionIndex - 1];
+    if (lastQuestion) {
+      const tracker = props.quizSession.questionsTrackers.find(
+        ({ questionId }) => questionId === lastQuestion.id
+      );
+      if (!tracker) {
+        alert("Failed to undo question!");
+        return;
+      }
+      setIsSaving(true);
+      try {
+        if (await updateQuestionStatus(tracker.id, "Incomplete")) {
+          setIsCorrect(
+            correctQuestions.findIndex((id) => lastQuestion.id === id) !== -1
+          );
+          setCorrectQuestions((prev) =>
+            prev.filter((id) => lastQuestion.id !== id)
+          );
+          setIncorrectQuestions((prev) =>
+            prev.filter((id) => lastQuestion.id !== id)
+          );
+          setInAnswerState(true);
+          setCurrentAnswer("Question Undone");
         }
-        setCurrentAnswer("");
-        setIsCorrect(false);
-        setInAnswerState(false);
+      } finally {
+        setIsSaving(false);
       }
     }
   }
@@ -150,6 +194,13 @@ export default function Writing(props: WritingProps) {
           <hr />
           {!inAnswerState && (
             <Flex className="gap-2">
+              <Button
+                onClick={() => undoQuestion()}
+                disabled={isSaving}
+                color="gray"
+              >
+                <Undo2 />
+              </Button>
               <TextInput
                 value={currentAnswer}
                 onValueChange={(newValue) => setCurrentAnswer(newValue)}
@@ -170,6 +221,14 @@ export default function Writing(props: WritingProps) {
               >
                 Submit
               </Button>
+              <Button
+                color="gray"
+                onClick={() => {
+                  onSubmitAnswer(true);
+                }}
+              >
+                I don't know
+              </Button>
             </Flex>
           )}
           {inAnswerState && (
@@ -177,24 +236,32 @@ export default function Writing(props: WritingProps) {
               <Metric color={isCorrect ? "green" : "red"}>
                 {isCorrect ? "Correct!" : "Not quite"}
               </Metric>
-              <Title color={isCorrect ? "green" : "red"}>
-                Your answer: {currentAnswer}
-              </Title>
+              {currentAnswer !== "" && (
+                <Title color={isCorrect ? "green" : "red"}>
+                  Your answer: {currentAnswer}
+                </Title>
+              )}
               <Title>Correct answer: {currentQuestion.answer}</Title>
               <Flex>
-                <Button
-                  onClick={() => {
-                    onConfirmAnswer(!isCorrect);
-                  }}
-                  variant="light"
-                  color={isCorrect ? "red" : "green"}
-                >
-                  Override, I was {isCorrect ? "wrong" : "right"}
-                </Button>
+                {currentAnswer !== "" ? (
+                  <Button
+                    onClick={() => {
+                      onConfirmAnswer(!isCorrect);
+                    }}
+                    disabled={isSaving}
+                    variant="light"
+                    color={isCorrect ? "red" : "green"}
+                  >
+                    Override, I was {isCorrect ? "wrong" : "right"}
+                  </Button>
+                ) : (
+                  <div></div>
+                )}
                 <Button
                   onClick={() => {
                     onConfirmAnswer(isCorrect);
                   }}
+                  disabled={isSaving}
                 >
                   Next
                 </Button>
