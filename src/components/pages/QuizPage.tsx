@@ -1,65 +1,31 @@
-import { ArrowRight, Loader2 } from "lucide-react";
+"use client";
+import { AlertTriangle, Loader2 } from "lucide-react";
 import React, { useEffect, useRef, useState } from "react";
-import SetPicker, {
-  convertSetLabelsToSetArray,
-  DefaultSetLabels,
-  SetLabel,
-} from "../SetPicker";
 import QuestionBox from "../QuestionBox";
 import ScrollToTop from "../utils/ScrollToTop";
-import Link from "next/link";
+import {
+  Callout,
+  Metric,
+  MultiSelect,
+  MultiSelectItem,
+  Switch,
+} from "@tremor/react";
+import { Category } from "@prisma/client";
+import useLocalStorage from "@/src/utils/use-local-storage";
 
-export default function QuizPage() {
+export default function QuizPage({ categories }: { categories: Category[] }) {
   const [questions, setQuestions] = useState<
     { id: number; question: string; answer: string; quiet: boolean }[]
   >([]);
-  const [selectedSets, setSelectedSets] = useState<SetLabel[]>(() => {
-    const savedSetList = localStorage.getItem("setList");
-    if (savedSetList) {
-      const parsedSetList = JSON.parse(savedSetList);
-      const newSets: SetLabel[] = [];
-      let failure = false;
-      if (parsedSetList instanceof Array) {
-        for (const set of parsedSetList) {
-          if (typeof set === "string") {
-            const newLabel = DefaultSetLabels.find((setLabel) => {
-              return setLabel.value === set;
-            });
-            if (newLabel !== undefined) {
-              newSets.push(newLabel);
-            } else {
-              failure = true;
-              break;
-            }
-          } else {
-            failure = true;
-            break;
-          }
-        }
-      } else {
-        failure = true;
-      }
-      if (!failure) {
-        return newSets;
-      } else {
-        window.localStorage.removeItem("setList");
-      }
-    }
-    return DefaultSetLabels;
-  });
-  const [autoNext, setAutoNext] = useState(() => {
-    const storageItem = window.localStorage.getItem("autoNext");
-    if (storageItem) {
-      const newAutoNext = JSON.parse(storageItem);
-      if (typeof newAutoNext === "boolean") {
-        return newAutoNext;
-      }
-    }
-    return false;
-  });
-  const [optionsOpen, setOptionsOpen] = useState(false);
+  const [selectedSets, setSelectedSets] = useLocalStorage<number[]>(
+    "set-list",
+    []
+  );
+  const [autoNext, setAutoNext] = useLocalStorage("auto-next", false);
 
   const swapValue = useRef(0);
+  const scrollRef = useRef<HTMLDivElement>(null);
+
   const getNextQuestion = async (
     quiet: boolean = false,
     errorCount = 0
@@ -83,7 +49,7 @@ export default function QuizPage() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          sets: convertSetLabelsToSetArray(selectedSets),
+          categories: selectedSets,
         }),
       }).then((response) => response.json());
       if (questions.find((q) => q.id === response.id)) {
@@ -117,74 +83,55 @@ export default function QuizPage() {
   };
 
   useEffect(() => {
-    window.localStorage.setItem(
-      "setList",
-      JSON.stringify(selectedSets.map((label) => label.value))
-    );
     swapLastQuestion(++swapValue.current);
   }, [selectedSets]);
 
-  useEffect(() => {
-    window.localStorage.setItem("autoNext", JSON.stringify(autoNext));
-  }, [autoNext]);
   return (
-    <main className="mb-12 dark:text-white">
-      <Link href={"/study/flashcards"}>Flashcards</Link>
-      <div className="flex flex-col border-2 rounded-lg grow shrink bg-slate-200 dark:bg-slate-500 dark:border-slate-600">
-        <button
-          className={
-            "flex gap-2 p-2 text-lg font-bold" +
-            (optionsOpen ? " border-b-2" : "")
-          }
-          onClick={() => {
-            setOptionsOpen(!optionsOpen);
+    <div
+      className="px-6 py-12 dark:text-white h-full overflow-auto"
+      ref={scrollRef}
+    >
+      <Metric className="mb-4">Quick Quiz</Metric>
+      <Callout
+        title="Streak Notice"
+        color="rose"
+        className="mb-4"
+        icon={AlertTriangle}
+      >
+        Answering questions here does NOT count towards your streak!
+      </Callout>
+      <MultiSelect
+        className="mb-4"
+        value={selectedSets.map((id) => id.toString())}
+        onValueChange={(values) => {
+          setSelectedSets(
+            values
+              .map((id) => Number(id))
+              .filter((number) => !Number.isNaN(number))
+          );
+        }}
+      >
+        {categories.map((category) => (
+          <MultiSelectItem key={category.id} value={category.id.toString()}>
+            {category.name}
+          </MultiSelectItem>
+        ))}
+      </MultiSelect>
+      <div className="flex m-2 gap-2">
+        <label htmlFor="auto-next">Auto Switch Question</label>
+        <Switch
+          id="auto-next"
+          checked={autoNext}
+          onChange={(newValue) => {
+            setAutoNext(newValue);
           }}
-          tabIndex={-1}
-        >
-          <span className="my-auto">Options</span>
-          <ArrowRight
-            className={
-              "transition-transform my-auto" + (optionsOpen ? " rotate-90" : "")
-            }
-          />
-        </button>
-        <div className="flex">
-          <div
-            className={
-              "overflow-hidden transition-[max-height]" +
-              (optionsOpen ? " max-h-screen" : " max-h-0")
-            }
-          >
-            <SetPicker
-              setList={selectedSets}
-              onChange={(setList) => {
-                if (setList.length > 0) {
-                  setSelectedSets([...setList]);
-                }
-              }}
-            />
-            <div className="flex m-2 gap-2">
-              <label htmlFor="auto-next">Auto Switch Question</label>
-              <input
-                tabIndex={-1}
-                className="p-2"
-                id="auto-next"
-                name="auto-next"
-                type="checkbox"
-                checked={autoNext}
-                onChange={(event) => {
-                  setAutoNext(event.target.checked);
-                }}
-              />
-            </div>
-          </div>
-        </div>
+        />
       </div>
       {questions.map((question, index) => {
         const isLast = index + 1 === questions.length;
         return (
           <React.Fragment key={index}>
-            <hr className="pb-4 mt-4 border-black" />
+            <hr className="my-4" />
             <QuestionBox
               onNext={async () => {
                 const newQuestion = await getNextQuestion();
@@ -208,7 +155,7 @@ export default function QuizPage() {
           <Loader2 className="animate-spin my-auto" />
         </span>
       )}
-      <ScrollToTop />
-    </main>
+      <ScrollToTop scrollParent={scrollRef} />
+    </div>
   );
 }

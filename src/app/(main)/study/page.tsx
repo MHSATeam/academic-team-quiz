@@ -20,10 +20,9 @@ export default function Page() {
       href: "/study/math",
     },
     {
-      name: "Test",
+      name: "Quiz",
       icon: FileText,
-      href: "/study/quiz-session?type=Test",
-      comingSoon: true,
+      href: "/study/quiz",
     },
     {
       name: "Round Explorer",
@@ -41,25 +40,25 @@ export default function Page() {
             <Card
               key={link.name}
               className={
-                link.comingSoon
-                  ? "bg-tremor-background-muted dark:bg-dark-tremor-background-muted relative overflow-hidden"
-                  : "hover:bg-blue-500"
+                // link.comingSoon
+                //   ? "bg-tremor-background-muted dark:bg-dark-tremor-background-muted relative overflow-hidden"
+                /*:*/ "hover:bg-blue-500"
               }
             >
               <Flex flexDirection="col" className="gap-2">
                 <Icon className="dark:text-white" />
                 <Title className="text-center">{link.name}</Title>
               </Flex>
-              {link.comingSoon && (
+              {/* {link.comingSoon && (
                 <div className="absolute top-0 left-0 w-full h-full flex flex-col justify-center items-center bg-gray-300 dark:bg-gray-700 bg-opacity-75 dark:bg-opacity-75">
                   <Subtitle color="red">Coming Soon!</Subtitle>
                 </div>
-              )}
+              )} */}
             </Card>
           );
-          if (link.comingSoon) {
-            return card;
-          }
+          // if (link.comingSoon) {
+          //   return card;
+          // }
           return (
             <Link href={link.href} key={link.name}>
               {card}

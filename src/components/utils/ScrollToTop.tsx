@@ -1,26 +1,37 @@
 import { ArrowUp } from "lucide-react";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 
 type ScrollToTopProps = {
   top?: number;
+  scrollParent?: React.RefObject<HTMLElement>;
 };
 
 export default function ScrollToTop(props: ScrollToTopProps) {
   const [active, setActive] = useState(false);
+
   useEffect(() => {
+    const parent =
+      props.scrollParent && props.scrollParent.current
+        ? props.scrollParent.current
+        : document.documentElement;
     const onScroll = () => {
-      setActive(document.documentElement.scrollTop >= (props.top ?? 300));
+      setActive(parent.scrollTop >= (props.top ?? 300));
     };
     onScroll();
-    document.addEventListener("scroll", onScroll);
+    parent.addEventListener("scroll", onScroll);
     return () => {
-      document.removeEventListener("scroll", onScroll);
+      parent.removeEventListener("scroll", onScroll);
     };
-  }, []);
+  }, [props.scrollParent]);
+
   return (
     <button
       onClick={() => {
-        window.scrollTo({
+        const parent =
+          props.scrollParent && props.scrollParent.current
+            ? props.scrollParent.current
+            : window;
+        parent.scrollTo({
           top: 0,
           behavior: "smooth",
         });
