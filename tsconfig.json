@@ -2,10 +2,19 @@
   "compilerOptions": {
     "target": "ESNext",
     "useDefineForClassFields": true,
-    "lib": ["DOM", "DOM.Iterable", "ESNext"],
-    "allowJs": false,
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ],
+    "lib": [
+      "DOM",
+      "DOM.Iterable",
+      "ESNext"
+    ],
+    "allowJs": true,
     "skipLibCheck": true,
-    "esModuleInterop": false,
+    "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "strict": true,
     "forceConsistentCasingInFileNames": true,
@@ -14,15 +23,35 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
-    "jsx": "react-jsx",
+    "jsx": "preserve",
+    "baseUrl": ".",
     "paths": {
-      "@/api-lib/*": ["./api-lib/*"]
+      "@/api-lib/*": [
+        "src/api-lib/*"
+      ],
+      "@/components/*": [
+        "src/components/*"
+      ],
+      "@/src/*": [
+        "src/*"
+      ]
     },
-    "types": ["vite/client", "dom-screen-wake-lock"]
+    "incremental": true,
+    "types": [
+      "dom-screen-wake-lock"
+    ]
   },
   "ts-node": {
     "esm": true,
     "experimentalSpecifierResolution": "node"
   },
-  "include": ["src", "api-lib", "api"]
+  "exclude": [
+    "./node_modules"
+  ],
+  "include": [
+    "src",
+    "./next-env.d.ts",
+    "./dist/types/**/*.ts",
+    ".next/types/**/*.ts"
+  ]
 }

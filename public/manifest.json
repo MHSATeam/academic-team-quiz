@@ -1,6 +1,6 @@
 {
-  "short-name": "A-Team",
   "name": "A-Team",
+  "short_name": "A-Team",
   "icons": [
     {
       "src": "favicon.ico",
