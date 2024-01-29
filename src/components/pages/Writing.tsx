@@ -193,14 +193,7 @@ export default function Writing(props: WritingProps) {
           </span>
           <hr />
           {!inAnswerState && (
-            <Flex className="gap-2">
-              <Button
-                onClick={() => undoQuestion()}
-                disabled={isSaving}
-                color="gray"
-              >
-                <Undo2 />
-              </Button>
+            <Flex flexDirection="col" className="gap-2">
               <TextInput
                 value={currentAnswer}
                 onValueChange={(newValue) => setCurrentAnswer(newValue)}
@@ -214,21 +207,31 @@ export default function Writing(props: WritingProps) {
                   fontSize: "1.125rem",
                 }}
               />
-              <Button
-                onClick={() => {
-                  onSubmitAnswer();
-                }}
-              >
-                Submit
-              </Button>
-              <Button
-                color="gray"
-                onClick={() => {
-                  onSubmitAnswer(true);
-                }}
-              >
-                I don't know
-              </Button>
+              <Flex className="gap-2">
+                <Button
+                  onClick={() => undoQuestion()}
+                  disabled={isSaving}
+                  color="gray"
+                >
+                  <Undo2 />
+                </Button>
+                <Button
+                  onClick={() => {
+                    onSubmitAnswer();
+                  }}
+                  className="grow"
+                >
+                  Submit
+                </Button>
+                <Button
+                  color="gray"
+                  onClick={() => {
+                    onSubmitAnswer(true);
+                  }}
+                >
+                  I don't know
+                </Button>
+              </Flex>
             </Flex>
           )}
           {inAnswerState && (
