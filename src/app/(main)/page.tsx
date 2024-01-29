@@ -23,6 +23,7 @@ import RefreshButton from "@/components/utils/RefreshButton";
 import QuestionsPerDay from "@/components/dashboard/QuestionsPerDay";
 import getUserList from "@/src/lib/users/get-user-ids";
 import { formatMonthDateShort } from "@/src/utils/date-utils";
+import getDefaultCategories from "@/src/lib/users/get-default-categories";
 
 export type UserStreaks = {
   [key: string]: {
@@ -52,7 +53,11 @@ export default async function Page() {
 
   const users = await getUserList();
 
-  const questionOfTheDay = await getRandomQuestion();
+  const categories = await getDefaultCategories(user.sub);
+
+  const questionOfTheDay = await getRandomQuestion(
+    categories.map(({ id }) => id)
+  );
   const { streaks, isActive: isStreakActive } = await getStreaks(user.sub);
   const activeStreak = isStreakActive ? streaks[0] : undefined;
   const goalPercent =
@@ -91,10 +96,18 @@ export default async function Page() {
     otherStreaks[user.user_id] = userStreaks;
   }
 
+  const firstName = formatUserName(user.name).split(" ")[0];
+
   return (
     <main className="py-12 px-6">
       <Flex>
-        <Metric>Welcome {formatUserName(user.name).split(" ")[0]}!</Metric>
+        <Metric>
+          Welcome{" "}
+          <Link className="text-blue-500" href={"/profile"}>
+            {firstName}
+          </Link>
+          !
+        </Metric>
         <RefreshButton />
       </Flex>
       <Grid numItems={1} numItemsMd={2} numItemsLg={3} className="gap-4 mt-4">

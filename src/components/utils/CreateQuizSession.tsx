@@ -1,5 +1,6 @@
 "use client";
 
+import CategorySelector from "@/components/utils/CategorySelector";
 import QuizTypes from "@/src/lib/quiz-sessions/QuizTypes";
 import { Category, Question, QuizType, UserQuizSession } from "@prisma/client";
 import {
@@ -24,10 +25,12 @@ import { useCallback, useMemo, useState } from "react";
 export default function CreateQuizSession({
   defaultQuizType,
   defaultOpen,
+  defaultCategories,
   categories,
 }: {
   defaultQuizType?: QuizType;
   defaultOpen: boolean;
+  defaultCategories: number[];
   categories: Category[];
 }) {
   const router = useRouter();
@@ -35,7 +38,7 @@ export default function CreateQuizSession({
   const [quizType, setQuizType] = useState<QuizType>(
     defaultQuizType ?? "Flashcards"
   );
-  const [categoryIds, setCategoryIds] = useState<number[]>([]);
+  const [categoryIds, setCategoryIds] = useState<number[]>(defaultCategories);
   const [questionCount, setQuestionCount] = useState(20);
   const [isCreatingQuiz, setIsCreatingQuiz] = useState(false);
 
@@ -98,24 +101,13 @@ export default function CreateQuizSession({
           </Flex>
           <hr className="my-4" />
           <Subtitle className="mb-1">Categories</Subtitle>
-          <MultiSelect
+          <CategorySelector
             className="mb-4"
             disabled={isCreatingQuiz}
-            value={categoryIds.map((id) => id.toString())}
-            onValueChange={(values) => {
-              setCategoryIds(
-                values
-                  .map((id) => Number(id))
-                  .filter((number) => !Number.isNaN(number))
-              );
-            }}
-          >
-            {categories.map((category) => (
-              <MultiSelectItem key={category.id} value={category.id.toString()}>
-                {category.name}
-              </MultiSelectItem>
-            ))}
-          </MultiSelect>
+            categories={categories}
+            selectedCategories={categoryIds}
+            setSelectedCategories={setCategoryIds}
+          />
           <Subtitle className="mb-1">Type of Quiz</Subtitle>
           <TabGroup
             className="mb-4"

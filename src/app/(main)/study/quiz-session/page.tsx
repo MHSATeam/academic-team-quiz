@@ -1,6 +1,7 @@
 import CreateQuizSession from "@/components/utils/CreateQuizSession";
 import DeleteSession from "@/components/utils/DeleteSession";
 import QuizTypes from "@/src/lib/quiz-sessions/QuizTypes";
+import getDefaultCategories from "@/src/lib/users/get-default-categories";
 import { prismaClient } from "@/src/utils/clients";
 import { getSession } from "@auth0/nextjs-auth0";
 import { UserProfile } from "@auth0/nextjs-auth0/client";
@@ -67,6 +68,8 @@ export default async function Page({
     },
   });
 
+  const defaultCategories = await getDefaultCategories(user.sub);
+
   const categories = await prismaClient.category.findMany();
 
   return (
@@ -86,6 +89,7 @@ export default async function Page({
               ? (searchParams.type as QuizType)
               : undefined
           }
+          defaultCategories={defaultCategories.map(({ id }) => id)}
           categories={categories}
         />
         {quizSessions.map((quizSession) => {

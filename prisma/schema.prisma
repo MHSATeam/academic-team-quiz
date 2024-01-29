@@ -14,9 +14,9 @@ model Question {
   answer      String
   createdYear Int                 @db.SmallInt
   categoryId  Int
-  category    Category            @relation(fields: [categoryId], references: [id])
+  category    Category            @relation(fields: [categoryId], references: [id], onDelete: Restrict)
   roundId     Int?
-  round       Round?              @relation(fields: [roundId], references: [id])
+  round       Round?              @relation(fields: [roundId], references: [id], onDelete: Cascade)
   userAnswers UserQuestionTrack[]
   createdOn   DateTime            @default(now()) @db.Timestamptz(3)
   modifiedOn  DateTime            @default(now()) @updatedAt @db.Timestamptz(3)
@@ -26,32 +26,33 @@ model Set {
   id               Int            @id @default(autoincrement())
   name             String
   author           String?
-  difficulty       Int
   categoryRoundId  Int?
-  categoryRound    CategoryRound? @relation(fields: [categoryRoundId], references: [id])
+  categoryRound    CategoryRound? @relation(fields: [categoryRoundId], references: [id], onDelete: SetNull)
   alphabetRoundId  Int?
-  alphabetRound    AlphabetRound? @relation(fields: [alphabetRoundId], references: [roundId])
+  alphabetRound    AlphabetRound? @relation(fields: [alphabetRoundId], references: [roundId], onDelete: SetNull)
   lightningRoundId Int?
-  lightningRound   Round?         @relation(fields: [lightningRoundId], references: [id])
+  lightningRound   Round?         @relation(fields: [lightningRoundId], references: [id], onDelete: SetNull)
   themeRoundId     Int?
-  themeRound       ThemeRound?    @relation(fields: [themeRoundId], references: [roundId])
+  themeRound       ThemeRound?    @relation(fields: [themeRoundId], references: [roundId], onDelete: SetNull)
   createdOn        DateTime       @default(now()) @db.Timestamptz(3)
   modifiedOn       DateTime       @default(now()) @updatedAt @db.Timestamptz(3)
 }
 
 model Category {
-  id                Int                 @id @default(autoincrement())
+  id                Int                     @id @default(autoincrement())
   name              String
   questions         Question[]
+  userDefaults      UserDefaultCategories[]
   categoryTeamGroup CategoryTeamGroup[]
   quizSessions      UserQuizSession[]
-  createdOn         DateTime            @default(now()) @db.Timestamptz(3)
-  modifiedOn        DateTime            @default(now()) @updatedAt @db.Timestamptz(3)
+  createdOn         DateTime                @default(now()) @db.Timestamptz(3)
+  modifiedOn        DateTime                @default(now()) @updatedAt @db.Timestamptz(3)
 }
 
 model Round {
   id                Int                @id @default(autoincrement())
   name              String?
+  difficulty        Int                @default(0) @db.SmallInt
   questions         Question[]
   alphabetRound     AlphabetRound?
   categoryTeamGroup CategoryTeamGroup?
@@ -63,7 +64,7 @@ model Round {
 
 model AlphabetRound {
   roundId    Int      @id
-  round      Round    @relation(fields: [roundId], references: [id])
+  round      Round    @relation(fields: [roundId], references: [id], onDelete: Cascade)
   letter     String   @db.Char()
   sets       Set[]
   createdOn  DateTime @default(now()) @db.Timestamptz(3)
@@ -72,7 +73,7 @@ model AlphabetRound {
 
 model ThemeRound {
   roundId    Int      @id
-  round      Round    @relation(fields: [roundId], references: [id])
+  round      Round    @relation(fields: [roundId], references: [id], onDelete: Cascade)
   theme      String
   sets       Set[]
   createdOn  DateTime @default(now()) @db.Timestamptz(3)
@@ -93,9 +94,9 @@ model CategoryTeamGroup {
   roundId         Int           @unique
   round           Round         @relation(fields: [roundId], references: [id])
   categoryRoundId Int
-  categoryRound   CategoryRound @relation(fields: [categoryRoundId], references: [id])
+  categoryRound   CategoryRound @relation(fields: [categoryRoundId], references: [id], onDelete: Cascade)
   categoryId      Int
-  category        Category      @relation(fields: [categoryId], references: [id])
+  category        Category      @relation(fields: [categoryId], references: [id], onDelete: Restrict)
   createdOn       DateTime      @default(now()) @db.Timestamptz(3)
   modifiedOn      DateTime      @default(now()) @updatedAt @db.Timestamptz(3)
 }
@@ -107,7 +108,7 @@ model UserQuestionTrack {
   question      Question?        @relation(fields: [questionId], references: [id], onDelete: SetNull)
   result        Result           @default(Incomplete)
   quizSessionId Int?
-  quizSession   UserQuizSession? @relation(fields: [quizSessionId], references: [id])
+  quizSession   UserQuizSession? @relation(fields: [quizSessionId], references: [id], onDelete: SetNull)
   modifiedOn    DateTime         @default(now()) @updatedAt @db.Timestamptz(3)
   createdOn     DateTime         @default(now()) @db.Timestamptz(3)
 }
@@ -132,6 +133,24 @@ enum QuizType {
   Flashcards
   Writing
   Test
+}
+
+model UserDefaultCategories {
+  userId     String     @id
+  categories Category[]
+  modifiedOn DateTime   @default(now()) @updatedAt @db.Timestamptz(3)
+}
+
+model UserRole {
+  userId String
+  role   Role
+
+  @@id([userId, role])
+}
+
+enum Role {
+  TeamCaptain
+  SiteAdmin
 }
 
 model ManagementTokens {
