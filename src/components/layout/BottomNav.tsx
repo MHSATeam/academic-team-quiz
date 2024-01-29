@@ -1,5 +1,5 @@
 import { getSession } from "@auth0/nextjs-auth0";
-import { BookMarked, Home, LogIn, LogOut, Siren } from "lucide-react";
+import { BookMarked, Home, LogIn, Siren, User } from "lucide-react";
 import Link from "next/link";
 
 export async function BottomNav() {
@@ -13,9 +13,9 @@ export async function BottomNav() {
           { to: "/study", name: "Study", icon: BookMarked },
           { to: "/buzzer", name: "Buzzer", icon: Siren },
           {
-            to: `/api/auth/${isLoggedOut ? "login" : "logout"}`,
-            name: isLoggedOut ? "Login" : "Logout",
-            icon: isLoggedOut ? LogIn : LogOut,
+            to: isLoggedOut ? "/api/auth/login" : "/profile",
+            name: isLoggedOut ? "Login" : "Profile",
+            icon: isLoggedOut ? LogIn : User,
           },
         ].map(({ to, name, icon: Icon }, index) => (
           <Link

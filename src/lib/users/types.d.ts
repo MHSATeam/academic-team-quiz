@@ -1,11 +1,5 @@
 import { UserProfile } from "@auth0/nextjs-auth0/client";
 
-export type Role = {
-  id: string;
-  name: string;
-  description: string;
-};
-
 // From auth0 generated user model https://github.com/auth0/node-auth0/blob/master/src/management/__generated/models/index.ts#L6577
 export type User = {
   [key: string]: any | any;
