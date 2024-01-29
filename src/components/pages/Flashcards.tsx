@@ -1,5 +1,6 @@
 "use client";
 
+import QuizFinished from "@/components/utils/QuizFinished";
 import { updateQuestionStatus } from "@/src/lib/quiz-sessions/update-question-status";
 import { filterNotEmpty } from "@/src/utils/array-utils";
 import { QuizSessionWithQuestions } from "@/src/utils/quiz-session-type-extension";
@@ -188,10 +189,7 @@ export default function Flashcards(props: FlashcardsProps) {
       <div className="grow relative">
         {!currentQuestion && (
           <div className="w-full h-full absolute left-0 text-center flex flex-col justify-center">
-            <Title>All Done!</Title>
-            <Link href={"/study/quiz-session?type=Flashcards"}>
-              <Button>Study Again?</Button>
-            </Link>
+            <QuizFinished quizType="Flashcards" />
           </div>
         )}
         {currentQuestion &&

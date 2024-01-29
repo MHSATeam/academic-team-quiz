@@ -1,5 +1,6 @@
 "use client";
 
+import QuizFinished from "@/components/utils/QuizFinished";
 import { updateQuestionStatus } from "@/src/lib/quiz-sessions/update-question-status";
 import { filterNotEmpty } from "@/src/utils/array-utils";
 import { QuizSessionWithQuestions } from "@/src/utils/quiz-session-type-extension";
@@ -273,14 +274,7 @@ export default function Writing(props: WritingProps) {
           )}
         </>
       ) : (
-        <>
-          <Flex flexDirection="col">
-            <Title>All Done!</Title>
-            <Link href={"/study/quiz-session?type=Writing"}>
-              <Button>Study Again?</Button>
-            </Link>
-          </Flex>
-        </>
+        <QuizFinished quizType="Writing" />
       )}
     </main>
   );
