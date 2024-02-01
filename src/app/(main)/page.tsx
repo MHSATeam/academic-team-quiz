@@ -83,10 +83,7 @@ export default async function Page() {
     if (userDays.days.length === 0) {
       return false;
     }
-    return (
-      userDays.days[userDays.days.length - 1].date.getTime() >=
-      startDate.getTime()
-    );
+    return userDays.days[0].date.getTime() >= startDate.getTime();
   });
 
   const otherStreaks: UserStreaks = {};
