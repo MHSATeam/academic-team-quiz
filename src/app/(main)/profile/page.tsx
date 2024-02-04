@@ -46,7 +46,8 @@ export default async function Page() {
       {isTeamCaptain && (
         <>
           <Divider>Team Captain Resources</Divider>
-          <Button variant="secondary">
+          <span className="dark:text-white text-lg my-1">Hello from the winter dance</span>
+	  <Button variant="secondary">
             <Link href={""}>Test</Link>
           </Button>
         </>
