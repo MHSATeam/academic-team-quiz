@@ -93,7 +93,7 @@ export async function POST(req: NextRequest) {
   )
   -- select a random set of questions weighted towards the later boxes
   select *, 
-  -LOG(1-random())/(99/(2.23605)*sqrt(box_index)+1) as priority 
+  -LOG(1-random())/(100/(2.44948)*sqrt(box_index+1)) as priority 
   from question_set
   order by priority
   limit ${numQuestions};`;
@@ -107,16 +107,14 @@ export async function POST(req: NextRequest) {
           id: categoryId,
         })),
       },
+      questionsTrackers: {
+        create: questions.map((question) => ({
+          result: "Incomplete",
+          questionId: question.id,
+          userId: user.sub!,
+        })),
+      },
     },
-  });
-
-  await prismaClient.userQuestionTrack.createMany({
-    data: questions.map((question) => ({
-      result: "Incomplete",
-      questionId: question.id,
-      userId: user.sub!,
-      quizSessionId: quizSession.id,
-    })),
   });
 
   return NextResponse.json({
