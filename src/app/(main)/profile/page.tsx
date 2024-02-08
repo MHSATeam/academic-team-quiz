@@ -40,15 +40,15 @@ export default async function Page() {
         categories={categories}
         currentlySelected={userCategories.map(({ id }) => id)}
       />
-      <Button variant="secondary">
-        <Link href={"/api/auth/logout"}>Logout</Link>
-      </Button>
+      <Link className="flex flex-col w-full" href={"/api/auth/logout"}>
+        <Button variant="secondary">Logout</Button>
+      </Link>
       {isTeamCaptain && (
         <>
           <Divider>Team Captain Resources</Divider>
-          <Button variant="secondary">
-            <Link href={""}>Test</Link>
-          </Button>
+          <Link className="flex flex-col w-full" href={"/management/"}>
+            <Button variant="secondary">Manage Sets</Button>
+          </Link>
         </>
       )}
     </main>
