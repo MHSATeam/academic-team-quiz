@@ -3,9 +3,10 @@ import { ActiveDay } from "@/src/lib/streaks/get-questions-per-day";
 import {
   compareDateWithoutTime,
   formatMonthDateShort,
+  newDateInTimeZone,
 } from "@/src/utils/date-utils";
-import { AreaChart, Flex, Switch } from "@tremor/react";
-import { useMemo, useState } from "react";
+import { AreaChart } from "@tremor/react";
+import { useMemo } from "react";
 
 type QuestionsPerDayProps = {
   showAll: boolean;
@@ -16,8 +17,8 @@ type QuestionsPerDayProps = {
 };
 
 export default function QuestionsPerDay(props: QuestionsPerDayProps) {
-  const startDate = new Date();
-  startDate.setUTCDate(startDate.getUTCDate() - props.timeFrameDays);
+  const startDate = newDateInTimeZone();
+  startDate.setDate(startDate.getDate() - props.timeFrameDays);
 
   const averageDayCount = (days: ActiveDay[]) => {
     return (

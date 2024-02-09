@@ -36,3 +36,7 @@ export function formatMonthDateShort(date: Date) {
     timeZone: "America/New_York",
   });
 }
+
+export function newDateInTimeZone(timeZone = "America/New_York") {
+  return new Date(new Date().toLocaleString("en-US", { timeZone }));
+}

@@ -22,7 +22,10 @@ import Link from "next/link";
 import RefreshButton from "@/components/utils/RefreshButton";
 import QuestionsPerDay from "@/components/dashboard/QuestionsPerDay";
 import getUserList from "@/src/lib/users/get-user-ids";
-import { formatMonthDateShort } from "@/src/utils/date-utils";
+import {
+  formatMonthDateShort,
+  newDateInTimeZone,
+} from "@/src/utils/date-utils";
 import getDefaultCategories from "@/src/lib/users/get-default-categories";
 
 export type UserStreaks = {
@@ -65,8 +68,8 @@ export default async function Page() {
 
   const currentUserDaysActive = await getQuestionsPerDay(user.sub);
   const numDaysInTimeFrame = 8;
-  const startDate = new Date();
-  startDate.setUTCDate(startDate.getUTCDate() - numDaysInTimeFrame);
+  const startDate = newDateInTimeZone();
+  startDate.setDate(startDate.getDate() - numDaysInTimeFrame);
   const otherUserDays = (
     await Promise.all(
       users
