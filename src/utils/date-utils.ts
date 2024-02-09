@@ -30,7 +30,9 @@ export function compareDateWithoutTime(
 }
 
 export function formatMonthDateShort(date: Date) {
-  return (
-    date.toLocaleString("en-US", { month: "short" }) + " " + date.getDate()
-  );
+  return date.toLocaleString("en-US", {
+    month: "short",
+    day: "numeric",
+    timeZone: "America/New_York",
+  });
 }
