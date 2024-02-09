@@ -30,7 +30,7 @@ export default async function StreakTracker({
           const isToday = i === numDaysInTimeFrame - 1;
           date.setDate(date.getDate() - (numDaysInTimeFrame - 1) + i);
           const activeDay = daysActive.find((activeDay) =>
-            compareDateWithoutTime(activeDay.completedOn, date, false)
+            compareDateWithoutTime(activeDay.day, date, false)
           );
 
           return {

@@ -64,7 +64,7 @@ export default async function Page() {
   const { streaks, isActive: isStreakActive } = await getStreaks(user.sub);
   const activeStreak = isStreakActive ? streaks[0] : undefined;
   const goalPercent =
-    Math.round(Number(activeStreak?.days_count ?? 0) * (100 / 0.6)) / 100;
+    Math.round(Number(activeStreak?.day_count ?? 0) * (100 / 0.6)) / 100;
 
   const currentUserDaysActive = await getQuestionsPerDay(user.sub);
   const numDaysInTimeFrame = 8;
@@ -138,7 +138,7 @@ export default async function Page() {
         <Card>
           <Title>Current Streak</Title>
           <Metric className="mt-2">
-            {activeStreak ? String(activeStreak.days_count) : "0"} Days!
+            {activeStreak ? String(activeStreak.day_count) : "0"} Days!
           </Metric>
           <StreakTracker user={user} isStreakActive={isStreakActive} />
         </Card>

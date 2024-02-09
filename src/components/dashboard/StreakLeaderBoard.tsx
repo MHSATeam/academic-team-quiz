@@ -25,13 +25,13 @@ export default async function StreakLeaderBoard({
   function getMostRecentStreak(userId: string) {
     return streaks[userId].isActive
       ? streaks[userId].streaks[0]
-      : { days_count: 0n, question_count: 0n };
+      : { day_count: 0n, question_count: 0n };
   }
 
   const topUsers = users.sort((a, b) => {
     const streakB = getMostRecentStreak(b.user_id);
     const streakA = getMostRecentStreak(a.user_id);
-    const diff = Number(streakB.days_count) - Number(streakA.days_count);
+    const diff = Number(streakB.day_count) - Number(streakA.day_count);
     if (diff === 0) {
       return Number(streakB.question_count) - Number(streakA.question_count);
     }
@@ -65,7 +65,7 @@ export default async function StreakLeaderBoard({
             : streak.isActive
             ? "yellow"
             : "gray",
-          tooltip: `${formatUserName(user.name)}: ${currentStreak.days_count}`,
+          tooltip: `${formatUserName(user.name)}: ${currentStreak.day_count}`,
         };
       })}
       className="mt-4"

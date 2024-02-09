@@ -13,13 +13,13 @@ export default async function getQuestionsPerDay(
 ): Promise<ActiveDay[]> {
   return (
     (await prismaClient.$queryRaw`
-  	select "modifiedOn"::date as date, 
+  	select timezone('America/New_York',"modifiedOn")::date as date, 
     "userId",
     COUNT(case result when 'Correct' then 1 else null end) as correct_count, 
     COUNT(case when result != 'Incomplete' then 1 else null end) as question_count
   	from "UserQuestionTrack"
   	where "userId" = ${userId}
-  	group by "modifiedOn"::date, "userId"
-    order by "modifiedOn"::date desc`) ?? []
+  	group by date, "userId"
+    order by date desc`) ?? []
   );
 }
