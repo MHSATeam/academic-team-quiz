@@ -8,3 +8,5 @@ dist-ssr
 .env
 .next
 google-token.json
+prisma/data
+*.pem
