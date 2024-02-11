@@ -27,6 +27,7 @@ import {
   newDateInTimeZone,
 } from "@/src/utils/date-utils";
 import getDefaultCategories from "@/src/lib/users/get-default-categories";
+import UpdateNotice from "@/components/dashboard/UpdateNotice";
 
 export type UserStreaks = {
   [key: string]: {
@@ -99,85 +100,88 @@ export default async function Page() {
   const firstName = formatUserName(user.name).split(" ")[0];
 
   return (
-    <main className="py-12 px-6">
-      <Flex>
-        <Metric>
-          Welcome{" "}
-          <Link className="text-blue-500" href={"/profile"}>
-            {firstName}
-          </Link>
-          !
-        </Metric>
-        <RefreshButton />
-      </Flex>
-      <Grid numItems={1} numItemsMd={2} numItemsLg={3} className="gap-4 mt-4">
-        <Col numColSpan={1} numColSpanSm={2}>
-          <Card>
-            <Title>
-              {questionOfTheDay ? (
-                <Link
-                  href={`/static/question/${questionOfTheDay.id}`}
-                  className="text-blue-500"
-                >
-                  Question of the Day
-                </Link>
-              ) : (
-                "Question of the Day"
-              )}
-            </Title>
-            {questionOfTheDay && (
-              <Subtitle>{questionOfTheDay.category.name}</Subtitle>
-            )}
-            {questionOfTheDay ? (
-              <QuestionDisplay question={questionOfTheDay} />
-            ) : (
-              <Text>Couldn't find question of the day!</Text>
-            )}
-          </Card>
-        </Col>
-        <Card>
-          <Title>Current Streak</Title>
-          <Metric className="mt-2">
-            {activeStreak ? String(activeStreak.day_count) : "0"} Days!
+    <>
+      <main className="py-12 px-6">
+        <Flex>
+          <Metric>
+            Welcome{" "}
+            <Link className="text-blue-500" href={"/profile"}>
+              {firstName}
+            </Link>
+            !
           </Metric>
-          <StreakTracker user={user} isStreakActive={isStreakActive} />
-        </Card>
-        <Card>
-          <Flex>
-            <Title>Streak Goal</Title>
-            <Subtitle color="blue">Keep Going!</Subtitle>
-          </Flex>
-          <Flex className="mt-2 mb-1">
-            <Text>Goal: 2 Month</Text>
-            <Text>{goalPercent}%</Text>
-          </Flex>
-          <ProgressBar value={goalPercent} />
-        </Card>
-        <Card>
-          <Title>Questions Studied Per Day</Title>
-          <QuestionsPerDay
-            showAll={false}
-            streaks={otherStreaks}
-            timeFrameDays={numDaysInTimeFrame}
-            currentUserDays={currentUserDaysActive}
-            otherUsers={otherUserDays}
-          />
-        </Card>
-        <Card>
-          <Flex>
-            <Title>Streak Tracker</Title>
-            <Title>{formatMonthDateShort(new Date())}</Title>
-          </Flex>
-          <StreakLeaderBoard streaks={otherStreaks} />
-          <QuestionsPerDay
-            showAll={true}
-            streaks={otherStreaks}
-            timeFrameDays={numDaysInTimeFrame}
-            currentUserDays={currentUserDaysActive}
-            otherUsers={otherUserDays}
-          />
-        </Card>
-      </Grid>
-    </main>
+          <RefreshButton />
+        </Flex>
+        <Grid numItems={1} numItemsMd={2} numItemsLg={3} className="gap-4 mt-4">
+          <Col numColSpan={1} numColSpanSm={2}>
+            <Card>
+              <Title>
+                {questionOfTheDay ? (
+                  <Link
+                    href={`/static/question/${questionOfTheDay.id}`}
+                    className="text-blue-500"
+                  >
+                    Question of the Day
+                  </Link>
+                ) : (
+                  "Question of the Day"
+                )}
+              </Title>
+              {questionOfTheDay && (
+                <Subtitle>{questionOfTheDay.category.name}</Subtitle>
+              )}
+              {questionOfTheDay ? (
+                <QuestionDisplay question={questionOfTheDay} />
+              ) : (
+                <Text>Couldn't find question of the day!</Text>
+              )}
+            </Card>
+          </Col>
+          <Card>
+            <Title>Current Streak</Title>
+            <Metric className="mt-2">
+              {activeStreak ? String(activeStreak.day_count) : "0"} Days!
+            </Metric>
+            <StreakTracker user={user} isStreakActive={isStreakActive} />
+          </Card>
+          <Card>
+            <Flex>
+              <Title>Streak Goal</Title>
+              <Subtitle color="blue">Keep Going!</Subtitle>
+            </Flex>
+            <Flex className="mt-2 mb-1">
+              <Text>Goal: 2 Month</Text>
+              <Text>{goalPercent}%</Text>
+            </Flex>
+            <ProgressBar value={goalPercent} />
+          </Card>
+          <Card>
+            <Title>Questions Studied Per Day</Title>
+            <QuestionsPerDay
+              showAll={false}
+              streaks={otherStreaks}
+              timeFrameDays={numDaysInTimeFrame}
+              currentUserDays={currentUserDaysActive}
+              otherUsers={otherUserDays}
+            />
+          </Card>
+          <Card>
+            <Flex>
+              <Title>Streak Tracker</Title>
+              <Title>{formatMonthDateShort(new Date())}</Title>
+            </Flex>
+            <StreakLeaderBoard streaks={otherStreaks} />
+            <QuestionsPerDay
+              showAll={true}
+              streaks={otherStreaks}
+              timeFrameDays={numDaysInTimeFrame}
+              currentUserDays={currentUserDaysActive}
+              otherUsers={otherUserDays}
+            />
+          </Card>
+        </Grid>
+      </main>
+      <UpdateNotice />
+    </>
   );
 }
