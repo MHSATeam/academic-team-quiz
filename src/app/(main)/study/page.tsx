@@ -1,5 +1,12 @@
 import { Card, Flex, Grid, Metric, Subtitle, Title } from "@tremor/react";
-import { FileText, FolderSearch, Layers, Pencil, Sigma } from "lucide-react";
+import {
+  FileText,
+  FolderSearch,
+  Layers,
+  Pencil,
+  Search,
+  Sigma,
+} from "lucide-react";
 import Link from "next/link";
 
 export default function Page() {
@@ -28,6 +35,11 @@ export default function Page() {
       name: "Round Explorer",
       icon: FolderSearch,
       href: "/static/round",
+    },
+    {
+      name: "Question Search",
+      icon: Search,
+      href: "/static/question",
     },
   ];
   return (

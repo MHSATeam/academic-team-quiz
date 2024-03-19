@@ -1,9 +1,10 @@
 "use client";
 import { Button, Dialog, DialogPanel, Flex, Text, Title } from "@tremor/react";
+import Link from "next/link";
 import { useEffect, useState } from "react";
 
 const LOCAL_STORAGE_KEY = "seen-update";
-const UPDATE_ID = "new-streak-system";
+const UPDATE_ID = "new-question-search";
 const UPDATE_ENABLED = true;
 const isServer = typeof window === "undefined";
 
@@ -49,20 +50,11 @@ export default function UpdateNotice() {
         <Flex flexDirection="col" className="gap-4" alignItems="start">
           <Title>There has been an update!</Title>
           <Text>
-            Streaks are now based on how many questions you answer, NOT how many
-            quizzes you complete!
-          </Text>
-          <Text>
-            If you think your current streak has been affected by this change,
-            contact Nate Wagner{" "}
-            <a
-              autoFocus={false}
-              className="text-tremor-brand dark:text-dark-tremor-brand"
-              href="mailto:nathaniel.wagner.student@madeiracityschools.org"
-            >
+            There is now a question search page! You can find it{" "}
+            <Link href={"/static/question"} className="text-blue-500">
               here
-            </a>
-            .
+            </Link>{" "}
+            or under the study tab.
           </Text>
           <Button
             onClick={() => {
