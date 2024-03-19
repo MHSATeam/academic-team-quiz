@@ -1,6 +1,7 @@
 import QuestionDisplay from "@/components/display/QuestionDisplay";
 import { getMissedQuestions } from "@/src/lib/questions/get-missed-questions";
 import { prismaClient } from "@/src/utils/clients";
+import { preProcessFullTextSearch } from "@/src/utils/string-utils";
 import { getSession } from "@auth0/nextjs-auth0";
 import { UserProfile } from "@auth0/nextjs-auth0/client";
 import { Question } from "@prisma/client";
@@ -46,20 +47,28 @@ export default async function Page({
   let questions: Question[];
 
   if (hasSearch) {
+    const processedSearch = preProcessFullTextSearch(searchParams.search);
     questions = await prismaClient.question.findMany({
       where: {
         OR: [
           {
             question: {
-              search: searchParams.search,
+              search: processedSearch,
             },
           },
           {
             answer: {
-              search: searchParams.search,
+              search: processedSearch,
             },
           },
         ],
+      },
+      orderBy: {
+        _relevance: {
+          fields: ["answer", "question"],
+          search: processedSearch,
+          sort: "desc",
+        },
       },
       take: 24,
     });
@@ -86,6 +95,9 @@ export default async function Page({
             defaultValue={searchParams.search}
             className="rounded-r-none border-r-0"
             autoComplete="off"
+            style={{
+              fontSize: "1.125rem",
+            }}
           />
           <Button type="submit" className="rounded-l-none border-l-0">
             <Search />
@@ -93,9 +105,12 @@ export default async function Page({
         </Flex>
       </form>
       {!hasSearch && <Title>Most missed Questions</Title>}
-      {!hasSearch && questions.length === 0 && (
-        <Title>You haven't missed any questions!</Title>
-      )}
+      {questions.length === 0 &&
+        (!hasSearch ? (
+          <Title>You haven't missed any questions!</Title>
+        ) : (
+          <Title>No questions found!</Title>
+        ))}
       <Grid numItems={1} numItemsLg={3} numItemsMd={2} className="gap-4">
         {questions.map((question) => {
           return (
