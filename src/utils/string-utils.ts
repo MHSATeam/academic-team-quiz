@@ -142,3 +142,10 @@ export const compareUserAnswer = (
   }
   return correct;
 };
+
+export const preProcessFullTextSearch = (search?: string) => {
+  if (search === undefined) {
+    return "";
+  }
+  return search.toLowerCase().replace(/(\w)\s+(\w)/g, "$1 <-> $2");
+};
