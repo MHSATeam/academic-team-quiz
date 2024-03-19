@@ -105,9 +105,12 @@ export default async function Page({
         </Flex>
       </form>
       {!hasSearch && <Title>Most missed Questions</Title>}
-      {!hasSearch && questions.length === 0 && (
-        <Title>You haven't missed any questions!</Title>
-      )}
+      {questions.length === 0 &&
+        (!hasSearch ? (
+          <Title>You haven't missed any questions!</Title>
+        ) : (
+          <Title>No questions found!</Title>
+        ))}
       <Grid numItems={1} numItemsLg={3} numItemsMd={2} className="gap-4">
         {questions.map((question) => {
           return (
