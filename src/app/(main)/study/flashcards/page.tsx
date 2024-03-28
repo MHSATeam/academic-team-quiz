@@ -59,7 +59,7 @@ export default async function Page({
   }
   return (
     <main className="px-6 py-12">
-      <Title>This flashcard set doesn't exist!</Title>
+      <Title>This flashcard set doesn&apos;t exist!</Title>
       <Button className="w-fit">
         <Link href="/">Go Home</Link>
       </Button>

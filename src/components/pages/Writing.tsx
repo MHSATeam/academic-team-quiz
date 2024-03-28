@@ -230,7 +230,7 @@ export default function Writing(props: WritingProps) {
                     onSubmitAnswer(true);
                   }}
                 >
-                  I don't know
+                  I don&apos;t know
                 </Button>
               </Flex>
             </Flex>

@@ -64,7 +64,7 @@ export default function BuzzerPage() {
       active = false;
       document.body.style.backgroundColor = "";
     };
-  }, [currentBuzz, status]);
+  }, [currentBuzz, status, team.value, user?.value]);
 
   // Wake lock system needs more testing before being used
   // useEffect(() => {
@@ -112,7 +112,7 @@ export default function BuzzerPage() {
         RealtimeStatus.buzzerClick.leave();
       }
     };
-  }, [status, user]);
+  }, [status, user, team.value]);
 
   useEffect(() => {
     if (user) {
@@ -123,7 +123,12 @@ export default function BuzzerPage() {
   const onBuzz = useDebounce(
     useCallback(() => {
       setCurrentlyClicking(true);
-      if (user !== null && status === "joined") {
+      if (
+        user !== null &&
+        status === "joined" &&
+        isHostConnected &&
+        !isLocked
+      ) {
         RealtimeStatus.buzzerClick.publish({
           user,
           team: team.value,
@@ -133,7 +138,7 @@ export default function BuzzerPage() {
         alert("You are missing a name!");
         setStatus("naming");
       }
-    }, [status, user, isLocked, isHostConnected]),
+    }, [status, user, isLocked, isHostConnected, team.value]),
     500
   );
 

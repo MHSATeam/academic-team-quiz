@@ -133,7 +133,7 @@ export default async function Page() {
               {questionOfTheDay ? (
                 <QuestionDisplay question={questionOfTheDay} />
               ) : (
-                <Text>Couldn't find question of the day!</Text>
+                <Text>Couldn&apos;t find question of the day!</Text>
               )}
             </Card>
           </Col>

@@ -1,6 +1,6 @@
 "use client";
 import { AlertTriangle, Loader2 } from "lucide-react";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import QuestionBox from "../QuestionBox";
 import ScrollToTop from "../utils/ScrollToTop";
 import {
@@ -26,65 +26,72 @@ export default function QuizPage({ categories }: { categories: Category[] }) {
   const swapValue = useRef(0);
   const scrollRef = useRef<HTMLDivElement>(null);
 
-  const getNextQuestion = async (
-    quiet: boolean = false,
-    errorCount = 0
-  ): Promise<{
-    id: number;
-    question: string;
-    answer: string;
-    quiet: boolean;
-  }> => {
-    const question = {
-      id: 0,
-      question: "",
-      answer: "",
-      quiet,
-    };
+  const getNextQuestion = useCallback(
+    async (
+      quiet: boolean = false,
+      errorCount = 0
+    ): Promise<{
+      id: number;
+      question: string;
+      answer: string;
+      quiet: boolean;
+    }> => {
+      const question = {
+        id: 0,
+        question: "",
+        answer: "",
+        quiet,
+      };
 
-    try {
-      const response = await fetch("/api/question", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          categories: selectedSets,
-        }),
-      }).then((response) => response.json());
-      if (questions.find((q) => q.id === response.id)) {
-        return getNextQuestion(quiet, errorCount + 0.5);
+      try {
+        const response = await fetch("/api/question", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            categories: selectedSets,
+          }),
+        }).then((response) => response.json());
+        if (questions.find((q) => q.id === response.id)) {
+          return getNextQuestion(quiet, errorCount + 0.5);
+        }
+        question.question = response.question;
+        question.id = response.id;
+        question.answer = response.answer;
+      } catch (e) {
+        console.error(e);
+        if (errorCount < 3) {
+          return getNextQuestion(quiet, errorCount + 1);
+        } else {
+          alert(
+            "There was an error fetching the question. Please try again later."
+          );
+          throw new Error("Failed to fetch new question");
+        }
       }
-      question.question = response.question;
-      question.id = response.id;
-      question.answer = response.answer;
-    } catch (e) {
-      console.error(e);
-      if (errorCount < 3) {
-        return getNextQuestion(quiet, errorCount + 1);
-      } else {
-        alert(
-          "There was an error fetching the question. Please try again later."
-        );
-        throw new Error("Failed to fetch new question");
+      return question;
+    },
+    [questions, selectedSets]
+  );
+
+  const swapLastQuestion = useCallback(
+    async (swap: number) => {
+      const newQuestion = await getNextQuestion(true);
+      if (swap === swapValue.current) {
+        setQuestions((prev) => {
+          const newArray = [...prev];
+          newArray.splice(prev.length - 1, 1, newQuestion);
+          return newArray;
+        });
       }
-    }
-    return question;
-  };
-  const swapLastQuestion = async (swap: number) => {
-    const newQuestion = await getNextQuestion(true);
-    if (swap === swapValue.current) {
-      setQuestions((prev) => {
-        const newArray = [...prev];
-        newArray.splice(prev.length - 1, 1, newQuestion);
-        return newArray;
-      });
-    }
-  };
+    },
+    [getNextQuestion]
+  );
 
   useEffect(() => {
     swapLastQuestion(++swapValue.current);
-  }, [selectedSets]);
+  }, [selectedSets, swapLastQuestion]);
 
   return (
     <div

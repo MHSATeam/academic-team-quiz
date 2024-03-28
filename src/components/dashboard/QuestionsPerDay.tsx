@@ -6,7 +6,7 @@ import {
   newDateInTimeZone,
 } from "@/src/utils/date-utils";
 import { AreaChart } from "@tremor/react";
-import { useMemo } from "react";
+import { useCallback, useMemo } from "react";
 
 type QuestionsPerDayProps = {
   showAll: boolean;
@@ -20,21 +20,24 @@ export default function QuestionsPerDay(props: QuestionsPerDayProps) {
   const startDate = newDateInTimeZone();
   startDate.setDate(startDate.getDate() - props.timeFrameDays);
 
-  const averageDayCount = (days: ActiveDay[]) => {
-    return (
-      days
-        .slice(0, props.timeFrameDays)
-        .reduce((sum, day) => sum + Number(day.question_count), 0) /
-      props.timeFrameDays
-    );
-  };
+  const averageDayCount = useCallback(
+    (days: ActiveDay[]) => {
+      return (
+        days
+          .slice(0, props.timeFrameDays)
+          .reduce((sum, day) => sum + Number(day.question_count), 0) /
+        props.timeFrameDays
+      );
+    },
+    [props.timeFrameDays]
+  );
 
   const otherUsersSorted = useMemo(
     () =>
       props.otherUsers.sort(
         (a, b) => averageDayCount(b.days) - averageDayCount(a.days)
       ),
-    [props.otherUsers]
+    [props.otherUsers, averageDayCount]
   );
 
   const categories = useMemo(

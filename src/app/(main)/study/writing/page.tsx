@@ -59,7 +59,7 @@ export default async function Page({
   }
   return (
     <main className="px-6 py-12">
-      <Title>This writing quiz doesn't exist!</Title>
+      <Title>This writing quiz doesn&apos;t exist!</Title>
       <Button className="w-fit">
         <Link href="/">Go Home</Link>
       </Button>

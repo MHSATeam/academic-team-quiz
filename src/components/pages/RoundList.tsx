@@ -55,7 +55,7 @@ export default function RoundList(props: RoundListProps) {
       storeFields: ["id", "name"],
     });
     minisearch.current.addAll(props.rounds);
-  }, []);
+  }, [props.rounds]);
 
   const filteredRounds = useMemo(() => {
     if (!minisearch.current || search.trim().length === 0) return props.rounds;

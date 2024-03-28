@@ -11,9 +11,17 @@ type QuestionBoxProps = {
   onNext: () => void;
 };
 
-export default function QuestionBox(props: QuestionBoxProps) {
+export default function QuestionBox({
+  answer,
+  autoNext,
+  isLastQuestion,
+  onNext,
+  question,
+  questionId,
+  quiet,
+}: QuestionBoxProps) {
   const [answerShown, setAnswerShown] = useState(false);
-  const [animate, setAnimate] = useState(props.quiet);
+  const [animate, setAnimate] = useState(quiet);
   const [clickedNext, setClickedNext] = useState(false);
   const questionBoxElement = useRef<HTMLDivElement>(null);
 
@@ -25,17 +33,17 @@ export default function QuestionBox(props: QuestionBoxProps) {
   }, []);
   useEffect(() => {
     const onKeyPress = (e: KeyboardEvent) => {
-      if (e.key === " " && props.isLastQuestion) {
+      if (e.key === " " && isLastQuestion) {
         e.preventDefault();
         e.stopImmediatePropagation();
         if (!answerShown) {
           setAnswerShown(true);
-          if (props.autoNext && !clickedNext) {
-            props.onNext();
+          if (autoNext && !clickedNext) {
+            onNext();
             setClickedNext(true);
           }
         } else if (!clickedNext) {
-          props.onNext();
+          onNext();
           setClickedNext(true);
         }
       }
@@ -51,28 +59,30 @@ export default function QuestionBox(props: QuestionBoxProps) {
       document.removeEventListener("keypress", onKeyPress);
       document.removeEventListener("keyup", onkeyUp);
     };
-  }, [answerShown, props.onNext, props.autoNext, clickedNext]);
+  }, [answerShown, onNext, autoNext, clickedNext, isLastQuestion]);
 
   useEffect(() => {
-    if (!props.autoNext && props.isLastQuestion) {
+    if (!autoNext && isLastQuestion) {
       window.scrollTo({
         top: document.body.scrollHeight,
         behavior: "smooth",
       });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [answerShown]);
 
   useEffect(() => {
-    if (props.isLastQuestion && answerShown && props.autoNext && !clickedNext) {
-      props.onNext();
+    if (isLastQuestion && answerShown && autoNext && !clickedNext) {
+      onNext();
       setClickedNext(true);
     }
-  }, [props.autoNext]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [autoNext]);
 
   useEffect(() => {
     setAnswerShown(false);
     setClickedNext(false);
-  }, [props.questionId]);
+  }, [questionId]);
   return (
     <div
       ref={questionBoxElement}
@@ -81,14 +91,14 @@ export default function QuestionBox(props: QuestionBoxProps) {
         (!animate ? "-translate-x-[200%]" : "translate-x-0")
       }
     >
-      <span>{props.question}</span>
+      <span>{question}</span>
       <div className="mt-4">
         {!answerShown ? (
           <button
             onClick={() => {
               setAnswerShown(true);
-              if (props.autoNext) {
-                props.onNext();
+              if (autoNext) {
+                onNext();
               }
             }}
             className="bg-blue-400 rounded-md px-3 py-1 active:bg-blue-500"
@@ -99,15 +109,15 @@ export default function QuestionBox(props: QuestionBoxProps) {
           <div className="flex gap-2">
             <div className="flex flex-col">
               <span className="font-bold">Answer: </span>
-              <span>{props.answer}</span>
+              <span>{answer}</span>
             </div>
-            {props.isLastQuestion && !props.autoNext && (
+            {isLastQuestion && !autoNext && (
               <button
                 disabled={clickedNext}
                 onClick={() => {
                   if (!clickedNext) {
                     setClickedNext(true);
-                    props.onNext();
+                    onNext();
                   }
                 }}
                 className="bg-blue-400 h-fit rounded-md px-3 py-1 shrink-0 ml-auto"

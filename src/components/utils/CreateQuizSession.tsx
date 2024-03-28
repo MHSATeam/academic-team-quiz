@@ -74,7 +74,7 @@ export default function CreateQuizSession({
     router.push(
       `/study/${quizSession.quizType.toLowerCase()}?id=${quizSession.id}`
     );
-  }, [categoryIds, questionCount, quizType]);
+  }, [categoryIds, questionCount, quizType, router]);
 
   return (
     <>
