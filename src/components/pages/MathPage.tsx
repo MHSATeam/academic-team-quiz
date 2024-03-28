@@ -27,7 +27,9 @@ export default function MathPage() {
         if (newTypes.length > 0) {
           return newTypes;
         }
-      } catch (e) {}
+      } catch (e) {
+        /* empty */
+      }
     }
     return [];
   });

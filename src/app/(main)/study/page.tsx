@@ -1,4 +1,4 @@
-import { Card, Flex, Grid, Metric, Subtitle, Title } from "@tremor/react";
+import { Card, Flex, Grid, Metric, Title } from "@tremor/react";
 import {
   FileText,
   FolderSearch,

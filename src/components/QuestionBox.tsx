@@ -1,5 +1,5 @@
 import { ArrowRight, Loader2 } from "lucide-react";
-import { Key, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 type QuestionBoxProps = {
   question: string;

@@ -2,15 +2,13 @@
 
 import CategorySelector from "@/components/utils/CategorySelector";
 import QuizTypes from "@/src/lib/quiz-sessions/QuizTypes";
-import { Category, Question, QuizType, UserQuizSession } from "@prisma/client";
+import { Category, QuizType, UserQuizSession } from "@prisma/client";
 import {
   Button,
   Card,
   Dialog,
   DialogPanel,
   Flex,
-  MultiSelect,
-  MultiSelectItem,
   NumberInput,
   Subtitle,
   Tab,

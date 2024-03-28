@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { UserProfile } from "@auth0/nextjs-auth0/client";
 
 // From auth0 generated user model https://github.com/auth0/node-auth0/blob/master/src/management/__generated/models/index.ts#L6577

@@ -4,23 +4,16 @@ import QuizFinished from "@/components/utils/QuizFinished";
 import { updateQuestionStatus } from "@/src/lib/quiz-sessions/update-question-status";
 import { filterNotEmpty } from "@/src/utils/array-utils";
 import { QuizSessionWithQuestions } from "@/src/utils/quiz-session-type-extension";
-import {
-  compareUserAnswer,
-  damerauLevDistance,
-  damerauLevSimilarity,
-} from "@/src/utils/string-utils";
+import { compareUserAnswer } from "@/src/utils/string-utils";
 import {
   Button,
   CategoryBar,
   Flex,
   Metric,
-  ProgressBar,
-  Text,
   TextInput,
   Title,
 } from "@tremor/react";
 import { Undo2 } from "lucide-react";
-import Link from "next/link";
 import { useMemo, useState } from "react";
 
 type WritingProps = {

@@ -1,4 +1,4 @@
-import { Prisma, PrismaClient, Round } from "@prisma/client";
+import { Prisma, PrismaClient } from "@prisma/client";
 
 export default function getRoundName(
   round: NonNullable<

@@ -1,7 +1,7 @@
 import QuestionList from "@/components/display/QuestionList";
 import getRoundName from "@/src/lib/round/getRoundName";
 import { prismaClient } from "@/src/utils/clients";
-import { Flex, List, ListItem, Subtitle, Text, Title } from "@tremor/react";
+import { Flex, List, ListItem, Text, Title } from "@tremor/react";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 

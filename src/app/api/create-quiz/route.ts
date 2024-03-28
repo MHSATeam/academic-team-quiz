@@ -22,7 +22,7 @@ export async function POST(req: NextRequest) {
   if (
     !categories ||
     !Array.isArray(categories) ||
-    !((categories: any[]): categories is number[] =>
+    !((categories: unknown[]): categories is number[] =>
       categories.every((value) => typeof value === "number"))(categories)
   ) {
     return NextResponse.json("Categories input was malformed", { status: 400 });

@@ -4,19 +4,16 @@ import QuizFinished from "@/components/utils/QuizFinished";
 import { updateQuestionStatus } from "@/src/lib/quiz-sessions/update-question-status";
 import { filterNotEmpty } from "@/src/utils/array-utils";
 import { QuizSessionWithQuestions } from "@/src/utils/quiz-session-type-extension";
-import { Question, Result } from "@prisma/client";
+import { Question } from "@prisma/client";
 import {
   Button,
   CategoryBar,
   Dialog,
   DialogPanel,
   Flex,
-  ProgressBar,
-  Subtitle,
   Title,
 } from "@tremor/react";
-import { Check, HelpCircle, Settings2, Undo2, X } from "lucide-react";
-import Link from "next/link";
+import { Check, HelpCircle, Undo2, X } from "lucide-react";
 import { useMemo, useState } from "react";
 
 type FlashcardsProps = {
@@ -305,7 +302,7 @@ function Flashcard({
         bottom: isDisappearing ? "100%" : "0%",
         ...(isDisappearing ? { zIndex: 40 } : isCurrent ? { zIndex: 30 } : {}),
       }}
-      onTransitionEnd={(e) => {
+      onTransitionEnd={() => {
         if (isDisappearing) {
           onDisappear?.();
         }

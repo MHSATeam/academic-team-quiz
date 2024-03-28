@@ -4,8 +4,8 @@ import "server-only";
 export type ActiveDay = {
   date: Date;
   userId: string;
-  correct_count: BigInt;
-  question_count: BigInt;
+  correct_count: bigint;
+  question_count: bigint;
 };
 
 export default async function getQuestionsPerDay(

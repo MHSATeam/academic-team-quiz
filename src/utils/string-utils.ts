@@ -28,7 +28,7 @@ const initMatrix = (s1: string, s2: string) => {
     return null;
   }
 
-  let d: number[][] = [];
+  const d: number[][] = [];
   for (let i = 0; i <= s1.length; i++) {
     d[i] = [];
     d[i][0] = i;
@@ -63,12 +63,12 @@ export const damerauLevDistance = (s1: string, s2: string) => {
     return -1;
   }
 
-  let d = initMatrix(s1, s2);
+  const d = initMatrix(s1, s2);
   /* istanbul ignore next */
   if (null === d) {
     return -1;
   }
-  for (var i = 1; i <= s1.length; i++) {
+  for (let i = 1; i <= s1.length; i++) {
     let cost;
     for (let j = 1; j <= s2.length; j++) {
       if (s1.charAt(i - 1) === s2.charAt(j - 1)) {

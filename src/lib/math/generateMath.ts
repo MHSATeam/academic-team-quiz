@@ -8,17 +8,13 @@ import {
   ProblemType,
 } from "./math-types";
 import {
-  Color,
   Deck,
-  Draw,
   generatePolynomial,
   nthStringConvert,
   randomBool,
   randomInt,
-  Rank,
   Shape3D,
   Shapes,
-  Suit,
   Vector,
   weightedRandomNumber,
 } from "./utils";
@@ -214,7 +210,7 @@ const generateProblem = (type: ProblemType): Problem => {
     case ProblemType.ParabolaVertices: {
       const x = randomInt(-10, 10);
       const y = randomInt(-10, 10);
-      var a = randomInt(-3, 4, 0);
+      const a = randomInt(-3, 4, 0);
 
       const nerdString = `${a}*((x-(${x}))^2)+(${y})`;
       const nerdTex = nerdamer(nerdString).expand().toTeX().removeCdot();
@@ -225,9 +221,9 @@ const generateProblem = (type: ProblemType): Problem => {
     }
     case ProblemType.CompleteTheSequence: {
       const isAddition = Math.random() > 0.5;
-      var termCount;
-      var terms = [];
-      var answer = 0;
+      const terms = [];
+      let termCount;
+      let answer = 0;
       if (isAddition) {
         termCount = randomInt(20, 100);
         const number = randomInt(-30, 30, 0, 1, -1);
@@ -431,7 +427,9 @@ const generateProblem = (type: ProblemType): Problem => {
         } else if (nerdString !== "cot(0)") {
           result = nerdamer(nerdString).toTeX().removeCdot();
         }
-      } catch (e) {}
+      } catch (e) {
+        /* empty */
+      }
       problem.question = `Evaluate the expression $$${equation
         .toTeX()
         .removeCdot()}$$`;

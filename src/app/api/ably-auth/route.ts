@@ -26,7 +26,7 @@ async function getAblyToken(): Promise<Ably.Types.TokenRequest> {
 
 export const revalidate = 0;
 
-export async function GET(req: Request) {
+export async function GET() {
   if (ablyRest === null) {
     console.warn(
       "You have not setup an api key for ably realtime, so features related to it will be disabled."

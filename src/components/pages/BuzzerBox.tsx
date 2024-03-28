@@ -15,9 +15,7 @@ const beepSound = new Audio("/beep.mp3");
 const scoresStorageKey = "scores";
 
 export default function BuzzerBox() {
-  const [buzzerHistory, setBuzzerHistory] = useState<
-    (BuzzerClickMessage | "reset")[]
-  >([]);
+  const [, setBuzzerHistory] = useState<(BuzzerClickMessage | "reset")[]>([]);
   const [teamScores, setTeamScores] = useState<TeamScore[]>(() => {
     const loadedScores = localStorage.getItem(scoresStorageKey);
     if (loadedScores) {
@@ -127,7 +125,7 @@ export default function BuzzerBox() {
       "rounded-se-lg": isLeft,
       "rounded-ss-lg": !isLeft,
     };
-    const tieBreaker = Math.abs(teamScores[0].score - teamScores[1].score);
+    // const tieBreaker = Math.abs(teamScores[0].score - teamScores[1].score);
 
     return (
       <div className="flex flex-col relative">
