@@ -12,7 +12,7 @@
   },
   "dependencies": {
     "@auth0/nextjs-auth0": "^3.5.0",
-    "@prisma/client": "^5.8.1",
+    "@prisma/client": "^5.11.0",
     "@tailwindcss/typography": "^0.5.12",
     "@tiptap/extension-subscript": "^2.2.4",
     "@tiptap/extension-superscript": "^2.2.4",
@@ -25,6 +25,7 @@
     "@types/dom-screen-wake-lock": "^1.0.3",
     "@types/mathjax": "^0.0.37",
     "@vercel/analytics": "^1.0.1",
+    "@xstate/react": "^4.1.0",
     "ably": "^1.2.47",
     "autoprefixer": "^10.4.16",
     "better-react-mathjax": "^2.0.3",
@@ -33,7 +34,7 @@
     "dompurify": "^3.0.11",
     "googleapis": "^129.0.0",
     "jose": "^4.14.4",
-    "lucide-react": "^0.292.0",
+    "lucide-react": "^0.363.0",
     "mathjax": "^3.2.2",
     "minisearch": "^6.3.0",
     "nanoid": "^5.0.3",
@@ -41,7 +42,7 @@
     "next": "^14.0.4",
     "node-fetch": "^2.6.7",
     "postcss": "^8.4.31",
-    "prisma": "^5.8.1",
+    "prisma": "^5.11.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-error-boundary": "^4.0.11",
@@ -49,10 +50,11 @@
     "react-select": "^5.8.0",
     "sass": "^1.56.0",
     "server-only": "^0.0.1",
-    "tailwindcss": "^3.3.5",
+    "tailwindcss": "^3.4.3",
     "tesseract.js": "^5.0.5",
     "tslib": "^2.4.1",
-    "typescript": "^5.3.3"
+    "typescript": "^5.3.3",
+    "xstate": "^5.9.1"
   },
   "devDependencies": {
     "@types/cookie": "^0.5.2",

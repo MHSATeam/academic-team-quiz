@@ -9,6 +9,8 @@ const nextConfig = {
       message: /Critical dependency/,
       module: /keyv/,
     });
+    config.resolve.alias.canvas = false;
+    config.resolve.alias.encoding = false;
     return config;
   },
 };

@@ -1,7 +1,7 @@
 import colors from "tailwindcss/colors";
 import typography from "@tailwindcss/typography";
 /** @type {import('tailwindcss').Config} */
-export default {
+const tailwindConfig = {
   content: [
     "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
@@ -132,3 +132,4 @@ export default {
   ],
   plugins: [require("@headlessui/tailwindcss"), typography],
 };
+export default tailwindConfig;
