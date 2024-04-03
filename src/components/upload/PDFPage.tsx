@@ -23,8 +23,12 @@ type PDFPageProps = {
   onSelect: (selection: Selection, event: MouseEvent) => void;
 };
 let TempCanvas: HTMLCanvasElement;
+let TempCanvasContext: CanvasRenderingContext2D;
 if (typeof window !== "undefined") {
   TempCanvas = document.createElement("canvas");
+  TempCanvasContext = TempCanvas.getContext("2d", {
+    willReadFrequently: true,
+  })!;
 }
 
 export default function PDFPage({
@@ -41,43 +45,51 @@ export default function PDFPage({
   const mousePos = useRef<Vector>({ x: 0, y: 0 });
 
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const contextRef = useRef<CanvasRenderingContext2D | null>(null);
   const defaultCanvasData = useRef<ImageData | null>(null);
 
   const renderOverlay = useCallback(() => {
     if (!canvasRef.current || !defaultCanvasData.current) {
       return;
     }
-    const ctx = canvasRef.current.getContext("2d");
-    if (!ctx) {
-      return;
+
+    if (!contextRef.current) {
+      const ctx = canvasRef.current.getContext("2d", {
+        willReadFrequently: true,
+      });
+      if (!ctx) {
+        return;
+      }
+      contextRef.current = ctx;
     }
 
-    ctx.putImageData(defaultCanvasData.current, 0, 0);
-    ctx.save();
+    contextRef.current.putImageData(defaultCanvasData.current, 0, 0);
+    contextRef.current.save();
 
     const currentMousePos = mousePos.current;
     const initialPosition = initialPositionRef.current;
     if (initialPosition) {
-      ctx.globalAlpha = 0.3;
-      ctx.fillStyle = "#0f0";
-      drawRoundedRect(ctx, initialPosition, currentMousePos);
+      contextRef.current.globalAlpha = 0.3;
+      contextRef.current.fillStyle = "#0f0";
+      drawRoundedRect(contextRef.current, initialPosition, currentMousePos);
     }
-    ctx.restore();
+    contextRef.current.restore();
     for (const selectedText of selections) {
       for (const selection of selectedText.selections) {
         if (selection.page === pageNumber) {
-          ctx.save();
-          ctx.globalAlpha = 0.3;
-          ctx.fillStyle = selectedText.type === "question" ? "#38c" : "#ec3";
+          contextRef.current.save();
+          contextRef.current.globalAlpha = 0.3;
+          contextRef.current.fillStyle =
+            selectedText.type === "question" ? "#38c" : "#ec3";
           const wordsHull = calculateSurroundingBox(
-            selection.words.map((w) => w.box)
+            selection.words.map((w) => w.box),
           );
           wordsHull.x0 -= 5;
           wordsHull.y0 -= 5;
           wordsHull.x1 += 5;
           wordsHull.y1 += 5;
-          drawRoundedRect(ctx, ...getBboxVectors(wordsHull));
-          ctx.restore();
+          drawRoundedRect(contextRef.current, ...getBboxVectors(wordsHull));
+          contextRef.current.restore();
         }
       }
     }
@@ -89,7 +101,7 @@ export default function PDFPage({
         const boxes = getOverlappingBoxes(
           initialPositionRef.current,
           mousePos.current,
-          wordBoxes
+          wordBoxes,
         );
         if (boxes.length === 0) {
           return;
@@ -102,23 +114,24 @@ export default function PDFPage({
         }
         TempCanvas.width = canvasRef.current.width;
         TempCanvas.height = canvasRef.current.height;
-        const ctx = TempCanvas.getContext("2d")!;
-        ctx.putImageData(defaultCanvasData.current, 0, 0);
+        TempCanvasContext.putImageData(defaultCanvasData.current, 0, 0);
         const selectionBox = getBboxFromPoints(
           initialPositionRef.current,
-          mousePos.current
+          mousePos.current,
         );
-        const selectionImage = ctx.getImageData(
-          Math.max(selectionBox.x0 - 5, 0),
-          Math.max(selectionBox.y0 - 5, 0),
+        const wordHull = calculateSurroundingBox(boxes.map((w) => w.box));
+
+        const selectionImage = TempCanvasContext.getImageData(
+          Math.max(wordHull.x0 - 5, 0),
+          Math.max(wordHull.y0 - 5, 0),
           Math.min(
-            selectionBox.x1 - selectionBox.x0 + 10,
-            TempCanvas.width - selectionBox.x0
+            wordHull.x1 - wordHull.x0 + 10,
+            TempCanvas.width - wordHull.x0,
           ),
           Math.min(
-            selectionBox.y1 - selectionBox.y0 + 10,
-            TempCanvas.height - selectionBox.y0
-          )
+            wordHull.y1 - wordHull.y0 + 10,
+            TempCanvas.height - wordHull.y0,
+          ),
         );
         onSelect(
           {
@@ -127,11 +140,11 @@ export default function PDFPage({
             words: boxes,
             selectionImage: selectionImage,
           },
-          event
+          event,
         );
       }
     },
-    [wordBoxes, onSelect, pageNumber]
+    [wordBoxes, onSelect, pageNumber],
   );
 
   useMouseEvent(
@@ -147,9 +160,9 @@ export default function PDFPage({
           initialPositionRef.current = null;
         }
       },
-      [renderOverlay]
+      [renderOverlay],
     ),
-    canvasRef.current
+    canvasRef.current,
   );
 
   useMouseEvent(
@@ -164,8 +177,8 @@ export default function PDFPage({
           }
         }
       },
-      [renderOverlay]
-    )
+      [renderOverlay],
+    ),
   );
 
   useMouseEvent(
@@ -187,15 +200,15 @@ export default function PDFPage({
         initialPositionRef.current = null;
         renderOverlay();
       },
-      [handleSelect, renderOverlay]
-    )
+      [handleSelect, renderOverlay],
+    ),
   );
 
   useKeyboardEvent(
     useCallback((event) => {
       setIsPressingMeta(event.metaKey);
     }, []),
-    ["keydown", "keyup"]
+    ["keydown", "keyup"],
   );
 
   const onRenderSuccess = useCallback(
@@ -204,19 +217,25 @@ export default function PDFPage({
         return;
       }
 
-      const ctx = canvasRef.current.getContext("2d");
-      if (!ctx) {
-        return;
+      if (!contextRef.current) {
+        const ctx = canvasRef.current.getContext("2d", {
+          willReadFrequently: true,
+        });
+        if (!ctx) {
+          return;
+        }
+        contextRef.current = ctx;
       }
+
       const { width, height } = canvasRef.current;
-      const canvasData = ctx.getImageData(0, 0, width, height);
+      const canvasData = contextRef.current.getImageData(0, 0, width, height);
       defaultCanvasData.current = canvasData;
 
       setIsProcessed(false);
 
       const { data } = await ocrScheduler.addJob(
         "recognize",
-        canvasRef.current
+        canvasRef.current,
       );
 
       const newWordBoxes: WordBox[] = [];
@@ -234,7 +253,7 @@ export default function PDFPage({
       renderOverlay();
       setIsProcessed(true);
     },
-    [ocrScheduler, renderOverlay]
+    [ocrScheduler, renderOverlay],
   );
 
   useEffect(() => {
@@ -255,8 +274,8 @@ export default function PDFPage({
       }
     >
       {!isProcessed && (
-        <div className="absolute top-0 left-0 w-full h-full bg-opacity-90 z-10 bg-white flex flex-col gap-4 items-center justify-center">
-          <span className="font-medium text-tremor-metric text-tremor-content-emphasis">
+        <div className="absolute left-0 top-0 z-10 flex h-full w-full flex-col items-center justify-center gap-4 bg-white bg-opacity-90">
+          <span className="text-tremor-metric font-medium text-tremor-content-emphasis">
             Scanning Page
           </span>
           <Scan className="animate-ping" />

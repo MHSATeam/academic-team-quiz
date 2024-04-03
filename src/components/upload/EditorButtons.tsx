@@ -35,10 +35,10 @@ function EditorButton(props: EditorButtonProps) {
       }}
       disabled={button.isDisabled?.(props.editor) ?? false}
       className={
-        "p-1 border-2 text-sm border-black rounded-md disabled:bg-slate-300" +
+        "rounded-md border-2 p-1 text-sm disabled:bg-slate-300 dark:text-white" +
         (button.isActive && button.isActive(props.editor)
-          ? " bg-black text-white"
-          : " bg-white")
+          ? " bg-tremor-brand dark:bg-dark-tremor-brand"
+          : " bg-tremor-brand-faint dark:bg-dark-tremor-brand-faint")
       }
     >
       <Icon />

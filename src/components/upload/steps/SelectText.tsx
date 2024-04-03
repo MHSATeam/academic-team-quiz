@@ -21,13 +21,18 @@ import {
   Button,
   Card,
   Flex,
-  Select,
-  SelectItem,
   Subtitle,
   Text,
   Textarea,
   Title,
 } from "@tremor/react";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/utils/PortalSelect";
 import {
   CircleCheck,
   CircleEllipsis,
@@ -133,6 +138,7 @@ export default function SelectText(props: StepComponentProps) {
             answer.selections = [...answer.selections, selection];
             return answer;
           });
+          setTypedAnswer(null);
           setTool("category");
           break;
         }
@@ -154,7 +160,7 @@ export default function SelectText(props: StepComponentProps) {
         }
       }
     },
-    [trueTool, props.categories]
+    [trueTool, props.categories],
   );
 
   const resetSelection = useCallback(() => {
@@ -170,7 +176,7 @@ export default function SelectText(props: StepComponentProps) {
       (question || typedQuestion) &&
       (answer || typedAnswer) &&
       categoryId !== 0,
-    [question, typedQuestion, answer, typedAnswer, categoryId]
+    [question, typedQuestion, answer, typedAnswer, categoryId],
   );
 
   const addQuestion = useCallback(() => {
@@ -181,7 +187,7 @@ export default function SelectText(props: StepComponentProps) {
     if (question) {
       newQuestion.question = getTextFromSelections(question);
       newQuestion.questionImages = question.selections.map(
-        (selection) => selection.selectionImage
+        (selection) => selection.selectionImage,
       );
     } else {
       newQuestion.question = typedQuestion ?? "";
@@ -189,7 +195,7 @@ export default function SelectText(props: StepComponentProps) {
     if (answer) {
       newQuestion.answer = getTextFromSelections(answer);
       newQuestion.answerImages = answer.selections.map(
-        (selection) => selection.selectionImage
+        (selection) => selection.selectionImage,
       );
     } else {
       newQuestion.answer = typedAnswer ?? "";
@@ -198,7 +204,7 @@ export default function SelectText(props: StepComponentProps) {
     newQuestion.answer = newQuestion.answer.trim();
 
     const category = props.categories.find(
-      (category) => category.id === categoryId
+      (category) => category.id === categoryId,
     );
     if (category) {
       newQuestion.category = category;
@@ -226,7 +232,7 @@ export default function SelectText(props: StepComponentProps) {
       resetSelection();
     }, [resetSelection]),
     "keyup",
-    "Escape"
+    "Escape",
   );
 
   useKeyboardEvent(
@@ -241,17 +247,17 @@ export default function SelectText(props: StepComponentProps) {
           addQuestion();
         }
       },
-      [addQuestion, question, answer]
+      [addQuestion, question, answer],
     ),
     ["keydown", "keyup"],
-    "Enter"
+    "Enter",
   );
 
   useKeyboardEvent(
     useCallback((event) => {
       setIsPressingMeta(event.metaKey);
     }, []),
-    ["keydown", "keyup"]
+    ["keydown", "keyup"],
   );
 
   useEffect(() => {
@@ -279,24 +285,24 @@ export default function SelectText(props: StepComponentProps) {
   const questionAccordions = props.state.context.questions.map(
     (question, index) => (
       <Accordion key={question.id}>
-        <AccordionHeader>
-          <Flex alignItems="center">
+        <Flex alignItems="center">
+          <AccordionHeader>
             <Title>Question #{index + 1}</Title>
-            <button
-              className="flex aspect-square items-center justify-center text-red-500 dark:hover:bg-red-900 hover:bg-red-300 rounded-md"
-              onClick={() => {
-                props.send({
-                  type: "removeQuestion",
-                  params: {
-                    questionId: question.id,
-                  },
-                });
-              }}
-            >
-              <X />
-            </button>
-          </Flex>
-        </AccordionHeader>
+          </AccordionHeader>
+          <button
+            className="mr-3 flex aspect-square items-center justify-center rounded-md text-red-500 hover:bg-red-300 dark:hover:bg-red-900"
+            onClick={() => {
+              props.send({
+                type: "removeQuestion",
+                params: {
+                  questionId: question.id,
+                },
+              });
+            }}
+          >
+            <X />
+          </button>
+        </Flex>
         <AccordionBody className="overflow-hidden">
           <Flex
             flexDirection="col"
@@ -312,7 +318,7 @@ export default function SelectText(props: StepComponentProps) {
           </Flex>
         </AccordionBody>
       </Accordion>
-    )
+    ),
   );
 
   return (
@@ -321,7 +327,7 @@ export default function SelectText(props: StepComponentProps) {
       className="gap-4 overflow-hidden"
       alignItems="start"
     >
-      <div className="flex flex-col gap-2 shrink w-1/4 h-full overflow-hidden p-1">
+      <div className="flex h-full w-1/4 shrink flex-col gap-2 overflow-hidden p-1">
         <Title>Selection Tools</Title>
         <Flex justifyContent="start" className="gap-2">
           {Object.entries(SelectionButtons).map(([selectionTool, button]) => {
@@ -342,32 +348,19 @@ export default function SelectText(props: StepComponentProps) {
           })}
         </Flex>
         <Title>Current Selection</Title>
-        <Card className="overflow-hidden flow-root">
+        <Card className="flow-root overflow-hidden">
           <Flex
             flexDirection="col"
-            className="gap-2 h-full"
+            className="h-full gap-2"
             justifyContent="start"
             alignItems="stretch"
           >
-            <Title>Category</Title>
-            <Select
-              value={categoryId.toString()}
-              onValueChange={(value) => {
-                setCategoryId(parseInt(value) ?? 0);
-              }}
-            >
-              {props.categories.map((category) => (
-                <SelectItem key={category.id} value={category.id.toString()}>
-                  {category.name}
-                </SelectItem>
-              ))}
-            </Select>
             <Flex>
               <Title>Question</Title>
               {question && (
                 <button
                   title="Clear Selection"
-                  className="flex aspect-square items-center justify-center text-red-500 dark:hover:bg-red-900 hover:bg-red-300 rounded-md p-1"
+                  className="flex aspect-square items-center justify-center rounded-md p-1 text-red-500 hover:bg-red-300 dark:hover:bg-red-900"
                   onClick={() => {
                     setQuestion(null);
                     setTool("question");
@@ -378,12 +371,12 @@ export default function SelectText(props: StepComponentProps) {
               )}
             </Flex>
             <Flex className="overflow-hidden">
-              <div className="block h-full overflow-auto grow">
+              <div className="block h-full grow overflow-auto">
                 <Textarea
                   value={
                     question !== null
                       ? getTextFromSelections(question)
-                      : typedQuestion ?? undefined
+                      : typedQuestion ?? ""
                   }
                   ref={questionInputRef}
                   disabled={question !== null}
@@ -400,7 +393,7 @@ export default function SelectText(props: StepComponentProps) {
               {answer && (
                 <button
                   title="Clear Selection"
-                  className="flex aspect-square items-center justify-center text-red-500 dark:hover:bg-red-900 hover:bg-red-300 rounded-md p-1"
+                  className="flex aspect-square items-center justify-center rounded-md p-1 text-red-500 hover:bg-red-300 dark:hover:bg-red-900"
                   onClick={() => {
                     setAnswer(null);
                     setTool("answer");
@@ -411,7 +404,7 @@ export default function SelectText(props: StepComponentProps) {
               )}
             </Flex>
             <Flex className="overflow-hidden">
-              <div className="block h-full overflow-auto grow">
+              <div className="block h-full grow overflow-auto">
                 <Textarea
                   value={
                     answer !== null
@@ -428,12 +421,31 @@ export default function SelectText(props: StepComponentProps) {
                 />
               </div>
             </Flex>
+            <Title>Category</Title>
+            <Select
+              value={categoryId === 0 ? undefined : categoryId.toString()}
+              onValueChange={(value) => {
+                setCategoryId(parseInt(value) ?? 0);
+              }}
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="Select" />
+              </SelectTrigger>
+              <SelectContent>
+                {props.categories.map((category) => (
+                  <SelectItem key={category.id} value={category.id.toString()}>
+                    {category.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
             <Button
               onClick={() => {
                 addQuestion();
               }}
               color="green"
               disabled={!canAddQuestion}
+              className="mt-2"
             >
               Add Question
             </Button>
@@ -457,22 +469,23 @@ export default function SelectText(props: StepComponentProps) {
           />
         ))}
       </Document>
-      <div className="flex flex-col w-1/4 h-full overflow-hidden gap-2">
+      <div className="flex h-full w-1/4 flex-col gap-2 overflow-hidden">
         <Title>Selected Questions</Title>
         {questionAccordions.length === 0 && (
           <Subtitle>No questions selected!</Subtitle>
         )}
         {questionAccordions.length > 1 ? (
-          <AccordionList className="overflow-auto no-scrollbar">
+          <AccordionList className="no-scrollbar overflow-auto">
             {questionAccordions}
           </AccordionList>
         ) : (
-          <div className="block grow overflow-auto no-scrollbar">
+          <div className="no-scrollbar block grow overflow-auto">
             {questionAccordions}
           </div>
         )}
         <Button
           className="mt-auto"
+          disabled={props.state.context.questions.length <= 0}
           onClick={() => {
             props.send({
               type: "toFormatting",

@@ -19,7 +19,8 @@ export const uploadSetMachine = setup({
       | { type: "addPdf"; params: { newFile: PDFFile } }
       | { type: "addQuestion"; params: { question: EditorQuestion } }
       | { type: "removeQuestion"; params: { questionId: string } }
-      | { type: "toFormatting" };
+      | { type: "toFormatting" }
+      | { type: "returnToSelectText" };
   },
 }).createMachine({
   context: {
@@ -61,7 +62,7 @@ export const uploadSetMachine = setup({
           actions: assign({
             questions: ({ context, event }) =>
               context.questions.filter(
-                (question) => question.id !== event.params.questionId
+                (question) => question.id !== event.params.questionId,
               ),
           }),
         },
@@ -77,6 +78,11 @@ export const uploadSetMachine = setup({
       },
     },
     formatting: {
+      on: {
+        returnToSelectText: {
+          target: "selectText",
+        },
+      },
       meta: {
         component: Formatting,
       },

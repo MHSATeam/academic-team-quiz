@@ -22,7 +22,7 @@ export default function MathPage() {
       try {
         const parsedData: ProblemType[] = JSON.parse(loadedData);
         const newTypes: ProblemType[] = parsedData.filter((type) =>
-          ALLOWED_PROBLEM_TYPES.includes(type)
+          ALLOWED_PROBLEM_TYPES.includes(type),
         );
         if (newTypes.length > 0) {
           return newTypes;
@@ -36,10 +36,10 @@ export default function MathPage() {
   useEffect(() => {
     window.localStorage.setItem(
       "math-types",
-      JSON.stringify(selectedProblemTypes)
+      JSON.stringify(selectedProblemTypes),
     );
     setProblemSet(
-      generateProblems(STARTING_QUESTION_COUNT, selectedProblemTypes, true)
+      generateProblems(STARTING_QUESTION_COUNT, selectedProblemTypes, true),
     );
   }, [selectedProblemTypes]);
 
@@ -59,7 +59,7 @@ export default function MathPage() {
           },
         }}
       >
-        <main className="flex flex-col gap-4 py-12 px-6">
+        <main className="flex flex-col gap-4 px-6 py-12">
           <span className="text-2xl font-bold dark:text-white">
             Computational Math
           </span>
@@ -80,7 +80,7 @@ export default function MathPage() {
             })}
           </MultiSelect>
           <hr className="my-2" />
-          <div className="flex flex-row flex-wrap gap-4 justify-center items-stretch">
+          <div className="flex flex-row flex-wrap items-stretch justify-center gap-4">
             {problemSet.map((problem, index) => {
               return (
                 <MathProblem
@@ -91,14 +91,14 @@ export default function MathPage() {
             })}
           </div>
           <button
-            className="p-2 my-3 dark:bg-gray-600 dark:text-white bg-gray-400 rounded-md active:bg-gray-500 dark:active:bg-gray-700"
+            className="my-3 rounded-md bg-gray-400 p-2 active:bg-gray-500 dark:bg-gray-600 dark:text-white dark:active:bg-gray-700"
             onClick={() => {
               setProblemSet(
                 generateProblems(
                   STARTING_QUESTION_COUNT,
                   selectedProblemTypes,
-                  true
-                )
+                  true,
+                ),
               );
             }}
           >

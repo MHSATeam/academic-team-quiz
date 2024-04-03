@@ -12,6 +12,7 @@ import {
   uploadSetMachine,
 } from "@/src/lib/upload/upload-state-machine";
 import { Actor, StateFrom } from "xstate";
+import { OCRBlacklistedCharacters } from "@/src/lib/upload/filter-ocr-results";
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`;
 
@@ -20,6 +21,9 @@ if (typeof window !== "undefined") {
   const WorkerCount = window.navigator.hardwareConcurrency ?? 4;
   const genWorker = async () => {
     const worker = await Tesseract.createWorker("eng");
+    await worker.setParameters({
+      tessedit_char_blacklist: OCRBlacklistedCharacters,
+    });
     TesseractScheduler.addWorker(worker);
   };
   for (let i = 0; i < WorkerCount; i++) {
@@ -39,7 +43,6 @@ export type StepComponentProps = {
 
 export type StepComponent = FunctionComponent<StepComponentProps>;
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export default function UploadSet(props: UploadSetProps) {
   const [state, send] = useMachine(uploadSetMachine);
 
@@ -50,7 +53,7 @@ export default function UploadSet(props: UploadSetProps) {
   const StateComponent = meta.component;
 
   return (
-    <main className="p-4 flex flex-col items-center gap-4 h-full overflow-hidden">
+    <main className="flex h-full flex-col items-center gap-4 overflow-hidden p-4">
       {StateComponent && (
         <StateComponent
           state={state}
