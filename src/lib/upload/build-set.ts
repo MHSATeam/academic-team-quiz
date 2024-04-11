@@ -70,7 +70,7 @@ export function buildSet(
     }
     return {
       question: removePTags(editorQuestion.question),
-      answer: editorQuestion.answer,
+      answer: removePTags(editorQuestion.answer),
       categoryId: editorQuestion.category.id,
       createdYear: set.createdYear,
     };
