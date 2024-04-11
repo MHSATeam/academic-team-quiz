@@ -14,7 +14,7 @@ import {
   TabList,
   Title,
 } from "@tremor/react";
-import { ChevronLeft } from "lucide-react";
+import { ChevronLeft, CloudUpload } from "lucide-react";
 import { useState } from "react";
 
 export default function Formatting(props: StepComponentProps) {
@@ -47,7 +47,7 @@ export default function Formatting(props: StepComponentProps) {
                   <br />
                   Make sure the answer has the{" "}
                   <em>
-                    <strong>required answer</strong>
+                    <strong>required part</strong>
                   </em>{" "}
                   underlined and bolded.
                 </li>
@@ -80,11 +80,38 @@ export default function Formatting(props: StepComponentProps) {
                   setOpenQuestion(question);
                   setShowingQuestionImages(isQuestion);
                 }}
+                onUpdateQuestion={(newQuestion) => {
+                  props.send({
+                    type: "updateQuestion",
+                    params: {
+                      id: question.id,
+                      question: newQuestion,
+                    },
+                  });
+                }}
+                onUpdateAnswer={(newAnswer) => {
+                  props.send({
+                    type: "updateQuestion",
+                    params: {
+                      id: question.id,
+                      answer: newAnswer,
+                    },
+                  });
+                }}
+                onUpdateCategory={(newCategory) => {
+                  props.send({
+                    type: "updateQuestion",
+                    params: {
+                      id: question.id,
+                      category: newCategory,
+                    },
+                  });
+                }}
               />
             );
           })}
         </Flex>
-        <Flex>
+        <Flex className="gap-2">
           <Button
             className="grow"
             color="gray"
@@ -92,12 +119,27 @@ export default function Formatting(props: StepComponentProps) {
               setOpenQuestion(null);
               setShowingQuestionImages(true);
               props.send({
-                type: "returnToSelectText",
+                type: "toSelectText",
               });
             }}
           >
             <div className="flex items-center gap-2">
               <ChevronLeft /> Return to Selection
+            </div>
+          </Button>
+          <Button
+            className="grow"
+            color="blue"
+            onClick={() => {
+              setOpenQuestion(null);
+              setShowingQuestionImages(true);
+              props.send({
+                type: "toUpload",
+              });
+            }}
+          >
+            <div className="flex items-center gap-2">
+              Next Step: Upload <CloudUpload />
             </div>
           </Button>
         </Flex>

@@ -1,5 +1,6 @@
 "use client";
 
+import DisplayFormattedText from "@/components/utils/DisplayFormattedText";
 import QuizFinished from "@/components/utils/QuizFinished";
 import { updateQuestionStatus } from "@/src/lib/quiz-sessions/update-question-status";
 import { filterNotEmpty } from "@/src/utils/array-utils";
@@ -27,7 +28,7 @@ export default function Flashcards(props: FlashcardsProps) {
       props.quizSession.questionsTrackers
         .map(({ question }) => question)
         .filter(filterNotEmpty),
-    [props.quizSession]
+    [props.quizSession],
   );
 
   const { initialCorrect, initialIncorrect } = useMemo(
@@ -48,14 +49,14 @@ export default function Flashcards(props: FlashcardsProps) {
         { initialCorrect: [], initialIncorrect: [] } as {
           initialCorrect: number[];
           initialIncorrect: number[];
-        }
+        },
       ),
-    [props.quizSession]
+    [props.quizSession],
   );
 
   // Setup program state based on loaded values
   const [hiddenCards, setHiddenCards] = useState<number[]>(
-    initialCorrect.concat(initialIncorrect)
+    initialCorrect.concat(initialIncorrect),
   );
   const [correctQuestions, setCorrectQuestions] = useState(initialCorrect);
   const [incorrectQuestions, setIncorrectQuestions] =
@@ -72,7 +73,7 @@ export default function Flashcards(props: FlashcardsProps) {
   async function markQuestion(correct: boolean) {
     if (currentQuestion !== undefined) {
       const tracker = props.quizSession.questionsTrackers.find(
-        ({ questionId }) => questionId === currentQuestion.id
+        ({ questionId }) => questionId === currentQuestion.id,
       );
       if (!tracker) {
         alert("Failed to save question response!");
@@ -83,7 +84,7 @@ export default function Flashcards(props: FlashcardsProps) {
         if (
           await updateQuestionStatus(
             tracker.id,
-            correct ? "Correct" : "Incorrect"
+            correct ? "Correct" : "Incorrect",
           )
         ) {
           if (currentQuestionIndex === questions.length - 1) {
@@ -117,7 +118,7 @@ export default function Flashcards(props: FlashcardsProps) {
     const lastQuestion = questions[currentQuestionIndex - 1];
     if (lastQuestion) {
       const tracker = props.quizSession.questionsTrackers.find(
-        ({ questionId }) => questionId === lastQuestion.id
+        ({ questionId }) => questionId === lastQuestion.id,
       );
       if (!tracker) {
         alert("Failed to undo question!");
@@ -128,10 +129,10 @@ export default function Flashcards(props: FlashcardsProps) {
         if (await updateQuestionStatus(tracker.id, "Incomplete")) {
           setHiddenCards((prev) => prev.filter((id) => lastQuestion.id !== id));
           setCorrectQuestions((prev) =>
-            prev.filter((id) => lastQuestion.id !== id)
+            prev.filter((id) => lastQuestion.id !== id),
           );
           setIncorrectQuestions((prev) =>
-            prev.filter((id) => lastQuestion.id !== id)
+            prev.filter((id) => lastQuestion.id !== id),
           );
         }
       } finally {
@@ -164,28 +165,28 @@ export default function Flashcards(props: FlashcardsProps) {
   );
 
   return (
-    <main className="h-full w-full flex flex-col p-8 gap-4">
+    <main className="flex h-full w-full flex-col gap-4 p-8">
       <Flex className="w-full gap-2" justifyContent="start" flexDirection="col">
-        <div className="flex w-full justify-between p-2 gap-16 whitespace-nowrap">
-          <span className="flex gap-2 items-center text-red-500 font-bold text-lg">
-            <span className="text-red-200 bg-red-500 rounded-md px-2 py-1 ">
+        <div className="flex w-full justify-between gap-16 whitespace-nowrap p-2">
+          <span className="flex items-center gap-2 text-lg font-bold text-red-500">
+            <span className="rounded-md bg-red-500 px-2 py-1 text-red-200 ">
               {incorrectQuestions.length}
             </span>
             Still Learning
           </span>
           {createProgressBar(true)}
-          <span className="flex gap-2 items-center text-green-500 font-bold text-lg whitespace-nowrap">
+          <span className="flex items-center gap-2 whitespace-nowrap text-lg font-bold text-green-500">
             Know
-            <span className="text-green-200 bg-green-500 rounded-md px-2 py-1">
+            <span className="rounded-md bg-green-500 px-2 py-1 text-green-200">
               {correctQuestions.length}
             </span>
           </span>
         </div>
         {createProgressBar(false)}
       </Flex>
-      <div className="grow relative">
+      <div className="relative grow">
         {!currentQuestion && (
-          <div className="w-full h-full absolute left-0 text-center flex flex-col justify-center">
+          <div className="absolute left-0 flex h-full w-full flex-col justify-center text-center">
             <QuizFinished quizType="Flashcards" />
           </div>
         )}
@@ -203,8 +204,8 @@ export default function Flashcards(props: FlashcardsProps) {
                 onDisappear={() => {
                   setHiddenCards((prev) =>
                     [...prev, question.id].filter(
-                      (id, index, arr) => arr.indexOf(id) === index
-                    )
+                      (id, index, arr) => arr.indexOf(id) === index,
+                    ),
                   );
                 }}
               />
@@ -215,22 +216,22 @@ export default function Flashcards(props: FlashcardsProps) {
         <button
           disabled={!currentQuestion || isSaving}
           onClick={() => undoQuestion()}
-          className="rounded-full aspect-square border-2 p-2 dark:border-dark-tremor-border border-tremor-border dark:text-dark-tremor-content text-tremor-content active:bg-tremor-content-subtle disabled:bg-tremor-content-subtle disabled:dark:bg-dark-tremor-content-subtle dark:active:bg-dark-tremor-content-subtle "
+          className="aspect-square rounded-full border-2 border-tremor-border p-2 text-tremor-content active:bg-tremor-content-subtle disabled:bg-tremor-content-subtle dark:border-dark-tremor-border dark:text-dark-tremor-content dark:active:bg-dark-tremor-content-subtle disabled:dark:bg-dark-tremor-content-subtle "
         >
           <Undo2 />
         </button>
-        <div className="flex justify-center gap-16 max-sm:gap-12 grow">
+        <div className="flex grow justify-center gap-16 max-sm:gap-12">
           <button
             disabled={currentQuestion === undefined || isSaving}
             onClick={() => markQuestion(false)}
-            className="rounded-full aspect-square text-red-500 border-2 p-2 border-red-500 active:bg-red-900 disabled:bg-tremor-content-subtle disabled:dark:bg-dark-tremor-content-subtle"
+            className="aspect-square rounded-full border-2 border-red-500 p-2 text-red-500 active:bg-red-900 disabled:bg-tremor-content-subtle disabled:dark:bg-dark-tremor-content-subtle"
           >
             <X />
           </button>
           <button
             disabled={currentQuestion === undefined || isSaving}
             onClick={() => markQuestion(true)}
-            className="rounded-full aspect-square text-green-500 border-2 p-2 border-green-500 active:bg-green-800 disabled:bg-tremor-content-subtle disabled:dark:bg-dark-tremor-content-subtle"
+            className="aspect-square rounded-full border-2 border-green-500 p-2 text-green-500 active:bg-green-800 disabled:bg-tremor-content-subtle disabled:dark:bg-dark-tremor-content-subtle"
           >
             <Check />
           </button>
@@ -242,7 +243,7 @@ export default function Flashcards(props: FlashcardsProps) {
             }
           }}
           disabled={!currentQuestion}
-          className="rounded-full aspect-square border-2 p-2 dark:border-dark-tremor-border border-tremor-border dark:text-dark-tremor-content text-tremor-content disabled:bg-tremor-content-subtle disabled:dark:bg-dark-tremor-content-subtle"
+          className="aspect-square rounded-full border-2 border-tremor-border p-2 text-tremor-content disabled:bg-tremor-content-subtle dark:border-dark-tremor-border dark:text-dark-tremor-content disabled:dark:bg-dark-tremor-content-subtle"
         >
           <HelpCircle />
         </button>
@@ -294,7 +295,7 @@ function Flashcard({
   return (
     <div
       data-question-id={question.id}
-      className="w-full h-full absolute left-0 text-center rounded-lg cursor-pointer"
+      className="absolute left-0 h-full w-full cursor-pointer rounded-lg text-center"
       style={{
         perspective: "1000px",
         transition: "all cubic-bezier(0.4, 0, 0.2, 1) 400ms",
@@ -312,7 +313,7 @@ function Flashcard({
       }}
     >
       <div
-        className="w-full h-full relative transition-transform"
+        className="relative h-full w-full transition-transform"
         style={{
           transform: flipped ? "rotateX(180deg)" : "rotateX(0deg)",
           transformStyle: "preserve-3d",
@@ -321,25 +322,27 @@ function Flashcard({
         {(isCurrent || isDisappearing) && (
           <>
             <div
-              className="front w-full h-full overflow-hidden p-4 absolute top-0 left-0 z-10 bg-slate-100 shadow-lg dark:bg-dark-tremor-background rounded-lg flex flex-col justify-center"
+              className="front absolute left-0 top-0 z-10 flex h-full w-full flex-col justify-center overflow-hidden rounded-lg bg-slate-100 p-4 shadow-lg dark:bg-dark-tremor-background"
               style={{
                 backfaceVisibility: "hidden",
               }}
             >
-              <span className="dark:text-white max-sm:text-2xl text-3xl overflow-auto">
-                {question.question}
-              </span>
+              <DisplayFormattedText
+                className="overflow-auto text-3xl max-sm:text-2xl dark:text-white"
+                text={question.question}
+              />
             </div>
             <div
-              className="back w-full h-full overflow-hidden p-4 absolute top-0 left-0 bg-slate-100 shadow-lg dark:bg-dark-tremor-background rounded-lg flex flex-col justify-center"
+              className="back absolute left-0 top-0 flex h-full w-full flex-col justify-center overflow-hidden rounded-lg bg-slate-100 p-4 shadow-lg dark:bg-dark-tremor-background"
               style={{
                 backfaceVisibility: "hidden",
                 transform: "rotateX(180deg)",
               }}
             >
-              <span className="dark:text-white max-sm:text-2xl text-3xl overflow-auto">
-                {question.answer}
-              </span>
+              <DisplayFormattedText
+                className="overflow-auto text-3xl max-sm:text-2xl dark:text-white"
+                text={question.answer}
+              />
             </div>
           </>
         )}

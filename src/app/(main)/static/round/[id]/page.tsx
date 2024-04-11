@@ -1,7 +1,8 @@
 import QuestionList from "@/components/display/QuestionList";
 import getRoundName from "@/src/lib/round/getRoundName";
+import getSets from "@/src/lib/round/getSets";
 import { prismaClient } from "@/src/utils/clients";
-import { Flex, List, ListItem, Text, Title } from "@tremor/react";
+import { Flex, List, ListItem, Subtitle, Text, Title } from "@tremor/react";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 
@@ -34,13 +35,25 @@ export default async function Page({
           questions: true,
         },
       },
-      alphabetRound: true,
-      categoryTeamGroup: {
+      alphabetRound: {
         include: {
-          category: true,
+          sets: true,
         },
       },
-      themeRound: true,
+      categoryTeamGroup: {
+        include: {
+          categoryRound: {
+            include: {
+              sets: true,
+            },
+          },
+        },
+      },
+      themeRound: {
+        include: {
+          sets: true,
+        },
+      },
       sets: true,
     },
   });
@@ -51,18 +64,29 @@ export default async function Page({
 
   const totalPages = Math.ceil(round._count.questions / QuestionsPerPage);
 
+  const sets = getSets(round);
+
   return (
     <>
-      <span className="dark:text-white text-2xl">
+      <span className="text-2xl dark:text-white">
         {getRoundName(round).roundType}
       </span>
       {round.name && <Title>{round.name}</Title>}
-      {round.sets.length > 0 && (
+      {round.alphabetRound && (
+        <Title>Letter: {round.alphabetRound.letter.toUpperCase()}</Title>
+      )}
+      {round.themeRound && (
+        <>
+          <Title>Theme:</Title>
+          <Subtitle>{round.themeRound.theme}</Subtitle>
+        </>
+      )}
+      {sets.length > 0 && (
         <>
           <hr className="my-2" />
           <Title>Connected Sets:</Title>
           <List>
-            {round.sets.map((set) => (
+            {sets.map((set) => (
               <ListItem key={set.id}>
                 <Link href={`/static/set/${set.id}`}>
                   <Flex className="gap-2">

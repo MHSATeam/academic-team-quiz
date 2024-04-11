@@ -1,3 +1,7 @@
+import {
+  filterAnswerForPrefixes,
+  filterQuestionForPrefixes,
+} from "@/src/lib/upload/filter-ocr-results";
 import { Vector } from "@/src/utils/vector";
 import { Bbox } from "tesseract.js";
 
@@ -33,7 +37,7 @@ export function getBboxFromPoints(...points: Vector[]) {
 export function getOverlappingBoxes(
   point1: Vector,
   point2: Vector,
-  wordBoxes: WordBox[]
+  wordBoxes: WordBox[],
 ) {
   const mouseBox: Bbox = getBboxFromPoints(point1, point2);
   return wordBoxes.filter(({ box }) => {
@@ -105,12 +109,22 @@ export function calculateSurroundingBox(boxes: Bbox[]): Bbox {
   return surrounding;
 }
 
-export function getTextFromSelections(selectedText: SelectedText): string {
+export function getTextFromSelections(
+  selectedText: SelectedText,
+  isQuestion: boolean,
+  useBr = true,
+): string {
   let fullText = "";
   for (const selection of selectedText.selections) {
-    const selectionText = getTextFromSelection(selection);
-    fullText += selectionText + "\n";
+    let selectionText = getTextFromSelection(selection);
+    if (isQuestion) {
+      selectionText = filterQuestionForPrefixes(selectionText);
+    } else {
+      selectionText = filterAnswerForPrefixes(selectionText);
+    }
+    fullText += selectionText + (useBr ? "<br/>" : "\n");
   }
+  fullText = fullText.replace(new RegExp(useBr ? /<br\/>$/ : /\n$/), "");
   return fullText;
 }
 

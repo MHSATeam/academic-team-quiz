@@ -34,6 +34,7 @@ import {
   SelectValue,
 } from "@/components/utils/PortalSelect";
 import {
+  ALargeSmall,
   CircleCheck,
   CircleEllipsis,
   CircleHelp,
@@ -42,6 +43,7 @@ import {
 } from "lucide-react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Document } from "react-pdf";
+import DisplayFormattedText from "@/components/utils/DisplayFormattedText";
 
 type SelectionTool = "question" | "answer" | "category";
 
@@ -185,7 +187,7 @@ export default function SelectText(props: StepComponentProps) {
     }
     const newQuestion = createQuestion();
     if (question) {
-      newQuestion.question = getTextFromSelections(question);
+      newQuestion.question = getTextFromSelections(question, true);
       newQuestion.questionImages = question.selections.map(
         (selection) => selection.selectionImage,
       );
@@ -193,7 +195,7 @@ export default function SelectText(props: StepComponentProps) {
       newQuestion.question = typedQuestion ?? "";
     }
     if (answer) {
-      newQuestion.answer = getTextFromSelections(answer);
+      newQuestion.answer = getTextFromSelections(answer, false);
       newQuestion.answerImages = answer.selections.map(
         (selection) => selection.selectionImage,
       );
@@ -312,9 +314,17 @@ export default function SelectText(props: StepComponentProps) {
             <Title>Category</Title>
             <Text>{question.category.name}</Text>
             <Title>Question</Title>
-            <Text>{question.question}</Text>
+            <DisplayFormattedText
+              className="text-tremor-default text-tremor-content dark:text-dark-tremor-content"
+              element="div"
+              text={question.question}
+            />
             <Title>Answer</Title>
-            <Text>{question.answer}</Text>
+            <DisplayFormattedText
+              className="text-tremor-default text-tremor-content dark:text-dark-tremor-content"
+              element="div"
+              text={question.answer}
+            />
           </Flex>
         </AccordionBody>
       </Accordion>
@@ -375,7 +385,7 @@ export default function SelectText(props: StepComponentProps) {
                 <Textarea
                   value={
                     question !== null
-                      ? getTextFromSelections(question)
+                      ? getTextFromSelections(question, true, false)
                       : typedQuestion ?? ""
                   }
                   ref={questionInputRef}
@@ -408,7 +418,7 @@ export default function SelectText(props: StepComponentProps) {
                 <Textarea
                   value={
                     answer !== null
-                      ? getTextFromSelections(answer)
+                      ? getTextFromSelections(answer, false, false)
                       : typedAnswer ?? ""
                   }
                   ref={answerInputRef}
@@ -492,7 +502,9 @@ export default function SelectText(props: StepComponentProps) {
             });
           }}
         >
-          Next Step: Formatting
+          <div className="flex items-center gap-2">
+            Next Step: Formatting <ALargeSmall />
+          </div>
         </Button>
       </div>
     </Flex>

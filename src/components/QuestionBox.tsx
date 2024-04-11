@@ -1,3 +1,4 @@
+import DisplayFormattedText from "@/components/utils/DisplayFormattedText";
 import { ArrowRight, Loader2 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
@@ -91,7 +92,7 @@ export default function QuestionBox({
         (!animate ? "-translate-x-[200%]" : "translate-x-0")
       }
     >
-      <span>{question}</span>
+      <DisplayFormattedText text={question} />
       <div className="mt-4">
         {!answerShown ? (
           <button
@@ -101,7 +102,7 @@ export default function QuestionBox({
                 onNext();
               }
             }}
-            className="bg-blue-400 rounded-md px-3 py-1 active:bg-blue-500"
+            className="rounded-md bg-blue-400 px-3 py-1 active:bg-blue-500"
           >
             Show Answer
           </button>
@@ -109,7 +110,7 @@ export default function QuestionBox({
           <div className="flex gap-2">
             <div className="flex flex-col">
               <span className="font-bold">Answer: </span>
-              <span>{answer}</span>
+              <DisplayFormattedText text={answer} />
             </div>
             {isLastQuestion && !autoNext && (
               <button
@@ -120,7 +121,7 @@ export default function QuestionBox({
                     onNext();
                   }
                 }}
-                className="bg-blue-400 h-fit rounded-md px-3 py-1 shrink-0 ml-auto"
+                className="ml-auto h-fit shrink-0 rounded-md bg-blue-400 px-3 py-1"
               >
                 <span className="flex gap-1">
                   Next

@@ -46,7 +46,7 @@ const damerau = (
   s1: string,
   s2: string,
   d: number[][],
-  cost: number
+  cost: number,
 ) => {
   if (i > 1 && j > 1 && s1[i - 1] === s2[j - 2] && s1[i - 2] === s2[j - 1]) {
     d[i][j] = Math.min.apply(null, [d[i][j], d[i - 2][j - 2] + cost]);
@@ -108,7 +108,7 @@ function getWords(string: string) {
 
 export const compareUserAnswer = (
   userAnswer: string,
-  correctAnswer: string
+  correctAnswer: string,
 ) => {
   let correct = true;
   const userWords = getWords(userAnswer);
@@ -149,3 +149,8 @@ export const preProcessFullTextSearch = (search?: string) => {
   }
   return search.toLowerCase().replace(/(\w)\s+(\w)/g, "$1 <-> $2");
 };
+
+export function stripHTML(html: string): string {
+  const doc = new DOMParser().parseFromString(html, "text/html");
+  return doc.body.textContent || "";
+}

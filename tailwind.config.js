@@ -104,6 +104,20 @@ const tailwindConfig = {
           from: { opacity: "1" },
           to: { opacity: "0" },
         },
+        "custom-pulse": {
+          "0%": {
+            transform: "scale(0.95)",
+            boxShadow: "0 0 0 0 rgba(255, 0, 0, 0.7)",
+          },
+          "70%": {
+            transform: "scale(1)",
+            boxShadow: "0 0 0 10px rgba(0, 0, 0, 0)",
+          },
+          "100%": {
+            transform: "scale(0.95)",
+            boxShadow: "0 0 0 0 rgba(0, 0, 0, 0)",
+          },
+        },
         slideDownAndFade: {
           from: { opacity: "0", transform: "translateY(-6px)" },
           to: { opacity: "1", transform: "translateY(0)" },
@@ -122,6 +136,7 @@ const tailwindConfig = {
         },
       },
       animation: {
+        "custom-pulse": "custom-pulse 1s infinite",
         hide: "hide 150ms cubic-bezier(0.16, 1, 0.3, 1)",
         slideDownAndFade:
           "slideDownAndFade 150ms cubic-bezier(0.16, 1, 0.3, 1)",

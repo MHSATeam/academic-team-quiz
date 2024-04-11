@@ -4,7 +4,6 @@ import { getExtensionList } from "@/src/utils/tiptap-utils";
 import { EditorQuestion } from "@/src/utils/set-upload-utils";
 import WYSIWYGEditor from "@/components/upload/WYSIWYGEditor";
 import { Category } from "@prisma/client";
-import { useState } from "react";
 import {
   Select,
   SelectContent,
@@ -18,18 +17,24 @@ type QuestionEditorProps = {
   questionIndex: number;
   categories: Category[];
   onOpenImages: (isQuestion: boolean) => void;
+  onUpdateQuestion: (newQuestion: string) => void;
+  onUpdateAnswer: (newAnswer: string) => void;
+  onUpdateCategory: (newCategory: Category) => void;
 };
 
 const editorClass =
   "prose dark:prose-invert mb-2 p-2 min-w-64 max-h-40 overflow-auto mb-2 border-b-2 transition-colors focus-within:border-tremor-brand outline-none no-scrollbar";
 
 export default function QuestionEditor(props: QuestionEditorProps) {
-  const [categoryId, setCategoryId] = useState(props.question.category.id);
+  const categoryId = props.question.category.id;
   const questionEditor = useEditor({
     editorProps: {
       attributes: {
         class: editorClass,
       },
+    },
+    onUpdate: ({ editor }) => {
+      props.onUpdateQuestion(editor.getHTML());
     },
     content: props.question.question,
     extensions: getExtensionList(),
@@ -40,6 +45,9 @@ export default function QuestionEditor(props: QuestionEditorProps) {
         class: editorClass,
       },
     },
+    onUpdate: ({ editor }) => {
+      props.onUpdateAnswer(editor.getHTML());
+    },
     content: props.question.answer,
     extensions: getExtensionList(),
   });
@@ -48,7 +56,7 @@ export default function QuestionEditor(props: QuestionEditorProps) {
       <Flex flexDirection="col" alignItems="start" className="gap-4">
         <Flex alignItems="start" justifyContent="start" className="gap-4">
           <Title className="grow">Question #{props.questionIndex + 1}</Title>
-          {categoryId === /* Math Category Id */ 2 && (
+          {props.question.category.id === /* Math Category Id */ 2 && (
             <Flex flexDirection="col" className="w-fit gap-1" alignItems="end">
               <Title className="grow">Is Computation Question?</Title>
               <Switch />
@@ -59,7 +67,12 @@ export default function QuestionEditor(props: QuestionEditorProps) {
             <Select
               value={categoryId.toString()}
               onValueChange={(value) => {
-                setCategoryId(parseInt(value) ?? 0);
+                const newCategory = props.categories.find(
+                  (c) => c.id === parseInt(value),
+                );
+                if (newCategory) {
+                  props.onUpdateCategory(newCategory);
+                }
               }}
             >
               <SelectTrigger className="w-fit gap-2">

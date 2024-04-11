@@ -263,7 +263,7 @@ export default function PDFPage({
   return (
     <Page
       scale={1}
-      className={["mb-2", isPressingMeta ? "cursor-copy" : ""]}
+      className={["border-b-2", isPressingMeta ? "cursor-copy" : ""]}
       pageNumber={pageNumber}
       renderAnnotationLayer={false}
       renderTextLayer={false}

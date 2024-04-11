@@ -40,14 +40,13 @@ model Set {
 }
 
 model Category {
-  id                Int                     @id @default(autoincrement())
-  name              String
-  questions         Question[]
-  userDefaults      UserDefaultCategories[]
-  categoryTeamGroup CategoryTeamGroup[]
-  quizSessions      UserQuizSession[]
-  createdOn         DateTime                @default(now()) @db.Timestamptz(3)
-  modifiedOn        DateTime                @default(now()) @updatedAt @db.Timestamptz(3)
+  id           Int                     @id @default(autoincrement())
+  name         String
+  questions    Question[]
+  userDefaults UserDefaultCategories[]
+  quizSessions UserQuizSession[]
+  createdOn    DateTime                @default(now()) @db.Timestamptz(3)
+  modifiedOn   DateTime                @default(now()) @updatedAt @db.Timestamptz(3)
 }
 
 model Round {
@@ -96,8 +95,6 @@ model CategoryTeamGroup {
   round           Round         @relation(fields: [roundId], references: [id])
   categoryRoundId Int
   categoryRound   CategoryRound @relation(fields: [categoryRoundId], references: [id], onDelete: Cascade)
-  categoryId      Int
-  category        Category      @relation(fields: [categoryId], references: [id], onDelete: Restrict)
   createdOn       DateTime      @default(now()) @db.Timestamptz(3)
   modifiedOn      DateTime      @default(now()) @updatedAt @db.Timestamptz(3)
 }

@@ -18,7 +18,8 @@ pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/b
 
 export const TesseractScheduler = Tesseract.createScheduler();
 if (typeof window !== "undefined") {
-  const WorkerCount = window.navigator.hardwareConcurrency ?? 4;
+  const WorkerCount =
+    Math.min(1, window.navigator.hardwareConcurrency - 1) ?? 4;
   const genWorker = async () => {
     const worker = await Tesseract.createWorker("eng");
     await worker.setParameters({
@@ -45,9 +46,14 @@ export type StepComponent = FunctionComponent<StepComponentProps>;
 
 export default function UploadSet(props: UploadSetProps) {
   const [state, send] = useMachine(uploadSetMachine);
-
+  let stateValue: string;
+  if (typeof state.value === "object") {
+    stateValue = "finalize";
+  } else {
+    stateValue = state.value;
+  }
   const meta = state.getMeta()[
-    state.machine.id + "." + state.value
+    state.machine.id + "." + stateValue
   ] as StepMetaData;
 
   const StateComponent = meta.component;

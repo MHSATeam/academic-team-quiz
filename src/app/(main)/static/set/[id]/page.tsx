@@ -19,7 +19,7 @@ export default async function Page({ params }: { params: { id: string } }) {
 
   return (
     <div className="flex flex-col">
-      <span className="dark:text-white text-2xl">Set: {set.name}</span>
+      <span className="text-2xl dark:text-white">Set: {set.name}</span>
       <span className="dark:text-white">
         This page has not been implemented yet!
       </span>
