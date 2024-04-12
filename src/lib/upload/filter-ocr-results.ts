@@ -1,10 +1,10 @@
-export const OCRBlacklistedCharacters = "`~|_";
+export const OCRBlacklistedCharacters = "`~|_®™";
 
 const numbersRegex = /^\d{1,2}[:;.]\s*/i;
 
 export function filterQuestionForPrefixes(text: string) {
   const teamRegex = /^[tT][eE][aA][mM]\s+[A-Z][:;]?\s*/;
-  const tossupRegex = /^tossup[:;]?\s*/i;
+  const tossupRegex = /^toss-?up[:;]?\s*/i;
 
   return text
     .replace(numbersRegex, "")
