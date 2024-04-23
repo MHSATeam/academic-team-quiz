@@ -49,6 +49,7 @@ export const uploadSetMachine = setup({
             question?: string;
             answer?: string;
             category?: Category;
+            hideInFlashcards?: boolean;
           };
         }
       | { type: "toUpload" }
@@ -320,7 +321,8 @@ export const uploadSetMachine = setup({
         updateQuestion: {
           actions: assign({
             questions: ({ context, event }) => {
-              const { id, question, answer, category } = event.params;
+              const { id, question, answer, category, hideInFlashcards } =
+                event.params;
               return context.questions.map((oldQuestion) => {
                 if (oldQuestion.id !== id) {
                   return oldQuestion;
@@ -328,14 +330,22 @@ export const uploadSetMachine = setup({
                 let newQuestionText = oldQuestion.question;
                 let newAnswer = oldQuestion.answer;
                 let newCategory = oldQuestion.category;
+                let newHideInFlashcards = oldQuestion.hideInFlashcards;
+
                 if (question !== undefined) {
                   newQuestionText = question;
                 }
+
                 if (answer !== undefined) {
                   newAnswer = answer;
                 }
+
                 if (category !== undefined) {
                   newCategory = category;
+                }
+
+                if (hideInFlashcards !== undefined) {
+                  newHideInFlashcards = hideInFlashcards;
                 }
 
                 return {
@@ -343,6 +353,7 @@ export const uploadSetMachine = setup({
                   question: newQuestionText,
                   answer: newAnswer,
                   category: newCategory,
+                  hideInFlashcards: newHideInFlashcards,
                 };
               });
             },

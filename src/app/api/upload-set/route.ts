@@ -35,6 +35,7 @@ export async function POST(req: NextRequest) {
     answer: sanitize(question.answer),
     categoryId: question.categoryId,
     createdYear: question.createdYear,
+    hideInFlashcards: question.hideInFlashcards,
   });
 
   if (set.alphabetRound && set.categoryRound && set.themeRound) {

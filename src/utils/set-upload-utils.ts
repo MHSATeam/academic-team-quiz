@@ -55,6 +55,7 @@ export type OACSet = {
 export type EditorQuestion = {
   id: string;
   category: Category;
+  hideInFlashcards: boolean;
   question: string;
   questionImages: ImageData[];
   answer: string;
@@ -79,6 +80,7 @@ export function createQuestion(): EditorQuestion {
       modifiedOn: new Date(),
       createdOn: new Date(),
     },
+    hideInFlashcards: false,
     question: "",
     questionImages: [],
     answer: "",

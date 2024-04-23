@@ -20,6 +20,7 @@ type QuestionEditorProps = {
   onUpdateQuestion: (newQuestion: string) => void;
   onUpdateAnswer: (newAnswer: string) => void;
   onUpdateCategory: (newCategory: Category) => void;
+  onUpdateComputationFlag: (newValue: boolean) => void;
 };
 
 const editorClass =
@@ -59,7 +60,10 @@ export default function QuestionEditor(props: QuestionEditorProps) {
           {props.question.category.id === /* Math Category Id */ 2 && (
             <Flex flexDirection="col" className="w-fit gap-1" alignItems="end">
               <Title className="grow">Is Computation Question?</Title>
-              <Switch />
+              <Switch
+                checked={props.question.hideInFlashcards}
+                onChange={props.onUpdateComputationFlag}
+              />
             </Flex>
           )}
           <Flex className="w-fit gap-1" alignItems="end" flexDirection="col">

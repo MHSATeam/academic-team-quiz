@@ -39,6 +39,7 @@ type ThemeRound = {
 type Question = {
   question: string;
   answer: string;
+  hideInFlashcards: boolean;
   categoryId: number;
   createdYear: number;
 };
@@ -73,6 +74,7 @@ export function buildSet(
       answer: removePTags(editorQuestion.answer),
       categoryId: editorQuestion.category.id,
       createdYear: set.createdYear,
+      hideInFlashcards: editorQuestion.hideInFlashcards,
     };
   }
 

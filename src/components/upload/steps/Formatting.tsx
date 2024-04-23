@@ -107,6 +107,15 @@ export default function Formatting(props: StepComponentProps) {
                     },
                   });
                 }}
+                onUpdateComputationFlag={(newValue) => {
+                  props.send({
+                    type: "updateQuestion",
+                    params: {
+                      id: question.id,
+                      hideInFlashcards: newValue,
+                    },
+                  });
+                }}
               />
             );
           })}

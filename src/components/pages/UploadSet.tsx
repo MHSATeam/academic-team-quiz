@@ -18,8 +18,10 @@ pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/b
 
 export const TesseractScheduler = Tesseract.createScheduler();
 if (typeof window !== "undefined") {
-  const WorkerCount =
-    Math.min(1, window.navigator.hardwareConcurrency - 1) ?? 4;
+  const WorkerCount = Math.max(
+    1,
+    window.navigator.hardwareConcurrency ?? 4 - 1,
+  );
   const genWorker = async () => {
     const worker = await Tesseract.createWorker("eng");
     await worker.setParameters({
