@@ -10,17 +10,18 @@ datasource db {
 }
 
 model Question {
-  id          Int                 @id @default(autoincrement())
-  question    String
-  answer      String
-  createdYear Int                 @db.SmallInt
-  categoryId  Int
-  category    Category            @relation(fields: [categoryId], references: [id], onDelete: Restrict)
-  roundId     Int?
-  round       Round?              @relation(fields: [roundId], references: [id], onDelete: Cascade)
-  userAnswers UserQuestionTrack[]
-  createdOn   DateTime            @default(now()) @db.Timestamptz(3)
-  modifiedOn  DateTime            @default(now()) @updatedAt @db.Timestamptz(3)
+  id               Int                 @id @default(autoincrement())
+  question         String
+  answer           String
+  createdYear      Int                 @db.SmallInt
+  categoryId       Int
+  category         Category            @relation(fields: [categoryId], references: [id], onDelete: Restrict)
+  hideInFlashcards Boolean             @default(false)
+  roundId          Int?
+  round            Round?              @relation(fields: [roundId], references: [id], onDelete: Cascade)
+  userAnswers      UserQuestionTrack[]
+  createdOn        DateTime            @default(now()) @db.Timestamptz(3)
+  modifiedOn       DateTime            @default(now()) @updatedAt @db.Timestamptz(3)
 }
 
 model Set {
