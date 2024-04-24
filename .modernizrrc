@@ -1,0 +1,10 @@
+module.exports = {
+  options: ["mq", "setClasses"],
+  "feature-detects": [
+    "test/canvas",
+    "test/canvastext",
+    "test/serviceworker",
+    "test/storage/localstorage",
+    "test/workers/webworkers",
+  ],
+};

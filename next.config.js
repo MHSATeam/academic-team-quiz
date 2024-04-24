@@ -1,3 +1,4 @@
+import withModernizr from "next-plugin-modernizr";
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   output: "standalone",
@@ -18,4 +19,4 @@ const nextConfig = {
   },
 };
 
-export default nextConfig;
+export default withModernizr(nextConfig);
