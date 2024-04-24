@@ -20,9 +20,14 @@ export default async function Page() {
         },
       },
     },
-    orderBy: {
-      createdOn: "desc",
-    },
+    orderBy: [
+      {
+        createdOn: "desc",
+      },
+      {
+        id: "asc",
+      },
+    ],
   });
 
   return (
