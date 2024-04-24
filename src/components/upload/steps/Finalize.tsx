@@ -1,5 +1,5 @@
 import { StepComponentProps } from "@/components/pages/UploadSet";
-import { Card } from "@tremor/react";
+import { Button, Card } from "@tremor/react";
 import { Loader2 } from "lucide-react";
 import Link from "next/link";
 
@@ -14,11 +14,23 @@ export default function Finalize(props: StepComponentProps) {
         </div>
       )}
       {context.error !== undefined && (
-        <div className="text-tremor-content-emphasis dark:text-dark-tremor-content-emphasis">
-          Error:
+        <div className="flex flex-col gap-2 text-tremor-content-emphasis dark:text-dark-tremor-content-emphasis">
+          An error has occurred:
           <pre className="whitespace-pre-wrap">
-            {JSON.stringify(context.error, null, 2)}
+            {typeof context.error === "string"
+              ? context.error
+              : JSON.stringify(context.error, null, 2)}
           </pre>
+          <Button
+            color="red"
+            onClick={() => {
+              props.send({
+                type: "retryError",
+              });
+            }}
+          >
+            Try Again
+          </Button>
         </div>
       )}
       {context.uploadedObj && (

@@ -66,7 +66,8 @@ export const uploadSetMachine = setup({
         }
       | { type: "updateAlphabetLetter"; params: { letter: string } }
       | { type: "updateTheme"; params: { theme: string } }
-      | { type: "finalize" };
+      | { type: "finalize" }
+      | { type: "retryError" };
   },
   actors: {
     uploadSet: fromPromise<PrismaSet | Round, { set: UploadableSet }>(
@@ -505,7 +506,18 @@ export const uploadSetMachine = setup({
             },
           },
         },
-        error: {},
+        error: {
+          on: {
+            retryError: {
+              target: "uploading",
+              actions: assign({
+                hasUploaded: false,
+                error: undefined,
+                uploadedObj: undefined,
+              }),
+            },
+          },
+        },
         done: {},
       },
       initial: "uploading",

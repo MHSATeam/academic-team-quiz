@@ -146,6 +146,7 @@ export default function Uploading(props: StepComponentProps) {
                   </>
                 ) : (
                   <Card>
+                    <Title className="mb-2">Question Order</Title>
                     <QuestionContainer
                       id={context.questionLists[0].id}
                       questionData={context.questions}
@@ -250,7 +251,7 @@ export default function Uploading(props: StepComponentProps) {
         <Dialog open={isSettingsOpen} onClose={setIsSettingsOpen}>
           <DialogPanel>
             <Flex flexDirection="col" className="gap-4" alignItems="stretch">
-              <Title className="text-center">Settings</Title>
+              <Title>Settings</Title>
               <div className="flex flex-col gap-1">
                 <Subtitle>Author(s)</Subtitle>
                 <TextInput
@@ -304,6 +305,12 @@ export default function Uploading(props: StepComponentProps) {
                   </SelectContent>
                 </Select>
               </div>
+              <Button
+                className="w-fit"
+                onClick={() => setIsSettingsOpen(false)}
+              >
+                Done
+              </Button>
             </Flex>
           </DialogPanel>
         </Dialog>
