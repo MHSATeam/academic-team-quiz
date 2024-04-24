@@ -8,7 +8,6 @@ import {
   getBboxVectors,
   getOverlappingBoxes,
 } from "@/src/utils/selection-utils";
-import useKeyboardEvent from "@/src/utils/use-keyboard-event";
 import useMouseEvent from "@/src/utils/use-mouse-event";
 import { Vector } from "@/src/utils/vector";
 import { Scan } from "lucide-react";
@@ -21,6 +20,7 @@ type PDFPageProps = {
   ocrScheduler: Tesseract.Scheduler;
   selections: SelectedText[];
   onSelect: (selection: Selection, event: MouseEvent) => void;
+  isPressingShift: boolean;
 };
 let TempCanvas: HTMLCanvasElement;
 let TempCanvasContext: CanvasRenderingContext2D;
@@ -35,11 +35,11 @@ export default function PDFPage({
   pageNumber,
   ocrScheduler,
   selections,
+  isPressingShift,
   onSelect,
 }: PDFPageProps) {
   const [isProcessed, setIsProcessed] = useState(false);
   const [wordBoxes, setWordBoxes] = useState<WordBox[]>([]);
-  const [isPressingMeta, setIsPressingMeta] = useState(false);
 
   const initialPositionRef = useRef<Vector | null>(null);
   const mousePos = useRef<Vector>({ x: 0, y: 0 });
@@ -204,13 +204,6 @@ export default function PDFPage({
     ),
   );
 
-  useKeyboardEvent(
-    useCallback((event) => {
-      setIsPressingMeta(event.metaKey);
-    }, []),
-    ["keydown", "keyup"],
-  );
-
   const onRenderSuccess = useCallback(
     async function () {
       if (!canvasRef.current) {
@@ -263,7 +256,7 @@ export default function PDFPage({
   return (
     <Page
       scale={1}
-      className={["border-b-2", isPressingMeta ? "cursor-copy" : ""]}
+      className={["border-b-2", isPressingShift ? "cursor-copy" : ""]}
       pageNumber={pageNumber}
       renderAnnotationLayer={false}
       renderTextLayer={false}

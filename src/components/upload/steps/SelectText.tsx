@@ -20,6 +20,8 @@ import {
   AccordionList,
   Button,
   Card,
+  Dialog,
+  DialogPanel,
   Flex,
   Subtitle,
   Text,
@@ -44,6 +46,7 @@ import {
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Document } from "react-pdf";
 import DisplayFormattedText from "@/components/utils/DisplayFormattedText";
+import classNames from "classnames";
 
 type SelectionTool = "question" | "answer" | "category";
 
@@ -88,22 +91,24 @@ export default function SelectText(props: StepComponentProps) {
   const [answer, setAnswer] = useState<SelectedText | null>(null);
   const [typedAnswer, setTypedAnswer] = useState<string | null>(null);
   const [tool, setTool] = useState<SelectionTool>("question");
-  const [isPressingMeta, setIsPressingMeta] = useState(false);
+  const [isPressingShift, setIsPressingShift] = useState(false);
   const [categoryId, setCategoryId] = useState(0);
+  const [instructionsOpen, setInstructionsOpen] = useState(false);
+  const [showInstructionsCallout, setInstructionsCallout] = useState(true);
 
   const questionInputRef = useRef<HTMLTextAreaElement>(null);
   const answerInputRef = useRef<HTMLTextAreaElement>(null);
 
   const trueTool: SelectionTool = useMemo(() => {
     let trueTool = tool;
-    if (isPressingMeta && tool === "answer") {
+    if (isPressingShift && tool === "answer") {
       trueTool = "question";
     }
-    if (isPressingMeta && tool === "category") {
+    if (isPressingShift && tool === "category") {
       trueTool = "answer";
     }
     return trueTool;
-  }, [tool, isPressingMeta]);
+  }, [tool, isPressingShift]);
 
   const handleSelect = useCallback(
     (selection: Selection) => {
@@ -257,7 +262,7 @@ export default function SelectText(props: StepComponentProps) {
 
   useKeyboardEvent(
     useCallback((event) => {
-      setIsPressingMeta(event.metaKey);
+      setIsPressingShift(event.shiftKey);
     }, []),
     ["keydown", "keyup"],
   );
@@ -332,181 +337,247 @@ export default function SelectText(props: StepComponentProps) {
   );
 
   return (
-    <Flex
-      justifyContent="center"
-      className="gap-4 overflow-hidden"
-      alignItems="start"
-    >
-      <div className="flex h-full w-1/4 shrink flex-col gap-2 overflow-hidden p-1">
-        <Title>Selection Tools</Title>
-        <Flex justifyContent="start" className="gap-2">
-          {Object.entries(SelectionButtons).map(([selectionTool, button]) => {
-            const Icon = button.icon;
-            return (
-              <Button
-                key={selectionTool}
-                title={button.hover}
-                color="neutral"
-                variant={selectionTool === trueTool ? "primary" : "secondary"}
-                onClick={() => {
-                  setTool(selectionTool as SelectionTool);
+    <>
+      <Flex
+        justifyContent="center"
+        className="gap-4 overflow-hidden"
+        alignItems="start"
+      >
+        <div className="flex h-full w-1/4 shrink flex-col gap-2 overflow-hidden p-1">
+          {showInstructionsCallout && (
+            <div className="flex flex-col  rounded-tremor-default border-l-4 border-tremor-brand-emphasis bg-tremor-brand-faint py-3 pl-4 pr-3 text-tremor-default text-tremor-brand-emphasis dark:border-dark-tremor-brand-emphasis dark:bg-dark-tremor-brand-muted/70 dark:text-dark-tremor-brand-emphasis">
+              <div className="tremor-Callout-header flex items-center justify-between">
+                <h4 className="tremor-Callout-title font-semibold">
+                  Not sure what to do?
+                </h4>
+                <button
+                  onClick={() => setInstructionsCallout(false)}
+                  className="rounded-md border border-transparent bg-opacity-10 text-red-500 hover:border-red-500"
+                  title="Close Instructions"
+                >
+                  <X />
+                </button>
+              </div>
+              <div className="mt-2">
+                <Button onClick={() => setInstructionsOpen(true)}>
+                  Open Instructions
+                </Button>
+              </div>
+            </div>
+          )}
+          <Card className="flex flex-col gap-2">
+            <Title>Selection Tools</Title>
+            <Flex justifyContent="start" className="gap-2">
+              {Object.entries(SelectionButtons).map(
+                ([selectionTool, button]) => {
+                  const Icon = button.icon;
+                  return (
+                    <Button
+                      key={selectionTool}
+                      title={button.hover}
+                      color="neutral"
+                      variant={
+                        selectionTool === trueTool ? "primary" : "secondary"
+                      }
+                      onClick={() => {
+                        setTool(selectionTool as SelectionTool);
+                      }}
+                    >
+                      <Icon />
+                    </Button>
+                  );
+                },
+              )}
+            </Flex>
+          </Card>
+          <Card className="flow-root overflow-hidden">
+            <Flex
+              flexDirection="col"
+              className="h-full gap-2"
+              justifyContent="start"
+              alignItems="stretch"
+            >
+              <Title>Current Selection</Title>
+              <Flex>
+                <Subtitle>Question</Subtitle>
+                {question && (
+                  <button
+                    title="Clear Selection"
+                    className="flex aspect-square items-center justify-center rounded-md p-1 text-red-500 hover:bg-red-300 dark:hover:bg-red-900"
+                    onClick={() => {
+                      setQuestion(null);
+                      setTool("question");
+                    }}
+                  >
+                    <X />
+                  </button>
+                )}
+              </Flex>
+              <Flex className="overflow-hidden">
+                <div className="block h-full grow overflow-auto">
+                  <Textarea
+                    value={
+                      question !== null
+                        ? getTextFromSelections(question, true, false)
+                        : typedQuestion ?? ""
+                    }
+                    ref={questionInputRef}
+                    disabled={question !== null}
+                    onValueChange={(value) => {
+                      setTypedQuestion(value ?? null);
+                    }}
+                    className={classNames("overflow-auto", {
+                      "bg-emerald-200 hover:bg-emerald-300 dark:bg-emerald-600 hover:dark:bg-emerald-500":
+                        trueTool === "question",
+                    })}
+                    placeholder="Type or select a question"
+                  />
+                </div>
+              </Flex>
+              <Flex>
+                <Subtitle>Answer</Subtitle>
+                {answer && (
+                  <button
+                    title="Clear Selection"
+                    className="flex aspect-square items-center justify-center rounded-md p-1 text-red-500 hover:bg-red-300 dark:hover:bg-red-900"
+                    onClick={() => {
+                      setAnswer(null);
+                      setTool("answer");
+                    }}
+                  >
+                    <X />
+                  </button>
+                )}
+              </Flex>
+              <Flex className="overflow-hidden">
+                <div className="block h-full grow overflow-auto">
+                  <Textarea
+                    value={
+                      answer !== null
+                        ? getTextFromSelections(answer, false, false)
+                        : typedAnswer ?? ""
+                    }
+                    ref={answerInputRef}
+                    disabled={answer !== null}
+                    onValueChange={(value) => {
+                      setTypedAnswer(value ?? null);
+                    }}
+                    className={classNames("overflow-auto", {
+                      "bg-emerald-200 hover:bg-emerald-300 dark:bg-emerald-600 hover:dark:bg-emerald-500":
+                        trueTool === "answer",
+                    })}
+                    placeholder="Type or select an answer"
+                  />
+                </div>
+              </Flex>
+              <Subtitle>Category</Subtitle>
+              <Select
+                value={categoryId === 0 ? undefined : categoryId.toString()}
+                onValueChange={(value) => {
+                  setCategoryId(parseInt(value) ?? 0);
                 }}
               >
-                <Icon />
+                <SelectTrigger
+                  className={classNames("shrink-0", {
+                    "bg-emerald-200 hover:bg-emerald-300 dark:bg-emerald-600 hover:dark:bg-emerald-500":
+                      trueTool === "category",
+                  })}
+                >
+                  <SelectValue placeholder="Select" />
+                </SelectTrigger>
+                <SelectContent>
+                  {props.categories.map((category) => (
+                    <SelectItem
+                      key={category.id}
+                      value={category.id.toString()}
+                    >
+                      {category.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <Button
+                onClick={() => {
+                  addQuestion();
+                }}
+                color="green"
+                disabled={!canAddQuestion}
+                className="mt-2"
+              >
+                Add Question
               </Button>
-            );
-          })}
-        </Flex>
-        <Title>Current Selection</Title>
-        <Card className="flow-root overflow-hidden">
-          <Flex
-            flexDirection="col"
-            className="h-full gap-2"
-            justifyContent="start"
-            alignItems="stretch"
-          >
-            <Flex>
-              <Title>Question</Title>
-              {question && (
-                <button
-                  title="Clear Selection"
-                  className="flex aspect-square items-center justify-center rounded-md p-1 text-red-500 hover:bg-red-300 dark:hover:bg-red-900"
-                  onClick={() => {
-                    setQuestion(null);
-                    setTool("question");
-                  }}
-                >
-                  <X />
-                </button>
-              )}
             </Flex>
-            <Flex className="overflow-hidden">
-              <div className="block h-full grow overflow-auto">
-                <Textarea
-                  value={
-                    question !== null
-                      ? getTextFromSelections(question, true, false)
-                      : typedQuestion ?? ""
-                  }
-                  ref={questionInputRef}
-                  disabled={question !== null}
-                  onValueChange={(value) => {
-                    setTypedQuestion(value ?? null);
-                  }}
-                  className="overflow-auto"
-                  placeholder="Type or select a question"
-                />
-              </div>
-            </Flex>
-            <Flex>
-              <Title>Answer</Title>
-              {answer && (
-                <button
-                  title="Clear Selection"
-                  className="flex aspect-square items-center justify-center rounded-md p-1 text-red-500 hover:bg-red-300 dark:hover:bg-red-900"
-                  onClick={() => {
-                    setAnswer(null);
-                    setTool("answer");
-                  }}
-                >
-                  <X />
-                </button>
-              )}
-            </Flex>
-            <Flex className="overflow-hidden">
-              <div className="block h-full grow overflow-auto">
-                <Textarea
-                  value={
-                    answer !== null
-                      ? getTextFromSelections(answer, false, false)
-                      : typedAnswer ?? ""
-                  }
-                  ref={answerInputRef}
-                  disabled={answer !== null}
-                  onValueChange={(value) => {
-                    setTypedAnswer(value ?? null);
-                  }}
-                  className="overflow-auto"
-                  placeholder="Type or select an answer"
-                />
-              </div>
-            </Flex>
-            <Title>Category</Title>
-            <Select
-              value={categoryId === 0 ? undefined : categoryId.toString()}
-              onValueChange={(value) => {
-                setCategoryId(parseInt(value) ?? 0);
-              }}
-            >
-              <SelectTrigger>
-                <SelectValue placeholder="Select" />
-              </SelectTrigger>
-              <SelectContent>
-                {props.categories.map((category) => (
-                  <SelectItem key={category.id} value={category.id.toString()}>
-                    {category.name}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-            <Button
-              onClick={() => {
-                addQuestion();
-              }}
-              color="green"
-              disabled={!canAddQuestion}
-              className="mt-2"
-            >
-              Add Question
-            </Button>
-          </Flex>
-        </Card>
-      </div>
-      <Document
-        file={props.state.context.pdfFile}
-        onLoadSuccess={({ numPages }) => {
-          setNumPages(numPages);
-        }}
-        className="h-full overflow-auto border bg-white"
-      >
-        {Array.from(new Array(numPages), (_, index) => (
-          <PDFPage
-            key={index + 1}
-            pageNumber={index + 1}
-            ocrScheduler={TesseractScheduler}
-            selections={selections}
-            onSelect={handleSelect}
-          />
-        ))}
-      </Document>
-      <div className="flex h-full w-1/4 flex-col gap-2 overflow-hidden">
-        <Title>Selected Questions</Title>
-        {questionAccordions.length === 0 && (
-          <Subtitle>No questions selected!</Subtitle>
-        )}
-        {questionAccordions.length > 1 ? (
-          <AccordionList className="no-scrollbar overflow-auto">
-            {questionAccordions}
-          </AccordionList>
-        ) : (
-          <div className="no-scrollbar block grow overflow-auto">
-            {questionAccordions}
-          </div>
-        )}
-        <Button
-          className="mt-auto"
-          disabled={props.state.context.questions.length <= 0}
-          onClick={() => {
-            props.send({
-              type: "toFormatting",
-            });
+          </Card>
+        </div>
+        <Document
+          file={props.state.context.pdfFile}
+          onLoadSuccess={({ numPages }) => {
+            setNumPages(numPages);
           }}
+          className="h-full overflow-auto border bg-white"
         >
-          <div className="flex items-center gap-2">
-            Next Step: Formatting <ALargeSmall />
-          </div>
-        </Button>
-      </div>
-    </Flex>
+          {Array.from(new Array(numPages), (_, index) => (
+            <PDFPage
+              key={index + 1}
+              pageNumber={index + 1}
+              ocrScheduler={TesseractScheduler}
+              selections={selections}
+              isPressingShift={isPressingShift}
+              onSelect={handleSelect}
+            />
+          ))}
+        </Document>
+        <div className="flex h-full w-1/4 flex-col gap-2 overflow-hidden">
+          <Title>Selected Questions</Title>
+          {questionAccordions.length === 0 && (
+            <Subtitle>No questions selected!</Subtitle>
+          )}
+          {questionAccordions.length > 1 ? (
+            <AccordionList className="no-scrollbar overflow-auto">
+              {questionAccordions}
+            </AccordionList>
+          ) : (
+            <div className="no-scrollbar block grow overflow-auto">
+              {questionAccordions}
+            </div>
+          )}
+          <Button
+            className="mt-auto"
+            disabled={props.state.context.questions.length <= 0}
+            onClick={() => {
+              props.send({
+                type: "toFormatting",
+              });
+            }}
+          >
+            <div className="flex items-center gap-2">
+              Next Step: Formatting <ALargeSmall />
+            </div>
+          </Button>
+        </div>
+      </Flex>
+      <Dialog open={instructionsOpen} onClose={setInstructionsOpen}>
+        <DialogPanel>
+          <Flex className="gap-2" flexDirection="col" alignItems="start">
+            <Title>Instructions</Title>
+            <Text>
+              This is the first step of the upload process. <br /> Use the
+              selection tools for question, answer and category by dragging a
+              selection box over the text. Don&apos;t worry about formatting or
+              any mistakes in the selection, those will be taken care of later.
+              Once you&apos;ve selected every question, click next step.
+            </Text>
+            <Text>
+              Tip: To select multiple parts of a question, hold{" "}
+              <pre className="inline rounded-md bg-tremor-background-subtle p-1 dark:bg-dark-tremor-background-subtle">
+                Shift
+              </pre>{" "}
+              to continue using the question select tool.
+            </Text>
+            <Button onClick={() => setInstructionsOpen(false)}>Got it!</Button>
+          </Flex>
+        </DialogPanel>
+      </Dialog>
+    </>
   );
 }
