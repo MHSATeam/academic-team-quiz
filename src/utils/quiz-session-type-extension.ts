@@ -1,3 +1,4 @@
+import { ArrayElement } from "@/src/utils/array-utils";
 import { Prisma, PrismaClient } from "@prisma/client";
 
 export type QuizSessionWithQuestions = NonNullable<
@@ -12,6 +13,12 @@ export type QuizSessionWithQuestions = NonNullable<
           include: {
             question: {
               include: {
+                round: {
+                  include: {
+                    alphabetRound: true;
+                    themeRound: true;
+                  };
+                };
                 category: true;
               };
             };
@@ -21,4 +28,8 @@ export type QuizSessionWithQuestions = NonNullable<
     },
     "findFirst"
   >
+>;
+
+export type QuestionWithRoundData = NonNullable<
+  ArrayElement<QuizSessionWithQuestions["questionsTrackers"]>["question"]
 >;

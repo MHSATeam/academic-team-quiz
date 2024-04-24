@@ -1,19 +1,15 @@
 "use client";
 
 import DisplayFormattedText from "@/components/utils/DisplayFormattedText";
+import QuestionInfoDialog from "@/components/utils/QuestionInfoDialog";
 import QuizFinished from "@/components/utils/QuizFinished";
 import { updateQuestionStatus } from "@/src/lib/quiz-sessions/update-question-status";
 import { filterNotEmpty } from "@/src/utils/array-utils";
-import { QuizSessionWithQuestions } from "@/src/utils/quiz-session-type-extension";
-import { Question } from "@prisma/client";
 import {
-  Button,
-  CategoryBar,
-  Dialog,
-  DialogPanel,
-  Flex,
-  Title,
-} from "@tremor/react";
+  QuizSessionWithQuestions,
+  QuestionWithRoundData,
+} from "@/src/utils/quiz-session-type-extension";
+import { CategoryBar, Flex, Title } from "@tremor/react";
 import { Check, HelpCircle, Undo2, X } from "lucide-react";
 import { useMemo, useState } from "react";
 
@@ -248,38 +244,17 @@ export default function Flashcards(props: FlashcardsProps) {
           <HelpCircle />
         </button>
       </div>
-      <Dialog
-        onClick={(e) => {
-          e.preventDefault();
-        }}
-        onClose={() => {
-          setIsInfoOpen(false);
-        }}
+      <QuestionInfoDialog
         open={isInfoOpen}
-        className="z-50"
-      >
-        <DialogPanel>
-          {currentQuestion && (
-            <Flex flexDirection="col" className="items-start gap-2">
-              <Title>Category: {currentQuestion.category.name}</Title>
-              <Title>Created in: {currentQuestion.createdYear}</Title>
-              <Button
-                onClick={() => {
-                  setIsInfoOpen(false);
-                }}
-              >
-                Close
-              </Button>
-            </Flex>
-          )}
-        </DialogPanel>
-      </Dialog>
+        setOpen={setIsInfoOpen}
+        question={currentQuestion}
+      />
     </main>
   );
 }
 
 type FlashcardProps = {
-  question: Question;
+  question: QuestionWithRoundData;
   isCurrent: boolean;
   isDisappearing: boolean;
   onDisappear?: () => void;
@@ -327,10 +302,22 @@ function Flashcard({
                 backfaceVisibility: "hidden",
               }}
             >
-              <DisplayFormattedText
-                className="overflow-auto text-3xl max-sm:text-2xl dark:text-white"
-                text={question.question}
-              />
+              <div className="overflow-auto">
+                {question.round?.alphabetRound && (
+                  <span className="text-xl text-slate-600 max-sm:text-lg dark:text-slate-400">
+                    Alphabet Round Letter: {question.round.alphabetRound.letter}
+                  </span>
+                )}
+                {question.round?.themeRound && (
+                  <span className="text-xl text-slate-600 max-sm:text-lg dark:text-slate-400">
+                    Part of a theme round, see question info
+                  </span>
+                )}
+                <DisplayFormattedText
+                  className="text-3xl max-sm:text-2xl dark:text-white"
+                  text={question.question}
+                />
+              </div>
             </div>
             <div
               className="back absolute left-0 top-0 flex h-full w-full flex-col justify-center overflow-hidden rounded-lg bg-slate-100 p-4 shadow-lg dark:bg-dark-tremor-background"

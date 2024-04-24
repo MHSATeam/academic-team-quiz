@@ -44,6 +44,12 @@ export default async function Page({
             include: {
               question: {
                 include: {
+                  round: {
+                    include: {
+                      alphabetRound: true,
+                      themeRound: true,
+                    },
+                  },
                   category: true,
                 },
               },

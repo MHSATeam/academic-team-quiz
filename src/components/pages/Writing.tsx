@@ -1,6 +1,7 @@
 "use client";
 
 import DisplayFormattedText from "@/components/utils/DisplayFormattedText";
+import QuestionInfoDialog from "@/components/utils/QuestionInfoDialog";
 import QuizFinished from "@/components/utils/QuizFinished";
 import { updateQuestionStatus } from "@/src/lib/quiz-sessions/update-question-status";
 import { filterNotEmpty } from "@/src/utils/array-utils";
@@ -60,6 +61,7 @@ export default function Writing(props: WritingProps) {
   const [currentAnswer, setCurrentAnswer] = useState("");
   const [isCorrect, setIsCorrect] = useState(false);
   const [inAnswerState, setInAnswerState] = useState(false);
+  const [isInfoOpen, setIsInfoOpen] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
 
   const currentQuestionIndex = useMemo(() => {
@@ -183,10 +185,31 @@ export default function Writing(props: WritingProps) {
       </Flex>
       {currentQuestion ? (
         <>
+          {currentQuestion.round?.alphabetRound && (
+            <span className="text-lg text-slate-600 max-sm:text-lg dark:text-slate-400">
+              Alphabet Round Letter:{" "}
+              {currentQuestion.round.alphabetRound.letter}
+            </span>
+          )}
+          {currentQuestion.round?.themeRound && (
+            <span className="text-lg text-slate-600 max-sm:text-lg dark:text-slate-400">
+              Part of a theme round:{" "}
+              <p className="text-tremor-default text-tremor-content dark:text-dark-tremor-content">
+                {currentQuestion.round.themeRound.theme}
+              </p>
+            </span>
+          )}
           <DisplayFormattedText
             className="text-xl text-tremor-content-strong dark:text-dark-tremor-content-strong"
             text={currentQuestion.question}
           />
+          <Button
+            color="gray"
+            onClick={() => setIsInfoOpen(true)}
+            className="md:w-fit"
+          >
+            Question Info
+          </Button>
           <hr />
           {!inAnswerState && (
             <Flex flexDirection="col" className="gap-2">
@@ -273,6 +296,11 @@ export default function Writing(props: WritingProps) {
               </Flex>
             </Flex>
           )}
+          <QuestionInfoDialog
+            open={isInfoOpen}
+            setOpen={setIsInfoOpen}
+            question={currentQuestion}
+          />
         </>
       ) : (
         <QuizFinished quizType="Writing" />

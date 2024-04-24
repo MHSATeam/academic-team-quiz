@@ -1,10 +1,11 @@
 import { prismaClient } from "@/src/utils/clients";
+import { QuestionWithRoundData } from "@/src/utils/quiz-session-type-extension";
 import "server-only";
 
 export async function getRandomQuestion(
   categories?: number[],
   showFlashcardHidden = false,
-) {
+): Promise<QuestionWithRoundData | null> {
   const categoriesClause =
     categories && categories.length > 0
       ? {
@@ -34,6 +35,12 @@ export async function getRandomQuestion(
   return await prismaClient.question.findFirst({
     ...where,
     include: {
+      round: {
+        include: {
+          alphabetRound: true,
+          themeRound: true,
+        },
+      },
       category: true,
     },
     skip,

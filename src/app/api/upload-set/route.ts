@@ -6,6 +6,7 @@ import { Round } from "@prisma/client";
 import { getSession } from "@auth0/nextjs-auth0";
 import { UserProfile } from "@auth0/nextjs-auth0/client";
 import { NextRequest, NextResponse } from "next/server";
+import { ArrayElement } from "@/src/utils/array-utils";
 
 export async function POST(req: NextRequest) {
   const res = new NextResponse();
@@ -24,8 +25,7 @@ export async function POST(req: NextRequest) {
   if (!("set" in body && typeof body.set === "object")) {
     return NextResponse.json("Missing set data", { status: 400 });
   }
-  type ArrayElement<ArrayType extends readonly unknown[]> =
-    ArrayType extends readonly (infer ElementType)[] ? ElementType : never;
+
   const { set }: { set: UploadableSet } = body;
 
   const questionListMapper = (

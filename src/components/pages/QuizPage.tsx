@@ -12,16 +12,24 @@ import {
 } from "@tremor/react";
 import { Category } from "@prisma/client";
 import useLocalStorage from "@/src/utils/use-local-storage";
+import { QuestionWithRoundData } from "@/src/utils/quiz-session-type-extension";
+import QuestionInfoDialog from "@/components/utils/QuestionInfoDialog";
+
+type QuizQuestion = {
+  id: number;
+  question: QuestionWithRoundData;
+  quiet: boolean;
+};
 
 export default function QuizPage({ categories }: { categories: Category[] }) {
-  const [questions, setQuestions] = useState<
-    { id: number; question: string; answer: string; quiet: boolean }[]
-  >([]);
+  const [questions, setQuestions] = useState<QuizQuestion[]>([]);
   const [selectedSets, setSelectedSets] = useLocalStorage<number[]>(
     "set-list",
     [],
   );
   const [autoNext, setAutoNext] = useLocalStorage("auto-next", false);
+  const [infoQuestion, setInfoQuestion] =
+    useState<QuestionWithRoundData | null>(null);
 
   const swapValue = useRef(0);
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -29,16 +37,8 @@ export default function QuizPage({ categories }: { categories: Category[] }) {
   const getNextQuestion = async (
     quiet: boolean = false,
     errorCount = 0,
-  ): Promise<{
-    id: number;
-    question: string;
-    answer: string;
-    quiet: boolean;
-  }> => {
-    const question = {
-      id: 0,
-      question: "",
-      answer: "",
+  ): Promise<QuizQuestion> => {
+    const question: Partial<QuizQuestion> = {
       quiet,
     };
 
@@ -55,9 +55,8 @@ export default function QuizPage({ categories }: { categories: Category[] }) {
       if (questions.find((q) => q.id === response.id)) {
         return getNextQuestion(quiet, errorCount + 0.5);
       }
-      question.question = response.question;
       question.id = response.id;
-      question.answer = response.answer;
+      question.question = response as QuestionWithRoundData;
     } catch (e) {
       console.error(e);
       if (errorCount < 3) {
@@ -69,7 +68,7 @@ export default function QuizPage({ categories }: { categories: Category[] }) {
         throw new Error("Failed to fetch new question");
       }
     }
-    return question;
+    return question as QuizQuestion;
   };
 
   const swapLastQuestion = async (swap: number) => {
@@ -143,10 +142,12 @@ export default function QuizPage({ categories }: { categories: Category[] }) {
               }}
               autoNext={autoNext}
               question={question.question}
-              answer={question.answer}
               questionId={question.id}
               quiet={question.quiet}
               isLastQuestion={isLast}
+              openInfo={() => {
+                setInfoQuestion(question.question);
+              }}
             />
           </React.Fragment>
         );
@@ -158,6 +159,13 @@ export default function QuizPage({ categories }: { categories: Category[] }) {
         </span>
       )}
       <ScrollToTop scrollParent={scrollRef} />
+      <QuestionInfoDialog
+        open={infoQuestion !== null}
+        setOpen={() => {
+          setInfoQuestion(null);
+        }}
+        question={infoQuestion ?? undefined}
+      />
     </div>
   );
 }

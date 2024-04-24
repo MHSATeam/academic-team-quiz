@@ -1,22 +1,23 @@
 import DisplayFormattedText from "@/components/utils/DisplayFormattedText";
+import { QuestionWithRoundData } from "@/src/utils/quiz-session-type-extension";
 import { ArrowRight, Loader2 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
 type QuestionBoxProps = {
-  question: string;
+  question: QuestionWithRoundData;
   questionId: number;
-  answer: string;
   quiet: boolean;
   isLastQuestion: boolean;
   autoNext: boolean;
   onNext: () => void;
+  openInfo: () => void;
 };
 
 export default function QuestionBox({
-  answer,
   autoNext,
   isLastQuestion,
   onNext,
+  openInfo,
   question,
   questionId,
   quiet,
@@ -92,8 +93,21 @@ export default function QuestionBox({
         (!animate ? "-translate-x-[200%]" : "translate-x-0")
       }
     >
-      <DisplayFormattedText text={question} />
-      <div className="mt-4">
+      {question.round?.alphabetRound && (
+        <span className="text-slate-600 max-sm:text-lg dark:text-slate-400">
+          Alphabet Round Letter: {question.round.alphabetRound.letter}
+        </span>
+      )}
+      {question.round?.themeRound && (
+        <span className="text-slate-600 max-sm:text-lg dark:text-slate-400">
+          Part of a theme round:{" "}
+          <p className="text-tremor-default text-tremor-content dark:text-dark-tremor-content">
+            {question.round.themeRound.theme}
+          </p>
+        </span>
+      )}
+      <DisplayFormattedText text={question.question} />
+      <div className="mt-4 flex">
         {!answerShown ? (
           <button
             onClick={() => {
@@ -102,7 +116,7 @@ export default function QuestionBox({
                 onNext();
               }
             }}
-            className="rounded-md bg-blue-400 px-3 py-1 active:bg-blue-500"
+            className="rounded-md bg-blue-500 px-3 py-1 hover:bg-blue-600"
           >
             Show Answer
           </button>
@@ -110,31 +124,39 @@ export default function QuestionBox({
           <div className="flex gap-2">
             <div className="flex flex-col">
               <span className="font-bold">Answer: </span>
-              <DisplayFormattedText text={answer} />
+              <DisplayFormattedText text={question.answer} />
             </div>
-            {isLastQuestion && !autoNext && (
-              <button
-                disabled={clickedNext}
-                onClick={() => {
-                  if (!clickedNext) {
-                    setClickedNext(true);
-                    onNext();
-                  }
-                }}
-                className="ml-auto h-fit shrink-0 rounded-md bg-blue-400 px-3 py-1"
-              >
-                <span className="flex gap-1">
-                  Next
-                  {clickedNext ? (
-                    <Loader2 className="animate-spin" />
-                  ) : (
-                    <ArrowRight />
-                  )}
-                </span>
-              </button>
-            )}
           </div>
         )}
+        <div className="ml-auto flex flex-col gap-2">
+          <button
+            onClick={() => openInfo()}
+            className="rounded-md bg-gray-500 px-3 py-1 hover:bg-gray-600"
+          >
+            Question Info
+          </button>
+          {answerShown && isLastQuestion && !autoNext && (
+            <button
+              disabled={clickedNext}
+              onClick={() => {
+                if (!clickedNext) {
+                  setClickedNext(true);
+                  onNext();
+                }
+              }}
+              className="ml-auto h-fit shrink-0 rounded-md bg-blue-500 px-3 py-1 hover:bg-blue-600"
+            >
+              <span className="flex gap-1">
+                Next
+                {clickedNext ? (
+                  <Loader2 className="animate-spin" />
+                ) : (
+                  <ArrowRight />
+                )}
+              </span>
+            </button>
+          )}
+        </div>
       </div>
     </div>
   );
