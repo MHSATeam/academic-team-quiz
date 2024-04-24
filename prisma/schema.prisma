@@ -93,7 +93,7 @@ model CategoryTeamGroup {
   id              Int           @id @default(autoincrement())
   team            String        @db.Char()
   roundId         Int           @unique
-  round           Round         @relation(fields: [roundId], references: [id])
+  round           Round         @relation(fields: [roundId], references: [id], onDelete: Cascade)
   categoryRoundId Int
   categoryRound   CategoryRound @relation(fields: [categoryRoundId], references: [id], onDelete: Cascade)
   createdOn       DateTime      @default(now()) @db.Timestamptz(3)

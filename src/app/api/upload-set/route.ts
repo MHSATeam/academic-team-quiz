@@ -59,6 +59,67 @@ export async function POST(req: NextRequest) {
           }),
         );
       }
+      const alphabetRound =
+        requiredSet.alphabetRound.questionList.length > 0
+          ? {
+              alphabetRound: {
+                create: {
+                  letter: requiredSet.alphabetRound.letter,
+                  round: {
+                    create: {
+                      name: requiredSet.name + " – Alphabet Round",
+                      questions: {
+                        createMany: {
+                          data: requiredSet.alphabetRound.questionList.map(
+                            questionListMapper,
+                          ),
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            }
+          : null;
+      const lightningRound =
+        requiredSet.lightningRound.questionList.length > 0
+          ? {
+              lightningRound: {
+                create: {
+                  name: requiredSet.name + " – Lightning Round",
+                  questions: {
+                    createMany: {
+                      data: requiredSet.lightningRound.questionList.map(
+                        questionListMapper,
+                      ),
+                    },
+                  },
+                },
+              },
+            }
+          : null;
+      const themeRound =
+        requiredSet.themeRound.questionList.length > 0
+          ? {
+              themeRound: {
+                create: {
+                  theme: requiredSet.themeRound.theme,
+                  round: {
+                    create: {
+                      name: requiredSet.name + " – Theme Round",
+                      questions: {
+                        createMany: {
+                          data: requiredSet.themeRound.questionList.map(
+                            questionListMapper,
+                          ),
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            }
+          : null;
       return tx.set.create({
         data: {
           name: requiredSet.name,
@@ -75,52 +136,9 @@ export async function POST(req: NextRequest) {
               },
             },
           },
-          alphabetRound: {
-            create: {
-              letter: requiredSet.alphabetRound.letter,
-              round: {
-                create: {
-                  name: requiredSet.name + " – Alphabet Round",
-                  questions: {
-                    createMany: {
-                      data: requiredSet.alphabetRound.questionList.map(
-                        questionListMapper,
-                      ),
-                    },
-                  },
-                },
-              },
-            },
-          },
-          lightningRound: {
-            create: {
-              name: requiredSet.name + " – Lightning Round",
-              questions: {
-                createMany: {
-                  data: requiredSet.lightningRound.questionList.map(
-                    questionListMapper,
-                  ),
-                },
-              },
-            },
-          },
-          themeRound: {
-            create: {
-              theme: requiredSet.themeRound.theme,
-              round: {
-                create: {
-                  name: requiredSet.name + " – Theme Round",
-                  questions: {
-                    createMany: {
-                      data: requiredSet.themeRound.questionList.map(
-                        questionListMapper,
-                      ),
-                    },
-                  },
-                },
-              },
-            },
-          },
+          ...alphabetRound,
+          ...lightningRound,
+          ...themeRound,
         },
       });
     });
