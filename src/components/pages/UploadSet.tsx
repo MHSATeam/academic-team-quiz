@@ -195,7 +195,7 @@ function StateMachine(props: StateMachineProps) {
       if (!snapshot.context.hasUploaded || snapshot.context.error) {
         saveTimeout.current = window.setTimeout(() => {
           saveMachineSnapshot(snapshot);
-        }, 2000);
+        }, 10000);
       } else {
         deleteMachineSnapshot(snapshot.context.stateId);
       }
