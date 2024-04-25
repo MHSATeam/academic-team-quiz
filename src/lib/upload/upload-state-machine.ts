@@ -5,6 +5,7 @@ import SelectFile from "@/components/upload/steps/SelectFile";
 import SelectText from "@/components/upload/steps/SelectText";
 import Uploading from "@/components/upload/steps/Uploading";
 import { UploadableSet, buildSet } from "@/src/lib/upload/build-set";
+import { initFileDb } from "@/src/lib/upload/file-db";
 import {
   EditorQuestion,
   OACSet,
@@ -19,15 +20,26 @@ import {
   createThemeRound,
 } from "@/src/utils/set-upload-utils";
 import { Category, Set as PrismaSet, Round } from "@prisma/client";
+import { nanoid } from "nanoid";
 import { assign, fromPromise, raise, setup } from "xstate";
 
 export type StepMetaData = {
   component: StepComponent;
 };
 
+let fileDB: IDBDatabase | undefined = undefined;
+
+export const getFileDb = async () => {
+  if (fileDB === undefined) {
+    fileDB = await initFileDb();
+  }
+  return fileDB;
+};
+
 export const uploadSetMachine = setup({
   types: {} as {
     context: {
+      stateId: string;
       pdfFile: PDFFile | undefined;
       questions: EditorQuestion[];
       questionLists: QuestionList[];
@@ -239,6 +251,7 @@ export const uploadSetMachine = setup({
   },
 }).createMachine({
   context: {
+    stateId: nanoid(),
     pdfFile: undefined,
     questions: [],
     questionLists: [],

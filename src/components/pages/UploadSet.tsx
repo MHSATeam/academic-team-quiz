@@ -1,7 +1,7 @@
 "use client";
 
 import { Category } from "@prisma/client";
-import { FunctionComponent, useEffect, useState } from "react";
+import { FunctionComponent, useEffect, useRef, useState } from "react";
 import { pdfjs } from "react-pdf";
 import Tesseract from "tesseract.js";
 import "react-pdf/dist/Page/AnnotationLayer.css";
@@ -11,29 +11,38 @@ import {
   StepMetaData,
   uploadSetMachine,
 } from "@/src/lib/upload/upload-state-machine";
-import { Actor, StateFrom } from "xstate";
+import { Actor, Snapshot, StateFrom } from "xstate";
 import { OCRBlacklistedCharacters } from "@/src/lib/upload/filter-ocr-results";
-import { Button, Subtitle, Title } from "@tremor/react";
+import { Button, Card, Flex, Subtitle, Title } from "@tremor/react";
+import {
+  deleteMachineSnapshot,
+  getSnapshotNames,
+  loadMachineSnapshot,
+  saveMachineSnapshot,
+} from "@/src/lib/upload/load-state";
+import { Loader2 } from "lucide-react";
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`;
 
 export const TesseractScheduler = Tesseract.createScheduler();
-if (typeof window !== "undefined") {
-  const WorkerCount = Math.max(
-    1,
-    window.navigator.hardwareConcurrency ?? 4 - 1,
-  );
-  const genWorker = async () => {
-    const worker = await Tesseract.createWorker("eng");
-    await worker.setParameters({
-      tessedit_char_blacklist: OCRBlacklistedCharacters,
-    });
-    TesseractScheduler.addWorker(worker);
-  };
-  for (let i = 0; i < WorkerCount; i++) {
-    genWorker();
+
+const getWorkerCount = () =>
+  Math.max(1, (window.navigator.hardwareConcurrency ?? 4) - 1);
+
+const genWorker = async () => {
+  if (TesseractScheduler.getNumWorkers() >= getWorkerCount()) {
+    return;
   }
-}
+  const worker = await Tesseract.createWorker("eng");
+  await worker.setParameters({
+    tessedit_char_blacklist: OCRBlacklistedCharacters,
+  });
+  if (TesseractScheduler.getNumWorkers() < getWorkerCount()) {
+    TesseractScheduler.addWorker(worker);
+  } else {
+    worker.terminate();
+  }
+};
 
 type UploadSetProps = {
   categories: Category[];
@@ -48,27 +57,37 @@ export type StepComponentProps = {
 export type StepComponent = FunctionComponent<StepComponentProps>;
 
 export default function UploadSet(props: UploadSetProps) {
-  const [state, send] = useMachine(uploadSetMachine);
+  const [snapshot, setSnapshot] = useState<
+    Snapshot<unknown> | undefined | null
+  >(null);
   const [confirmDesktop, setConfirmDesktop] = useState(false);
+  const [createNew, setCreateNew] = useState<boolean | null>(null);
   const [Modernizr, setModernizr] = useState<ModernizrStatic>();
 
   useEffect(() => {
     if (typeof window !== "undefined") {
       import("modernizr").then((api) => setModernizr(api));
+      const load = async () => {
+        const snapshots = await getSnapshotNames();
+        for (let i = 0; i < getWorkerCount(); i++) {
+          await genWorker();
+        }
+        if (snapshots.length > 0) {
+          try {
+            setSnapshot(await loadMachineSnapshot(snapshots[0]));
+            return;
+          } catch (e) {
+            /* empty */
+          }
+        }
+        setSnapshot(undefined);
+      };
+      load();
+    } else {
+      setSnapshot(undefined);
     }
   }, []);
 
-  let stateValue: string;
-  if (typeof state.value === "object") {
-    stateValue = "finalize";
-  } else {
-    stateValue = state.value;
-  }
-  const meta = state.getMeta()[
-    state.machine.id + "." + stateValue
-  ] as StepMetaData;
-
-  const StateComponent = meta.component;
   if (
     Modernizr === undefined ||
     (Modernizr.canvas &&
@@ -81,17 +100,59 @@ export default function UploadSet(props: UploadSetProps) {
       Modernizr.mq("only screen and (min-width: 50em)") ||
       confirmDesktop
     ) {
-      return (
-        <main className="flex h-full flex-col items-center gap-4 overflow-hidden p-4">
-          {StateComponent && (
-            <StateComponent
-              state={state}
-              categories={props.categories}
-              send={send}
-            />
-          )}
-        </main>
-      );
+      if (snapshot === null) {
+        return (
+          <main className="flex h-full flex-col items-center gap-4 overflow-hidden p-4">
+            <Title className="flex items-center gap-2">
+              Loading <Loader2 className="animate-spin" />
+            </Title>
+          </main>
+        );
+      } else {
+        if (createNew !== null || snapshot === undefined) {
+          return (
+            <main className="flex h-full flex-col items-center gap-4 overflow-hidden p-4">
+              <StateMachine
+                categories={props.categories}
+                snapshot={createNew ? undefined : snapshot}
+              />
+            </main>
+          );
+        } else {
+          return (
+            <main className="flex h-full flex-col items-center gap-4 overflow-hidden p-4">
+              <Flex flexDirection="col" className="my-auto w-fit gap-4">
+                <Card>
+                  <Flex flexDirection="col" className="gap-2">
+                    <Title>
+                      You already started uploading a set. Would you like to
+                      continue or restart?
+                    </Title>
+                    <Flex className="gap-2">
+                      <Button onClick={() => setCreateNew(false)}>
+                        Continue
+                      </Button>
+                      <Button
+                        onClick={() => {
+                          setCreateNew(true);
+                          getSnapshotNames().then((names) => {
+                            names.forEach((name) => {
+                              deleteMachineSnapshot(name);
+                            });
+                          });
+                        }}
+                        color="red"
+                      >
+                        Start Over
+                      </Button>
+                    </Flex>
+                  </Flex>
+                </Card>
+              </Flex>
+            </main>
+          );
+        }
+      }
     } else {
       return (
         <main className="flex h-full flex-col gap-4 p-4">
@@ -111,6 +172,50 @@ export default function UploadSet(props: UploadSetProps) {
       <main className="flex h-full flex-col gap-4 p-4">
         <Title>Sorry! Your device is not compatible with this tool!</Title>
       </main>
+    );
+  }
+}
+
+type StateMachineProps = {
+  snapshot?: Snapshot<unknown>;
+  categories: Category[];
+};
+
+function StateMachine(props: StateMachineProps) {
+  const [state, send, actor] = useMachine(uploadSetMachine, {
+    snapshot: props.snapshot,
+  });
+  const saveTimeout = useRef<number>();
+
+  useEffect(() => {
+    actor.subscribe((snapshot) => {
+      if (saveTimeout.current) {
+        clearTimeout(saveTimeout.current);
+      }
+      if (!snapshot.context.hasUploaded || snapshot.context.error) {
+        saveTimeout.current = window.setTimeout(() => {
+          saveMachineSnapshot(snapshot);
+        }, 2000);
+      } else {
+        deleteMachineSnapshot(snapshot.context.stateId);
+      }
+    });
+  }, [actor]);
+
+  let stateValue: string;
+  if (typeof state.value === "object") {
+    stateValue = "finalize";
+  } else {
+    stateValue = state.value;
+  }
+  const meta = state.getMeta()[
+    state.machine.id + "." + stateValue
+  ] as StepMetaData;
+
+  const StateComponent = meta.component;
+  if (StateComponent) {
+    return (
+      <StateComponent state={state} categories={props.categories} send={send} />
     );
   }
 }

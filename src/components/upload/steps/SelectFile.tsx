@@ -16,7 +16,7 @@ const packetResourceLinks: { name: string; href: string }[] = [
 
 export default function SelectFile(props: StepComponentProps) {
   return (
-    <Flex flexDirection="col" className="w-overflow my-auto w-fit gap-4">
+    <Flex flexDirection="col" className="my-auto w-fit gap-4">
       <Card>
         <Title>Set Upload Tool</Title>
         <Text>
@@ -27,7 +27,7 @@ export default function SelectFile(props: StepComponentProps) {
       </Card>
       <Card className="p-0">
         <FileDrop
-          onReceiveFiles={(file) => {
+          onReceiveFiles={async (file) => {
             props.send({
               type: "addPdf",
               params: {
