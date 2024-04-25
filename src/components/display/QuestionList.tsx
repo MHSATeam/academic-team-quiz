@@ -1,6 +1,7 @@
+import DisplayFormattedText from "@/components/utils/DisplayFormattedText";
 import Pagination from "@/components/utils/Pagination";
 import { Question } from "@prisma/client";
-import { Flex, List, ListItem, Text } from "@tremor/react";
+import { Flex, List, ListItem } from "@tremor/react";
 import Link from "next/link";
 
 type QuestionListProps = {
@@ -26,9 +27,10 @@ export default function QuestionList(props: QuestionListProps) {
             <ListItem key={question.id}>
               <Link href={`/static/question/${question.id}`}>
                 <Flex className="gap-2">
-                  <Text className="line-clamp-2 overflow-clip overflow-ellipsis">
-                    {question.question}
-                  </Text>
+                  <DisplayFormattedText
+                    className="line-clamp-2 overflow-clip overflow-ellipsis text-tremor-default text-tremor-content dark:text-dark-tremor-content"
+                    text={question.question}
+                  />
                 </Flex>
               </Link>
             </ListItem>

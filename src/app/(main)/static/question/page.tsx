@@ -107,7 +107,7 @@ export default async function Page({
       {!hasSearch && <Title>Most missed Questions</Title>}
       {questions.length === 0 &&
         (!hasSearch ? (
-          <Title>You haven't missed any questions!</Title>
+          <Title>You haven&apos;t missed any questions!</Title>
         ) : (
           <Title>No questions found!</Title>
         ))}

@@ -1,3 +1,4 @@
+import withModernizr from "next-plugin-modernizr";
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   output: "standalone",
@@ -9,8 +10,13 @@ const nextConfig = {
       message: /Critical dependency/,
       module: /keyv/,
     });
+    config.resolve.alias.canvas = false;
+    config.resolve.alias.encoding = false;
     return config;
+  },
+  experimental: {
+    outputFileTracingIgnores: ["**canvas**"],
   },
 };
 
-export default nextConfig;
+export default withModernizr(nextConfig);

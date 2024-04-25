@@ -6,7 +6,7 @@ import { useBuzzerBox } from "@/src/buzzers/useBuzzerBox";
 import ExpandingInput from "../utils/ExpandingInput";
 
 export default function Scorekeeper() {
-  const [teamScores, _, isHostConnected] = useBuzzerBox();
+  const [teamScores, , isHostConnected] = useBuzzerBox();
   const addPoints = (increment: number, team: string) => {
     RealtimeStatus.boxChannel.publish({
       type: "score",
@@ -102,7 +102,7 @@ export default function Scorekeeper() {
                 }
                 onChange={(e) => {
                   const filteredValue = e.target.value.replaceAll(
-                    /\s|[-\.]|(?:^[^0-9])/g,
+                    /\s|[-.]|(?:^[^0-9])/g,
                     ""
                   );
                   try {
@@ -113,7 +113,9 @@ export default function Scorekeeper() {
                         [team]: Math.abs(newValue),
                       };
                     });
-                  } catch (e) {}
+                  } catch (e) {
+                    /* empty */
+                  }
                 }}
               />
               {[true, false].map((isAdding) =>

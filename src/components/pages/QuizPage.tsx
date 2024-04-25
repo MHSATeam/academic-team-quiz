@@ -12,33 +12,33 @@ import {
 } from "@tremor/react";
 import { Category } from "@prisma/client";
 import useLocalStorage from "@/src/utils/use-local-storage";
+import { QuestionWithRoundData } from "@/src/utils/quiz-session-type-extension";
+import QuestionInfoDialog from "@/components/utils/QuestionInfoDialog";
+
+type QuizQuestion = {
+  id: number;
+  question: QuestionWithRoundData;
+  quiet: boolean;
+};
 
 export default function QuizPage({ categories }: { categories: Category[] }) {
-  const [questions, setQuestions] = useState<
-    { id: number; question: string; answer: string; quiet: boolean }[]
-  >([]);
+  const [questions, setQuestions] = useState<QuizQuestion[]>([]);
   const [selectedSets, setSelectedSets] = useLocalStorage<number[]>(
     "set-list",
-    []
+    [],
   );
   const [autoNext, setAutoNext] = useLocalStorage("auto-next", false);
+  const [infoQuestion, setInfoQuestion] =
+    useState<QuestionWithRoundData | null>(null);
 
   const swapValue = useRef(0);
   const scrollRef = useRef<HTMLDivElement>(null);
 
   const getNextQuestion = async (
     quiet: boolean = false,
-    errorCount = 0
-  ): Promise<{
-    id: number;
-    question: string;
-    answer: string;
-    quiet: boolean;
-  }> => {
-    const question = {
-      id: 0,
-      question: "",
-      answer: "",
+    errorCount = 0,
+  ): Promise<QuizQuestion> => {
+    const question: Partial<QuizQuestion> = {
       quiet,
     };
 
@@ -55,22 +55,22 @@ export default function QuizPage({ categories }: { categories: Category[] }) {
       if (questions.find((q) => q.id === response.id)) {
         return getNextQuestion(quiet, errorCount + 0.5);
       }
-      question.question = response.question;
       question.id = response.id;
-      question.answer = response.answer;
+      question.question = response as QuestionWithRoundData;
     } catch (e) {
       console.error(e);
       if (errorCount < 3) {
         return getNextQuestion(quiet, errorCount + 1);
       } else {
         alert(
-          "There was an error fetching the question. Please try again later."
+          "There was an error fetching the question. Please try again later.",
         );
         throw new Error("Failed to fetch new question");
       }
     }
-    return question;
+    return question as QuizQuestion;
   };
+
   const swapLastQuestion = async (swap: number) => {
     const newQuestion = await getNextQuestion(true);
     if (swap === swapValue.current) {
@@ -84,11 +84,12 @@ export default function QuizPage({ categories }: { categories: Category[] }) {
 
   useEffect(() => {
     swapLastQuestion(++swapValue.current);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedSets]);
 
   return (
     <div
-      className="px-6 py-12 dark:text-white h-full overflow-auto"
+      className="h-full overflow-auto px-6 py-12 dark:text-white"
       ref={scrollRef}
     >
       <Metric className="mb-4">Quick Quiz</Metric>
@@ -107,7 +108,7 @@ export default function QuizPage({ categories }: { categories: Category[] }) {
           setSelectedSets(
             values
               .map((id) => Number(id))
-              .filter((number) => !Number.isNaN(number))
+              .filter((number) => !Number.isNaN(number)),
           );
         }}
       >
@@ -117,7 +118,7 @@ export default function QuizPage({ categories }: { categories: Category[] }) {
           </MultiSelectItem>
         ))}
       </MultiSelect>
-      <div className="flex m-2 gap-2">
+      <div className="m-2 flex gap-2">
         <label htmlFor="auto-next">Auto Switch Question</label>
         <Switch
           id="auto-next"
@@ -141,21 +142,30 @@ export default function QuizPage({ categories }: { categories: Category[] }) {
               }}
               autoNext={autoNext}
               question={question.question}
-              answer={question.answer}
               questionId={question.id}
               quiet={question.quiet}
               isLastQuestion={isLast}
+              openInfo={() => {
+                setInfoQuestion(question.question);
+              }}
             />
           </React.Fragment>
         );
       })}
       {questions.length === 0 && (
-        <span className="justify-center text-2xl flex gap-2">
+        <span className="flex justify-center gap-2 text-2xl">
           Loading
-          <Loader2 className="animate-spin my-auto" />
+          <Loader2 className="my-auto animate-spin" />
         </span>
       )}
       <ScrollToTop scrollParent={scrollRef} />
+      <QuestionInfoDialog
+        open={infoQuestion !== null}
+        setOpen={() => {
+          setInfoQuestion(null);
+        }}
+        question={infoQuestion ?? undefined}
+      />
     </div>
   );
 }

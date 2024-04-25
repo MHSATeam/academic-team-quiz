@@ -22,7 +22,7 @@ export default function ScrollToTop(props: ScrollToTopProps) {
     return () => {
       parent.removeEventListener("scroll", onScroll);
     };
-  }, [props.scrollParent]);
+  }, [props.scrollParent, props.top]);
 
   return (
     <button

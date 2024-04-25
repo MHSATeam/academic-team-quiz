@@ -2,7 +2,7 @@ import { useRef, useEffect } from "react";
 
 type Timer = ReturnType<typeof setTimeout>;
 
-export function useDebounce<Func extends (...args: any[]) => void>(
+export function useDebounce<Func extends (...args: unknown[]) => void>(
   func: Func,
   delay = 1000
 ) {

@@ -1,6 +1,7 @@
 import colors from "tailwindcss/colors";
+import typography from "@tailwindcss/typography";
 /** @type {import('tailwindcss').Config} */
-export default {
+const tailwindConfig = {
   content: [
     "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
@@ -98,6 +99,53 @@ export default {
         "tremor-title": ["1.125rem", { lineHeight: "1.75rem" }],
         "tremor-metric": ["1.875rem", { lineHeight: "2.25rem" }],
       },
+      keyframes: {
+        hide: {
+          from: { opacity: "1" },
+          to: { opacity: "0" },
+        },
+        "custom-pulse": {
+          "0%": {
+            transform: "scale(0.95)",
+            boxShadow: "0 0 0 0 rgba(255, 0, 0, 0.7)",
+          },
+          "70%": {
+            transform: "scale(1)",
+            boxShadow: "0 0 0 10px rgba(0, 0, 0, 0)",
+          },
+          "100%": {
+            transform: "scale(0.95)",
+            boxShadow: "0 0 0 0 rgba(0, 0, 0, 0)",
+          },
+        },
+        slideDownAndFade: {
+          from: { opacity: "0", transform: "translateY(-6px)" },
+          to: { opacity: "1", transform: "translateY(0)" },
+        },
+        slideLeftAndFade: {
+          from: { opacity: "0", transform: "translateX(6px)" },
+          to: { opacity: "1", transform: "translateX(0)" },
+        },
+        slideUpAndFade: {
+          from: { opacity: "0", transform: "translateY(6px)" },
+          to: { opacity: "1", transform: "translateY(0)" },
+        },
+        slideRightAndFade: {
+          from: { opacity: "0", transform: "translateX(-6px)" },
+          to: { opacity: "1", transform: "translateX(0)" },
+        },
+      },
+      animation: {
+        "custom-pulse": "custom-pulse 1s infinite",
+        hide: "hide 150ms cubic-bezier(0.16, 1, 0.3, 1)",
+        slideDownAndFade:
+          "slideDownAndFade 150ms cubic-bezier(0.16, 1, 0.3, 1)",
+        slideLeftAndFade:
+          "slideLeftAndFade 150ms cubic-bezier(0.16, 1, 0.3, 1)",
+        slideUpAndFade: "slideUpAndFade 150ms cubic-bezier(0.16, 1, 0.3, 1)",
+        slideRightAndFade:
+          "slideRightAndFade 150ms cubic-bezier(0.16, 1, 0.3, 1)",
+      },
     },
   },
   safelist: [
@@ -129,5 +177,6 @@ export default {
         /^(fill-(?:slate|gray|zinc|neutral|stone|red|orange|amber|yellow|lime|green|emerald|teal|cyan|sky|blue|indigo|violet|purple|fuchsia|pink|rose)-(?:50|100|200|300|400|500|600|700|800|900|950))$/,
     },
   ],
-  plugins: [require("@headlessui/tailwindcss")],
+  plugins: [require("@headlessui/tailwindcss"), typography],
 };
+export default tailwindConfig;

@@ -9,8 +9,8 @@ export type Streak = {
   userId: string;
   start_at: Date;
   end_at: Date;
-  day_count: BigInt;
-  question_count: BigInt;
+  day_count: bigint;
+  question_count: bigint;
 };
 
 export default async function getStreaks(userId: string): Promise<{

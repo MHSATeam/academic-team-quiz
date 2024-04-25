@@ -60,7 +60,7 @@ export default async function Page() {
   const categories = await getDefaultCategories(user.sub);
 
   const questionOfTheDay = await getRandomQuestion(
-    categories.map(({ id }) => id)
+    categories.map(({ id }) => id),
   );
   const { streaks, isActive: isStreakActive } = await getStreaks(user.sub);
   const activeStreak = isStreakActive ? streaks[0] : undefined;
@@ -81,7 +81,7 @@ export default async function Page() {
             userId: u.user_id,
             days: await getQuestionsPerDay(u.user_id),
           };
-        })
+        }),
     )
   ).filter((userDays) => {
     if (userDays.days.length === 0) {
@@ -101,7 +101,7 @@ export default async function Page() {
 
   return (
     <>
-      <main className="py-12 px-6">
+      <main className="px-6 py-12">
         <Flex>
           <Metric>
             Welcome{" "}
@@ -112,7 +112,7 @@ export default async function Page() {
           </Metric>
           <RefreshButton />
         </Flex>
-        <Grid numItems={1} numItemsMd={2} numItemsLg={3} className="gap-4 mt-4">
+        <Grid numItems={1} numItemsMd={2} numItemsLg={3} className="mt-4 gap-4">
           <Col numColSpan={1} numColSpanSm={2}>
             <Card>
               <Title>
@@ -133,7 +133,7 @@ export default async function Page() {
               {questionOfTheDay ? (
                 <QuestionDisplay question={questionOfTheDay} />
               ) : (
-                <Text>Couldn't find question of the day!</Text>
+                <Text>Couldn&apos;t find question of the day!</Text>
               )}
             </Card>
           </Col>
@@ -149,7 +149,7 @@ export default async function Page() {
               <Title>Streak Goal</Title>
               <Subtitle color="blue">Keep Going!</Subtitle>
             </Flex>
-            <Flex className="mt-2 mb-1">
+            <Flex className="mb-1 mt-2">
               <Text>Goal: 2 Month</Text>
               <Text>{goalPercent}%</Text>
             </Flex>

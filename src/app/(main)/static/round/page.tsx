@@ -11,11 +11,7 @@ export default async function Page() {
         take: 5,
       },
       alphabetRound: true,
-      categoryTeamGroup: {
-        include: {
-          category: true,
-        },
-      },
+      categoryTeamGroup: true,
       themeRound: true,
       sets: true,
       _count: {
@@ -24,9 +20,14 @@ export default async function Page() {
         },
       },
     },
-    orderBy: {
-      createdOn: "desc",
-    },
+    orderBy: [
+      {
+        createdOn: "desc",
+      },
+      {
+        id: "asc",
+      },
+    ],
   });
 
   return (
@@ -35,7 +36,7 @@ export default async function Page() {
       <Grid
         numItems={1}
         numItemsMd={3}
-        className="gap-4 justify-normal items-stretch"
+        className="items-stretch justify-normal gap-4"
       >
         {rounds.map((round) => {
           const { fullName, roundType, name } = getRoundName(round);

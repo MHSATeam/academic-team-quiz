@@ -29,8 +29,8 @@ export const randomInt = (
   function getNumber() {
     return Math.floor(Math.random() * (max - min)) + min;
   }
-  var number = getNumber();
-  var count = 0;
+  let number = getNumber();
+  let count = 0;
   while (exclude.includes(number) && count < 50) {
     number = getNumber();
     count++;
@@ -419,7 +419,7 @@ export class Deck {
       name = name.slice(0, -1);
     }
 
-    let prefix = vowels.includes(name[0]) ? "an " : "a ";
+    const prefix = vowels.includes(name[0]) ? "an " : "a ";
 
     return prefix + name;
   }

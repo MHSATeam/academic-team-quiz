@@ -35,7 +35,7 @@ export default function Pagination({ totalPages }: { totalPages: number }) {
           )
       );
     },
-    [router, pathname, createQueryString]
+    [router, pathname, createQueryString, pageNumber, totalPages]
   );
 
   return (

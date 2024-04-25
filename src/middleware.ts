@@ -3,7 +3,7 @@ import { NextMiddleware } from "next/server";
 
 export const config = {
   matcher:
-    "/((?!mustangs-amazons-square-logo.png|buzzer|scorekeeper|api/ably-auth|api/log-buzz).*)",
+    "/((?!mustangs-amazons-square-logo\\.png|buzzer|scorekeeper|api/ably-auth|api/log-buzz|beep\\.mp3).*)",
 };
 
 export default ((...args) => {

@@ -47,7 +47,7 @@ export default async function Page() {
         <>
           <Divider>Team Captain Resources</Divider>
           <Link className="flex flex-col w-full" href={"/management/"}>
-            <Button variant="secondary">Manage Sets</Button>
+            <Button variant="secondary">Management Console</Button>
           </Link>
         </>
       )}

@@ -2,11 +2,10 @@ import { UserStreaks } from "@/src/app/(main)/page";
 import getQuestionsPerDay, {
   ActiveDay,
 } from "@/src/lib/streaks/get-questions-per-day";
-import getStreaks, { Streak } from "@/src/lib/streaks/get-streak";
 import formatUserName from "@/src/lib/users/format-user-name";
 import getUserList from "@/src/lib/users/get-user-ids";
 import { newDateInTimeZone } from "@/src/utils/date-utils";
-import { Bold, Subtitle, Text, Tracker } from "@tremor/react";
+import { Tracker } from "@tremor/react";
 
 export default async function StreakLeaderBoard({
   streaks,
