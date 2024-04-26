@@ -82,7 +82,7 @@ export async function POST(req: NextRequest) {
     on q.id = boxes."questionId"
     where
     q."categoryId" in (${Prisma.join(categories)})
-    and q.hideInFlashcards = 0
+    and q."hideInFlashcards" is not TRUE
     and (boxes.last_answered is null
     or boxes.last_answered <= case 
       when boxes.box_index = 1 then now() - interval '1 day' 
