@@ -1,8 +1,6 @@
-import QuestionList from "@/components/display/QuestionList";
-import getRoundName from "@/src/lib/round/getRoundName";
+import RoundCard from "@/components/utils/RoundCard";
 import { prismaClient } from "@/src/utils/clients";
-import { Card, Flex, Grid, Metric, Subtitle, Title } from "@tremor/react";
-import Link from "next/link";
+import { Flex, Grid, Metric } from "@tremor/react";
 
 export default async function Page() {
   const rounds = await prismaClient.round.findMany({
@@ -39,20 +37,7 @@ export default async function Page() {
         className="items-stretch justify-normal gap-4"
       >
         {rounds.map((round) => {
-          const { fullName, roundType, name } = getRoundName(round);
-
-          return (
-            <Card key={round.id}>
-              <Link href={`/static/round/${round.id}`}>
-                <Title>{name ?? fullName}</Title>
-                <Subtitle>{roundType}</Subtitle>
-                <Subtitle>{round._count.questions} Questions</Subtitle>
-              </Link>
-              <hr className="my-2" />
-              <Title>Sample Questions</Title>
-              <QuestionList questions={round.questions} />
-            </Card>
-          );
+          return <RoundCard key={round.id} round={round} />;
         })}
       </Grid>
     </Flex>
