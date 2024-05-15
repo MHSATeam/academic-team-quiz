@@ -16,16 +16,16 @@ const to = () => ({
   x: 0,
   y: 0,
   scale: 1,
-  delay: 100,
+  // delay: 100,
 });
 
-const from = () => ({ x: 0, y: -1000, scale: 1.5, delay: 0 });
+const from = () => ({ x: 0, y: -1000, scale: 0.5, delay: 0 });
 
 export default function FlashcardList(props: FlashcardListProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
 
-  const [springs, api] = useSprings(props.questions.length, () => ({
-    ...to(),
+  const [springs, api] = useSprings(props.questions.length, (i) => ({
+    ...(i === 0 ? { ...to(), immediate: true } : {}),
     from: from(),
   }));
 
@@ -49,7 +49,9 @@ export default function FlashcardList(props: FlashcardListProps) {
       api.start((i) => {
         if (i === currentIndex)
           return {
-            x: 200 + window.innerWidth,
+            scale: 0,
+            from: to(),
+            immediate: false,
           };
         if (i === currentIndex + 1) {
           return to();
@@ -68,17 +70,20 @@ export default function FlashcardList(props: FlashcardListProps) {
   }, "keydown");
 
   return (
-    <div className="flex aspect-video flex-col gap-2 md:w-2/3">
+    <div className="mx-auto flex aspect-video flex-col gap-2 md:w-2/3">
       <div className="relative grow">
         {springs.map(({ x, y, scale }, item) => {
           const question = props.questions[item];
           return (
             <animated.div
               key={item}
-              className="absolute left-0 top-0 h-full w-full will-change-transform"
+              className="absolute h-full w-full"
               style={{ x, y, scale }}
             >
-              <Flashcard question={question} />
+              <Flashcard
+                question={question}
+                isCurrent={item === currentIndex}
+              />
             </animated.div>
           );
         })}

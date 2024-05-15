@@ -1,19 +1,42 @@
 "use client";
 import DisplayFormattedText from "@/components/utils/DisplayFormattedText";
 import { QuestionWithRoundData } from "@/src/utils/quiz-session-type-extension";
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { animated, useSpring } from "@react-spring/web";
+import useKeyboardEvent from "@/src/utils/use-keyboard-event";
 
 type FlashcardProps = {
   question: QuestionWithRoundData;
+  isCurrent: boolean;
 };
-export function Flashcard({ question }: FlashcardProps) {
+export function Flashcard({ question, isCurrent }: FlashcardProps) {
   const [flipped, setFlipped] = useState(false);
   const { transform, opacity } = useSpring({
     opacity: flipped ? 1 : 0,
     transform: `perspective(600px) rotateX(${flipped ? 180 : 0}deg)`,
     config: { mass: 5, tension: 500, friction: 80 },
   });
+
+  useEffect(() => {
+    if (!isCurrent) {
+      setFlipped(false);
+    }
+  }, [isCurrent]);
+
+  useKeyboardEvent(
+    useCallback(
+      (e) => {
+        if (isCurrent) {
+          e.preventDefault();
+          setFlipped((prev) => !prev);
+        }
+      },
+      [isCurrent],
+    ),
+    "keydown",
+    " ",
+  );
+
   return (
     <div
       data-question-id={question.id}
