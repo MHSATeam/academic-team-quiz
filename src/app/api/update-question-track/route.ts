@@ -1,20 +1,20 @@
 import { prismaClient } from "@/src/utils/clients";
-import { getSession } from "@auth0/nextjs-auth0";
-import { UserProfile } from "@auth0/nextjs-auth0/client";
+// import { getSession } from "@auth0/nextjs-auth0";
+// import { UserProfile } from "@auth0/nextjs-auth0/client";
 import { Result } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest) {
-  const res = new NextResponse();
-  const session = await getSession(req, res);
-  if (!session || typeof session.user.sub !== "string") {
-    return NextResponse.json("Missing user session", { ...res, status: 401 });
-  }
-  const { user }: { user: UserProfile } = session;
+  // const res = new NextResponse();
+  // const session = await getSession(req, res);
+  // if (!session || typeof session.user.sub !== "string") {
+  //   return NextResponse.json("Missing user session", { ...res, status: 401 });
+  // }
+  // const { user }: { user: UserProfile } = session;
 
-  if (!user.sub) {
-    return NextResponse.json("User profile was malformed", { status: 500 });
-  }
+  // if (!user.sub) {
+  //   return NextResponse.json("User profile was malformed", { status: 500 });
+  // }
 
   const body = await req.json();
 
@@ -37,7 +37,7 @@ export async function POST(req: NextRequest) {
     const updateResponse = await prismaClient.userQuestionTrack.update({
       where: {
         id: questionTrackerId,
-        userId: user.sub,
+        // userId: user.sub,
         OR: [
           {
             quizSession: null,

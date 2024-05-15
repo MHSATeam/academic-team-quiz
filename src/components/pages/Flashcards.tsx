@@ -6,6 +6,7 @@ import QuizFinished from "@/components/utils/QuizFinished";
 import { updateQuestionStatus } from "@/src/lib/quiz-sessions/update-question-status";
 import { filterNotEmpty } from "@/src/utils/array-utils";
 import { QuizSessionWithQuestions } from "@/src/utils/quiz-session-type-extension";
+import { useSprings, animated } from "@react-spring/web";
 import { CategoryBar, Flex, Title } from "@tremor/react";
 import { Check, HelpCircle, Undo2, X } from "lucide-react";
 import { useMemo, useState } from "react";
@@ -13,6 +14,26 @@ import { useMemo, useState } from "react";
 type FlashcardsProps = {
   quizSession: QuizSessionWithQuestions;
 };
+
+const to = () => ({
+  x: 0,
+  y: 0,
+  scale: 1,
+});
+
+const afterMark = (correct: boolean) => ({
+  scale: 0.5,
+  x:
+    typeof window === "undefined"
+      ? 0
+      : correct
+        ? window.innerWidth + 200
+        : -window.innerWidth - 200,
+  y: 0,
+  immediate: false,
+});
+
+const from = () => ({ x: 0, y: -1000, scale: 0.5, delay: 0 });
 
 export default function Flashcards(props: FlashcardsProps) {
   // Initialize values from database
@@ -60,6 +81,30 @@ export default function Flashcards(props: FlashcardsProps) {
 
   const currentTracker = questionTrackers[currentQuestionIndex];
 
+  const [springs, api] = useSprings(questionTrackers.length, (i) => {
+    const questionId = questionTrackers[i].questionId ?? -1;
+    let initialMove = {};
+    if (
+      correctQuestions.includes(questionId) ||
+      incorrectQuestions.includes(questionId)
+    ) {
+      initialMove = {
+        ...afterMark(correctQuestions.includes(questionId)),
+        immediate: true,
+      };
+    }
+    if (i === currentQuestionIndex) {
+      initialMove = {
+        ...to(),
+        immediate: true,
+      };
+    }
+    return {
+      ...initialMove,
+      from: from(),
+    };
+  });
+
   async function markQuestion(correct: boolean) {
     if (currentTracker !== undefined) {
       setIsSaving(true);
@@ -86,10 +131,28 @@ export default function Flashcards(props: FlashcardsProps) {
             }
           }
           if (correct) {
-            setCorrectQuestions((prev) => [...prev, currentTracker.id]);
+            setCorrectQuestions((prev) => [
+              ...prev,
+              currentTracker.questionId ?? -1,
+            ]);
           } else {
-            setIncorrectQuestions((prev) => [...prev, currentTracker.id]);
+            setIncorrectQuestions((prev) => [
+              ...prev,
+              currentTracker.questionId ?? -1,
+            ]);
           }
+          api.start((i) => {
+            if (i === currentQuestionIndex) {
+              return {
+                ...afterMark(correct),
+                from: to(),
+                immediate: false,
+              };
+            }
+            if (i === currentQuestionIndex + 1) {
+              return to();
+            }
+          });
         }
       } finally {
         setIsSaving(false);
@@ -103,12 +166,23 @@ export default function Flashcards(props: FlashcardsProps) {
       setIsSaving(true);
       try {
         if (await updateQuestionStatus(lastTracker.id, "Incomplete")) {
+          console.log(lastTracker);
           setCorrectQuestions((prev) =>
-            prev.filter((id) => lastTracker.id !== id),
+            prev.filter((id) => lastTracker.questionId !== id),
           );
           setIncorrectQuestions((prev) =>
-            prev.filter((id) => lastTracker.id !== id),
+            prev.filter((id) => lastTracker.questionId !== id),
           );
+          if (currentQuestionIndex !== 0) {
+            api.start((i) => {
+              if (i === currentQuestionIndex) {
+                return from();
+              }
+              if (i === currentQuestionIndex - 1) {
+                return to();
+              }
+            });
+          }
         }
       } finally {
         setIsSaving(false);
@@ -160,21 +234,30 @@ export default function Flashcards(props: FlashcardsProps) {
         </div>
         {createProgressBar(false)}
       </Flex>
-      <div className="relative grow">
+      <div className="relative grow overflow-hidden">
         {!currentTracker && (
           <div className="absolute left-0 flex h-full w-full flex-col justify-center text-center">
             <QuizFinished quizType="Flashcards" />
           </div>
         )}
         {currentTracker &&
-          questionTrackers.map((tracker) => {
+          springs.map(({ x, y, scale }, index) => {
+            const tracker = questionTrackers[index];
+            if (!tracker.question) {
+              return null;
+            }
             return (
-              <Flashcard
-                key={tracker.question!.id}
-                answer={tracker.result}
-                question={tracker.question!}
-                isCurrent={tracker === currentTracker}
-              />
+              <animated.div
+                key={index}
+                className="absolute h-full w-full"
+                style={{ x, y, scale }}
+              >
+                <Flashcard
+                  key={tracker.question!.id}
+                  question={tracker.question!}
+                  isCurrent={tracker === currentTracker}
+                />
+              </animated.div>
             );
           })}
       </div>
@@ -214,11 +297,13 @@ export default function Flashcards(props: FlashcardsProps) {
           <HelpCircle />
         </button>
       </div>
-      <QuestionInfoDialog
-        open={isInfoOpen}
-        setOpen={setIsInfoOpen}
-        question={currentTracker.question!}
-      />
+      {currentTracker && (
+        <QuestionInfoDialog
+          open={isInfoOpen}
+          setOpen={setIsInfoOpen}
+          question={currentTracker.question!}
+        />
+      )}
     </main>
   );
 }
