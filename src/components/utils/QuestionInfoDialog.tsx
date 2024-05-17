@@ -41,7 +41,7 @@ export default function QuestionInfoDialog(props: QuestionInfoDialogProps) {
             {props.question.round?.alphabetRound && (
               <Title>
                 Alphabet Round Letter:{" "}
-                {props.question.round.alphabetRound.letter}
+                {props.question.round.alphabetRound.letter.toUpperCase()}
               </Title>
             )}
             {props.question.round?.themeRound && (

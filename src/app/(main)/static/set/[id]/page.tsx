@@ -104,7 +104,7 @@ export default async function Page({ params }: { params: { id: string } }) {
 
   const createFlashcardQuestion = (
     question: Question & { category: Category },
-    round: Round,
+    round: Round & Partial<QuestionWithRoundData["round"]>,
   ): QuestionWithRoundData => {
     return {
       ...question,
@@ -163,7 +163,12 @@ export default async function Page({ params }: { params: { id: string } }) {
   if (set.alphabetRound) {
     const round = set.alphabetRound.round;
     flashcardQuestions.push(
-      ...round.questions.map((q) => createFlashcardQuestion(q, round)),
+      ...round.questions.map((q) =>
+        createFlashcardQuestion(q, {
+          ...round,
+          alphabetRound: set.alphabetRound,
+        }),
+      ),
     );
   }
   if (set.lightningRound) {
@@ -175,7 +180,9 @@ export default async function Page({ params }: { params: { id: string } }) {
   if (set.themeRound) {
     const round = set.themeRound.round;
     flashcardQuestions.push(
-      ...round.questions.map((q) => createFlashcardQuestion(q, round)),
+      ...round.questions.map((q) =>
+        createFlashcardQuestion(q, { ...round, themeRound: set.themeRound }),
+      ),
     );
   }
 

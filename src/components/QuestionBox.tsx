@@ -95,7 +95,8 @@ export default function QuestionBox({
     >
       {question.round?.alphabetRound && (
         <span className="text-slate-600 max-sm:text-lg dark:text-slate-400">
-          Alphabet Round Letter: {question.round.alphabetRound.letter}
+          Alphabet Round Letter:{" "}
+          {question.round.alphabetRound.letter.toUpperCase()}
         </span>
       )}
       {question.round?.themeRound && (

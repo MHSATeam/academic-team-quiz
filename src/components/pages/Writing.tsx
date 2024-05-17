@@ -188,7 +188,7 @@ export default function Writing(props: WritingProps) {
           {currentQuestion.round?.alphabetRound && (
             <span className="text-lg text-slate-600 max-sm:text-lg dark:text-slate-400">
               Alphabet Round Letter:{" "}
-              {currentQuestion.round.alphabetRound.letter}
+              {currentQuestion.round.alphabetRound.letter.toUpperCase()}
             </span>
           )}
           {currentQuestion.round?.themeRound && (
