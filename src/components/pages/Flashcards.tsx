@@ -1,14 +1,12 @@
 "use client";
 
-import DisplayFormattedText from "@/components/utils/DisplayFormattedText";
+import { Flashcard } from "@/components/utils/Flashcard";
 import QuestionInfoDialog from "@/components/utils/QuestionInfoDialog";
 import QuizFinished from "@/components/utils/QuizFinished";
 import { updateQuestionStatus } from "@/src/lib/quiz-sessions/update-question-status";
 import { filterNotEmpty } from "@/src/utils/array-utils";
-import {
-  QuizSessionWithQuestions,
-  QuestionWithRoundData,
-} from "@/src/utils/quiz-session-type-extension";
+import { QuizSessionWithQuestions } from "@/src/utils/quiz-session-type-extension";
+import { useSprings, animated } from "@react-spring/web";
 import { CategoryBar, Flex, Title } from "@tremor/react";
 import { Check, HelpCircle, Undo2, X } from "lucide-react";
 import { useMemo, useState } from "react";
@@ -17,13 +15,33 @@ type FlashcardsProps = {
   quizSession: QuizSessionWithQuestions;
 };
 
+const to = () => ({
+  x: 0,
+  y: 0,
+  scale: 1,
+});
+
+const afterMark = (correct: boolean) => ({
+  scale: 0.5,
+  x:
+    typeof window === "undefined"
+      ? 0
+      : correct
+        ? window.innerWidth + 200
+        : -window.innerWidth - 200,
+  y: 0,
+  immediate: false,
+});
+
+const from = () => ({ x: 0, y: -1000, scale: 0.5, delay: 0 });
+
 export default function Flashcards(props: FlashcardsProps) {
   // Initialize values from database
-  const questions = useMemo(
+  const questionTrackers = useMemo(
     () =>
-      props.quizSession.questionsTrackers
-        .map(({ question }) => question)
-        .filter(filterNotEmpty),
+      props.quizSession.questionsTrackers.filter((q) =>
+        filterNotEmpty(q.question),
+      ),
     [props.quizSession],
   );
 
@@ -51,9 +69,6 @@ export default function Flashcards(props: FlashcardsProps) {
   );
 
   // Setup program state based on loaded values
-  const [hiddenCards, setHiddenCards] = useState<number[]>(
-    initialCorrect.concat(initialIncorrect),
-  );
   const [correctQuestions, setCorrectQuestions] = useState(initialCorrect);
   const [incorrectQuestions, setIncorrectQuestions] =
     useState(initialIncorrect);
@@ -64,26 +79,43 @@ export default function Flashcards(props: FlashcardsProps) {
     return correctQuestions.length + incorrectQuestions.length;
   }, [correctQuestions, incorrectQuestions]);
 
-  const currentQuestion = questions[currentQuestionIndex];
+  const currentTracker = questionTrackers[currentQuestionIndex];
+
+  const [springs, api] = useSprings(questionTrackers.length, (i) => {
+    const questionId = questionTrackers[i].questionId ?? -1;
+    let initialMove = {};
+    if (
+      correctQuestions.includes(questionId) ||
+      incorrectQuestions.includes(questionId)
+    ) {
+      initialMove = {
+        ...afterMark(correctQuestions.includes(questionId)),
+        immediate: true,
+      };
+    }
+    if (i === currentQuestionIndex) {
+      initialMove = {
+        ...to(),
+        immediate: true,
+      };
+    }
+    return {
+      ...initialMove,
+      from: from(),
+    };
+  });
 
   async function markQuestion(correct: boolean) {
-    if (currentQuestion !== undefined) {
-      const tracker = props.quizSession.questionsTrackers.find(
-        ({ questionId }) => questionId === currentQuestion.id,
-      );
-      if (!tracker) {
-        alert("Failed to save question response!");
-        return;
-      }
+    if (currentTracker !== undefined) {
       setIsSaving(true);
       try {
         if (
           await updateQuestionStatus(
-            tracker.id,
+            currentTracker.id,
             correct ? "Correct" : "Incorrect",
           )
         ) {
-          if (currentQuestionIndex === questions.length - 1) {
+          if (currentQuestionIndex === questionTrackers.length - 1) {
             const res = await fetch("/api/complete-quiz", {
               method: "POST",
               body: JSON.stringify({
@@ -99,10 +131,28 @@ export default function Flashcards(props: FlashcardsProps) {
             }
           }
           if (correct) {
-            setCorrectQuestions((prev) => [...prev, currentQuestion.id]);
+            setCorrectQuestions((prev) => [
+              ...prev,
+              currentTracker.questionId ?? -1,
+            ]);
           } else {
-            setIncorrectQuestions((prev) => [...prev, currentQuestion.id]);
+            setIncorrectQuestions((prev) => [
+              ...prev,
+              currentTracker.questionId ?? -1,
+            ]);
           }
+          api.start((i) => {
+            if (i === currentQuestionIndex) {
+              return {
+                ...afterMark(correct),
+                from: to(),
+                immediate: false,
+              };
+            }
+            if (i === currentQuestionIndex + 1) {
+              return to();
+            }
+          });
         }
       } finally {
         setIsSaving(false);
@@ -111,25 +161,28 @@ export default function Flashcards(props: FlashcardsProps) {
   }
 
   async function undoQuestion() {
-    const lastQuestion = questions[currentQuestionIndex - 1];
-    if (lastQuestion) {
-      const tracker = props.quizSession.questionsTrackers.find(
-        ({ questionId }) => questionId === lastQuestion.id,
-      );
-      if (!tracker) {
-        alert("Failed to undo question!");
-        return;
-      }
+    const lastTracker = questionTrackers[currentQuestionIndex - 1];
+    if (lastTracker) {
       setIsSaving(true);
       try {
-        if (await updateQuestionStatus(tracker.id, "Incomplete")) {
-          setHiddenCards((prev) => prev.filter((id) => lastQuestion.id !== id));
+        if (await updateQuestionStatus(lastTracker.id, "Incomplete")) {
+          console.log(lastTracker);
           setCorrectQuestions((prev) =>
-            prev.filter((id) => lastQuestion.id !== id),
+            prev.filter((id) => lastTracker.questionId !== id),
           );
           setIncorrectQuestions((prev) =>
-            prev.filter((id) => lastQuestion.id !== id),
+            prev.filter((id) => lastTracker.questionId !== id),
           );
+          if (currentQuestionIndex !== 0) {
+            api.start((i) => {
+              if (i === currentQuestionIndex) {
+                return from();
+              }
+              if (i === currentQuestionIndex - 1) {
+                return to();
+              }
+            });
+          }
         }
       } finally {
         setIsSaving(false);
@@ -144,15 +197,16 @@ export default function Flashcards(props: FlashcardsProps) {
     >
       {large && (
         <Title>
-          {currentQuestionIndex} / {questions.length}
+          {currentQuestionIndex} / {questionTrackers.length}
         </Title>
       )}
       <CategoryBar
         className="w-full"
         values={[
-          (incorrectQuestions.length * 100) / questions.length,
-          (correctQuestions.length * 100) / questions.length,
-          ((questions.length - currentQuestionIndex) * 100) / questions.length,
+          (incorrectQuestions.length * 100) / questionTrackers.length,
+          (correctQuestions.length * 100) / questionTrackers.length,
+          ((questionTrackers.length - currentQuestionIndex) * 100) /
+            questionTrackers.length,
         ]}
         colors={["red", "green", "neutral"]}
         showLabels={false}
@@ -180,37 +234,36 @@ export default function Flashcards(props: FlashcardsProps) {
         </div>
         {createProgressBar(false)}
       </Flex>
-      <div className="relative grow">
-        {!currentQuestion && (
+      <div className="relative grow overflow-hidden">
+        {!currentTracker && (
           <div className="absolute left-0 flex h-full w-full flex-col justify-center text-center">
             <QuizFinished quizType="Flashcards" />
           </div>
         )}
-        {currentQuestion &&
-          questions.map((question, index) => {
-            if (hiddenCards.includes(question.id)) {
+        {currentTracker &&
+          springs.map(({ x, y, scale }, index) => {
+            const tracker = questionTrackers[index];
+            if (!tracker.question) {
               return null;
             }
             return (
-              <Flashcard
-                key={question.id}
-                isCurrent={question.id === currentQuestion.id}
-                question={question}
-                isDisappearing={index < currentQuestionIndex}
-                onDisappear={() => {
-                  setHiddenCards((prev) =>
-                    [...prev, question.id].filter(
-                      (id, index, arr) => arr.indexOf(id) === index,
-                    ),
-                  );
-                }}
-              />
+              <animated.div
+                key={index}
+                className="absolute h-full w-full"
+                style={{ x, y, scale }}
+              >
+                <Flashcard
+                  key={tracker.question!.id}
+                  question={tracker.question!}
+                  isCurrent={tracker === currentTracker}
+                />
+              </animated.div>
             );
           })}
       </div>
       <div className="flex justify-between">
         <button
-          disabled={!currentQuestion || isSaving}
+          disabled={!currentTracker || isSaving}
           onClick={() => undoQuestion()}
           className="aspect-square rounded-full border-2 border-tremor-border p-2 text-tremor-content active:bg-tremor-content-subtle disabled:bg-tremor-content-subtle dark:border-dark-tremor-border dark:text-dark-tremor-content dark:active:bg-dark-tremor-content-subtle disabled:dark:bg-dark-tremor-content-subtle "
         >
@@ -218,14 +271,14 @@ export default function Flashcards(props: FlashcardsProps) {
         </button>
         <div className="flex grow justify-center gap-16 max-sm:gap-12">
           <button
-            disabled={currentQuestion === undefined || isSaving}
+            disabled={currentTracker === undefined || isSaving}
             onClick={() => markQuestion(false)}
             className="aspect-square rounded-full border-2 border-red-500 p-2 text-red-500 active:bg-red-900 disabled:bg-tremor-content-subtle disabled:dark:bg-dark-tremor-content-subtle"
           >
             <X />
           </button>
           <button
-            disabled={currentQuestion === undefined || isSaving}
+            disabled={currentTracker === undefined || isSaving}
             onClick={() => markQuestion(true)}
             className="aspect-square rounded-full border-2 border-green-500 p-2 text-green-500 active:bg-green-800 disabled:bg-tremor-content-subtle disabled:dark:bg-dark-tremor-content-subtle"
           >
@@ -234,106 +287,23 @@ export default function Flashcards(props: FlashcardsProps) {
         </div>
         <button
           onClick={() => {
-            if (currentQuestion) {
+            if (currentTracker) {
               setIsInfoOpen(true);
             }
           }}
-          disabled={!currentQuestion}
+          disabled={!currentTracker}
           className="aspect-square rounded-full border-2 border-tremor-border p-2 text-tremor-content disabled:bg-tremor-content-subtle dark:border-dark-tremor-border dark:text-dark-tremor-content disabled:dark:bg-dark-tremor-content-subtle"
         >
           <HelpCircle />
         </button>
       </div>
-      <QuestionInfoDialog
-        open={isInfoOpen}
-        setOpen={setIsInfoOpen}
-        question={currentQuestion}
-      />
+      {currentTracker && (
+        <QuestionInfoDialog
+          open={isInfoOpen}
+          setOpen={setIsInfoOpen}
+          question={currentTracker.question!}
+        />
+      )}
     </main>
-  );
-}
-
-type FlashcardProps = {
-  question: QuestionWithRoundData;
-  isCurrent: boolean;
-  isDisappearing: boolean;
-  onDisappear?: () => void;
-};
-function Flashcard({
-  question,
-  isCurrent,
-  isDisappearing,
-  onDisappear,
-}: FlashcardProps) {
-  const [flipped, setFlipped] = useState(false);
-
-  return (
-    <div
-      data-question-id={question.id}
-      className="absolute left-0 h-full w-full cursor-pointer rounded-lg text-center"
-      style={{
-        perspective: "1000px",
-        transition: "all cubic-bezier(0.4, 0, 0.2, 1) 400ms",
-        transform: isDisappearing ? "scale(0)" : "scale(1)",
-        bottom: isDisappearing ? "100%" : "0%",
-        ...(isDisappearing ? { zIndex: 40 } : isCurrent ? { zIndex: 30 } : {}),
-      }}
-      onTransitionEnd={() => {
-        if (isDisappearing) {
-          onDisappear?.();
-        }
-      }}
-      onClick={() => {
-        setFlipped(!flipped);
-      }}
-    >
-      <div
-        className="relative h-full w-full transition-transform"
-        style={{
-          transform: flipped ? "rotateX(180deg)" : "rotateX(0deg)",
-          transformStyle: "preserve-3d",
-        }}
-      >
-        {(isCurrent || isDisappearing) && (
-          <>
-            <div
-              className="front absolute left-0 top-0 z-10 flex h-full w-full flex-col justify-center overflow-hidden rounded-lg bg-slate-100 p-4 shadow-lg dark:bg-dark-tremor-background"
-              style={{
-                backfaceVisibility: "hidden",
-              }}
-            >
-              <div className="overflow-auto">
-                {question.round?.alphabetRound && (
-                  <span className="text-xl text-slate-600 max-sm:text-lg dark:text-slate-400">
-                    Alphabet Round Letter: {question.round.alphabetRound.letter}
-                  </span>
-                )}
-                {question.round?.themeRound && (
-                  <span className="text-xl text-slate-600 max-sm:text-lg dark:text-slate-400">
-                    Part of a theme round, see question info
-                  </span>
-                )}
-                <DisplayFormattedText
-                  className="text-3xl max-sm:text-2xl dark:text-white"
-                  text={question.question}
-                />
-              </div>
-            </div>
-            <div
-              className="back absolute left-0 top-0 flex h-full w-full flex-col justify-center overflow-hidden rounded-lg bg-slate-100 p-4 shadow-lg dark:bg-dark-tremor-background"
-              style={{
-                backfaceVisibility: "hidden",
-                transform: "rotateX(180deg)",
-              }}
-            >
-              <DisplayFormattedText
-                className="overflow-auto text-3xl max-sm:text-2xl dark:text-white"
-                text={question.answer}
-              />
-            </div>
-          </>
-        )}
-      </div>
-    </div>
   );
 }
