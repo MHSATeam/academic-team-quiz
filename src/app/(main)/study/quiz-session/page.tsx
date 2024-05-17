@@ -1,6 +1,6 @@
 import CreateQuizSession from "@/components/inputs/CreateQuizSession";
 import DeleteSession from "@/components/inputs/DeleteSession";
-import QuizTypes from "@/src/lib/quiz-sessions/QuizTypes";
+import QuizTypes from "@/src/lib/quiz-sessions/quiz-types";
 import getDefaultCategories from "@/src/lib/users/get-default-categories";
 import { prismaClient } from "@/src/utils/clients";
 import { getSession } from "@auth0/nextjs-auth0";

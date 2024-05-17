@@ -1,7 +1,7 @@
 "use client";
 
 import CategorySelector from "@/components/inputs/CategorySelector";
-import QuizTypes from "@/src/lib/quiz-sessions/QuizTypes";
+import QuizTypes from "@/src/lib/quiz-sessions/quiz-types";
 import { Category, QuizType, UserQuizSession } from "@prisma/client";
 import {
   Button,

@@ -1,7 +1,7 @@
 "use client";
 
 import QuestionList from "@/components/display/QuestionList";
-import getRoundName from "@/src/lib/round/getRoundName";
+import getRoundName from "@/src/lib/round/get-round-name";
 import { Prisma, PrismaClient } from "@prisma/client";
 import {
   Button,
@@ -61,7 +61,7 @@ export default function RoundList(props: RoundListProps) {
     if (!minisearch.current || search.trim().length === 0) return props.rounds;
     const searchResults = minisearch.current.search(search);
     return props.rounds.filter(
-      (round) => searchResults.findIndex((r) => r.id === round.id) !== -1
+      (round) => searchResults.findIndex((r) => r.id === round.id) !== -1,
     );
   }, [props.rounds, search]);
 
@@ -73,7 +73,7 @@ export default function RoundList(props: RoundListProps) {
           setSearch(searchInput);
         }}
       >
-        <Flex className="gap-2 items-stretch">
+        <Flex className="items-stretch gap-2">
           <TextInput
             placeholder="Search"
             icon={Search}
@@ -90,7 +90,7 @@ export default function RoundList(props: RoundListProps) {
       <Grid
         numItems={1}
         numItemsMd={3}
-        className="gap-4 justify-normal items-stretch"
+        className="items-stretch justify-normal gap-4"
       >
         {filteredRounds.map((round) => {
           const { fullName, roundType, name } = getRoundName(round);

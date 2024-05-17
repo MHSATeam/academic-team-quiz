@@ -1,5 +1,5 @@
 import QuestionList from "@/components/display/QuestionList";
-import getRoundName from "@/src/lib/round/getRoundName";
+import getRoundName from "@/src/lib/round/get-round-name";
 import { Prisma, PrismaClient } from "@prisma/client";
 import { Card, Subtitle, Title } from "@tremor/react";
 import Link from "next/link";
