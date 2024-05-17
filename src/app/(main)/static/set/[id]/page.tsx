@@ -116,34 +116,6 @@ export default async function Page({ params }: { params: { id: string } }) {
   };
 
   const flashcardQuestions: QuestionWithRoundData[] = [];
-  if (set.categoryRound) {
-    flashcardQuestions.push(
-      ...set.categoryRound.teamGroups.flatMap((group) =>
-        group.round.questions.map((q) =>
-          createFlashcardQuestion(q, group.round),
-        ),
-      ),
-    );
-  }
-  if (set.alphabetRound) {
-    const round = set.alphabetRound.round;
-    flashcardQuestions.push(
-      ...round.questions.map((q) => createFlashcardQuestion(q, round)),
-    );
-  }
-  if (set.lightningRound) {
-    const round = set.lightningRound;
-    flashcardQuestions.push(
-      ...round.questions.map((q) => createFlashcardQuestion(q, round)),
-    );
-  }
-  if (set.themeRound) {
-    const round = set.themeRound.round;
-    flashcardQuestions.push(
-      ...round.questions.map((q) => createFlashcardQuestion(q, round)),
-    );
-  }
-
   const categoryRoundQuestionsByCategory: QuestionWithRoundData[][] = [];
 
   if (set.categoryRound) {
@@ -173,6 +145,38 @@ export default async function Page({ params }: { params: { id: string } }) {
         );
       }
     }
+  }
+
+  if (set.categoryRound) {
+    if (categoryRoundQuestionsByCategory.length === 0) {
+      flashcardQuestions.push(
+        ...set.categoryRound.teamGroups.flatMap((group) =>
+          group.round.questions.map((q) =>
+            createFlashcardQuestion(q, group.round),
+          ),
+        ),
+      );
+    } else {
+      flashcardQuestions.push(...categoryRoundQuestionsByCategory.flat());
+    }
+  }
+  if (set.alphabetRound) {
+    const round = set.alphabetRound.round;
+    flashcardQuestions.push(
+      ...round.questions.map((q) => createFlashcardQuestion(q, round)),
+    );
+  }
+  if (set.lightningRound) {
+    const round = set.lightningRound;
+    flashcardQuestions.push(
+      ...round.questions.map((q) => createFlashcardQuestion(q, round)),
+    );
+  }
+  if (set.themeRound) {
+    const round = set.themeRound.round;
+    flashcardQuestions.push(
+      ...round.questions.map((q) => createFlashcardQuestion(q, round)),
+    );
   }
 
   return (
