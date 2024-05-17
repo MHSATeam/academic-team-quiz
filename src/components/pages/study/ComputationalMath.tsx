@@ -4,7 +4,7 @@ import {
   Problem,
   ProblemType,
 } from "@/src/lib/math/math-types";
-import { generateProblems } from "@/src/lib/math/generateMath";
+import { generateProblems } from "@/src/lib/math/generate-math";
 import { MathJaxContext } from "better-react-mathjax";
 import MathProblem from "../../display/MathProblem";
 import { ErrorBoundary } from "react-error-boundary";
