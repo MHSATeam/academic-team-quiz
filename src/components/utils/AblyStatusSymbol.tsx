@@ -26,6 +26,9 @@ export default function AblyStatusSymbol() {
         case "failed":
         case "suspended": {
           setStatusSymbol("server-off");
+          if (stateChange.current !== "closed") {
+            alert("You are disconnected! You may need to restart the app.");
+          }
           break;
         }
       }
@@ -59,7 +62,7 @@ export default function AblyStatusSymbol() {
   const capitalize = (str: string) =>
     str.slice(0, 1).toUpperCase() + str.slice(1);
   const title = `Connection Status: ${capitalize(
-    RealtimeStatus.stateManager.state
+    RealtimeStatus.stateManager.state,
   )}`;
 
   return (
@@ -67,6 +70,13 @@ export default function AblyStatusSymbol() {
       onClick={(e) => {
         e.stopPropagation();
         alert(title);
+        if (
+          ["suspended", "disconnected"].includes(
+            RealtimeStatus.stateManager.state,
+          )
+        ) {
+          RealtimeStatus.connect();
+        }
       }}
       title={title}
     >
