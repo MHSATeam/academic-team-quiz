@@ -1,11 +1,13 @@
 import { Types } from "ably";
-import { Cloud, CloudCog, CloudOff } from "lucide-react";
+import { Cloud, CloudCog, CloudOff, LucideProps } from "lucide-react";
 import { useEffect, useState } from "react";
 import { RealtimeStatus } from "@/src/buzzers/ably-realtime";
 
 type StatusSymbol = "server" | "server-off" | "server-cog";
 
-export default function AblyStatusSymbol() {
+export default function AblyStatusSymbol(
+  props: LucideProps & { buttonClass?: string },
+) {
   const [statusSymbol, setStatusSymbol] = useState<StatusSymbol>("server-off");
 
   useEffect(() => {
@@ -65,6 +67,8 @@ export default function AblyStatusSymbol() {
     RealtimeStatus.stateManager.state,
   )}`;
 
+  const { buttonClass, ...lucideProps } = props;
+
   return (
     <button
       onClick={(e) => {
@@ -79,8 +83,9 @@ export default function AblyStatusSymbol() {
         }
       }}
       title={title}
+      className={buttonClass}
     >
-      <Symbol size={36} />
+      <Symbol size={36} {...lucideProps} />
     </button>
   );
 }

@@ -10,6 +10,7 @@ import {
 import { getTeamColors } from "@/src/buzzers/get-team-colors";
 import { useBuzzIn } from "@/src/buzzers/useBuzzIn";
 import { useUserList } from "@/src/buzzers/useUserList";
+import AblyStatusSymbol from "@/components/utils/AblyStatusSymbol";
 
 const beepSound = new Audio("/beep.mp3");
 const scoresStorageKey = "scores";
@@ -45,7 +46,7 @@ export default function BuzzerBox() {
         beepSound.play();
       }
     },
-    [isLocked, isMuted]
+    [isLocked, isMuted],
   );
   const [currentBuzz, buzzList, resetBuzzer] = useBuzzIn(onBuzzIn);
 
@@ -94,13 +95,13 @@ export default function BuzzerBox() {
             team,
             score: Math.max(
               (prev.find((t) => t.team === team)?.score ?? 0) + points,
-              0
+              0,
             ),
           },
         ];
       });
     },
-    [setTeamScores]
+    [setTeamScores],
   );
 
   useEffect(() => {
@@ -128,7 +129,7 @@ export default function BuzzerBox() {
     // const tieBreaker = Math.abs(teamScores[0].score - teamScores[1].score);
 
     return (
-      <div className="flex flex-col relative">
+      <div className="relative flex flex-col">
         <div
           className={classNames(
             "flex",
@@ -137,7 +138,7 @@ export default function BuzzerBox() {
             "p-3",
             "mt-auto",
             getTeamColors(team),
-            cornerRounding
+            cornerRounding,
           )}
         >
           <span className="text-3xl">Team {team.toUpperCase()}:</span>
@@ -157,7 +158,7 @@ export default function BuzzerBox() {
                 </span>
               );
             })}
-          <span className={"text-red-400 text-5xl text-center"}>{score}</span>
+          <span className={"text-center text-5xl text-red-400"}>{score}</span>
         </div>
         <div
           className={classNames(
@@ -171,7 +172,7 @@ export default function BuzzerBox() {
               "left-full": isLeft,
             },
             getTeamColors(team),
-            cornerRounding
+            cornerRounding,
           )}
         >
           {[
@@ -185,7 +186,7 @@ export default function BuzzerBox() {
               onClick={() => {
                 addPoints(increment, team);
               }}
-              className="p-2 px-4 bg-gray-400 active:bg-gray-300 rounded-md"
+              className="rounded-md bg-gray-400 p-2 px-4 active:bg-gray-300"
             >
               {increment === -score
                 ? "Clear"
@@ -198,27 +199,30 @@ export default function BuzzerBox() {
   };
   return (
     <>
-      <button
-        onClick={() => {
-          setMuted(!isMuted);
-        }}
-        className="absolute top-0 left-0 p-2 z-10"
-      >
-        {isMuted ? <VolumeX size={48} /> : <Volume2 size={48} />}
-      </button>
-      <button
-        onClick={() => {
-          setLocked(!isLocked);
-        }}
-        className="absolute top-0 right-0 p-2 z-10"
-      >
-        {isLocked ? <Lock size={48} /> : <Unlock size={48} />}
-      </button>
-      <div className="flex flex-col h-screen">
-        <div className="flex flex-row grow">
+      <div className="absolute left-0 top-0 z-10 flex w-full">
+        <button
+          onClick={() => {
+            setMuted(!isMuted);
+          }}
+          className="p-2"
+        >
+          {isMuted ? <VolumeX size={48} /> : <Volume2 size={48} />}
+        </button>
+        <button
+          onClick={() => {
+            setLocked(!isLocked);
+          }}
+          className="ml-auto p-2"
+        >
+          {isLocked ? <Lock size={48} /> : <Unlock size={48} />}
+        </button>
+        <AblyStatusSymbol size={48} buttonClass="p-2" />
+      </div>
+      <div className="flex h-screen flex-col">
+        <div className="flex grow flex-row">
           {createTeamDisplay("a", true)}
-          <div className="flex flex-col justify-center gap-2 grow">
-            <span className="text-6xl text-center">
+          <div className="flex grow flex-col justify-center gap-2">
+            <span className="text-center text-6xl">
               {currentBuzz === null ? (
                 isLocked ? (
                   "Buzzers are locked"
@@ -230,7 +234,7 @@ export default function BuzzerBox() {
                   <span
                     className={classNames(
                       "font-bold",
-                      getTeamColors(currentBuzz.team, "text-")
+                      getTeamColors(currentBuzz.team, "text-"),
                     )}
                   >
                     {currentBuzz.user.label}
@@ -239,7 +243,7 @@ export default function BuzzerBox() {
                 </>
               )}
             </span>
-            <div className="flex flex-col text-xl text-center">
+            <div className="flex flex-col text-center text-xl">
               {currentBuzz !== null &&
                 buzzList
                   .filter((buzz) => buzz.user.value !== currentBuzz.user.value)
@@ -273,7 +277,7 @@ export default function BuzzerBox() {
           </button>
           <button
             className={
-              "grow p-8 text-center text-2xl border-l-2 " +
+              "grow border-l-2 p-8 text-center text-2xl " +
               (currentBuzz === null
                 ? "bg-gray-400"
                 : "bg-green-400 hover:bg-green-500")
