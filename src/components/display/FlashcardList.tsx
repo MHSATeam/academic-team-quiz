@@ -1,6 +1,6 @@
 "use client";
 
-import { Flashcard } from "@/components/utils/Flashcard";
+import { Flashcard } from "@/components/display/Flashcard";
 import useKeyboardEvent from "@/src/hooks/use-keyboard-event";
 import { QuestionWithRoundData } from "@/src/utils/quiz-session-type-extension";
 import { animated, useSprings } from "@react-spring/web";

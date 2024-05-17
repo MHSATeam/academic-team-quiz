@@ -1,4 +1,4 @@
-import Flashcards from "@/components/pages/Flashcards";
+import Flashcards from "@/components/pages/study/Flashcards";
 import { prismaClient } from "@/src/utils/clients";
 import { getSession } from "@auth0/nextjs-auth0";
 import { UserProfile } from "@auth0/nextjs-auth0/client";

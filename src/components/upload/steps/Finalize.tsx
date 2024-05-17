@@ -1,4 +1,4 @@
-import { StepComponentProps } from "@/components/pages/UploadSet";
+import { StepComponentProps } from "@/components/pages/management/UploadSet";
 import { Button, Card } from "@tremor/react";
 import { Loader2 } from "lucide-react";
 import Link from "next/link";

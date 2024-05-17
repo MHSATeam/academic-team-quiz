@@ -1,4 +1,4 @@
-import DefaultCategoriesSelector from "@/components/utils/DefaultCategoriesSelector";
+import DefaultCategoriesSelector from "@/components/inputs/DefaultCategoriesSelector";
 import canAccessTeamCaptain from "@/src/lib/users/can-access-team-captain";
 import getDefaultCategories from "@/src/lib/users/get-default-categories";
 import { prismaClient } from "@/src/utils/clients";
@@ -34,19 +34,19 @@ export default async function Page() {
   const userCategories = await getDefaultCategories(user.sub);
 
   return (
-    <main className="px-6 py-12 flex flex-col gap-4 lg:max-w-3xl">
+    <main className="flex flex-col gap-4 px-6 py-12 lg:max-w-3xl">
       <Metric>Your Profile</Metric>
       <DefaultCategoriesSelector
         categories={categories}
         currentlySelected={userCategories.map(({ id }) => id)}
       />
-      <Link className="flex flex-col w-full" href={"/api/auth/logout"}>
+      <Link className="flex w-full flex-col" href={"/api/auth/logout"}>
         <Button variant="secondary">Logout</Button>
       </Link>
       {isTeamCaptain && (
         <>
           <Divider>Team Captain Resources</Divider>
-          <Link className="flex flex-col w-full" href={"/management/"}>
+          <Link className="flex w-full flex-col" href={"/management/"}>
             <Button variant="secondary">Management Console</Button>
           </Link>
         </>

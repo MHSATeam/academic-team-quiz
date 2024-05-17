@@ -10,7 +10,7 @@ import { useUserList } from "@/src/lib/buzzers/use-user-list";
 import { useBuzzIn } from "@/src/lib/buzzers/use-buzz-in";
 import classNames from "classnames";
 import { ArrowLeft } from "lucide-react";
-import AblyStatusSymbol from "../utils/AblyStatusSymbol";
+import AblyStatusSymbol from "../../utils/AblyStatusSymbol";
 import { useBuzzerBox } from "@/src/lib/buzzers/use-buzzer-box";
 import { getTeamColors } from "@/src/lib/buzzers/get-team-colors";
 import { Button, Card, Title } from "@tremor/react";
@@ -24,7 +24,7 @@ const failureColor = "rgb(221, 51, 29)";
 
 const userKey = "buzz-user";
 
-export default function BuzzerPage() {
+export default function Buzzer() {
   const [currentBuzz, buzzList, reset] = useBuzzIn();
   const [scores, isLocked, isHostConnected] = useBuzzerBox();
   const [user, setUser] = useState<TeamMember | null>(() => {

@@ -1,7 +1,7 @@
 import {
   StepComponentProps,
   TesseractScheduler,
-} from "@/components/pages/UploadSet";
+} from "@/components/pages/management/UploadSet";
 import PDFPage from "@/components/upload/PDFPage";
 import {
   SelectedText,

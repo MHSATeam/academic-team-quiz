@@ -1,9 +1,9 @@
 "use client";
-import DisplayFormattedText from "@/components/utils/DisplayFormattedText";
 import { QuestionWithRoundData } from "@/src/utils/quiz-session-type-extension";
 import { useCallback, useEffect, useState } from "react";
 import { animated, useSpring } from "@react-spring/web";
 import useKeyboardEvent from "@/src/hooks/use-keyboard-event";
+import QuestionText from "@/components/display/QuestionText";
 
 type FlashcardProps = {
   question: QuestionWithRoundData;
@@ -49,23 +49,11 @@ export function Flashcard({ question, isCurrent }: FlashcardProps) {
         className="front absolute left-0 top-0 flex h-full w-full flex-col justify-center overflow-hidden rounded-lg bg-slate-100 p-4 shadow-lg dark:bg-dark-tremor-background"
         style={{ opacity: opacity.to((o) => 1 - o), transform }}
       >
-        <div className="overflow-auto">
-          {question.round?.alphabetRound && (
-            <span className="text-xl text-slate-600 max-sm:text-lg dark:text-slate-400">
-              Alphabet Round Letter:{" "}
-              {question.round.alphabetRound.letter.toUpperCase()}
-            </span>
-          )}
-          {question.round?.themeRound && (
-            <span className="text-xl text-slate-600 max-sm:text-lg dark:text-slate-400">
-              Part of a theme round, see question info
-            </span>
-          )}
-          <DisplayFormattedText
-            className="text-3xl max-sm:text-2xl dark:text-white"
-            text={question.question}
-          />
-        </div>
+        <QuestionText
+          question={question}
+          subtitleClass="text-xl text-slate-600 max-sm:text-lg dark:text-slate-400"
+          className="text-3xl max-sm:text-2xl dark:text-white"
+        />
       </animated.div>
       <animated.div
         className="back absolute left-0 top-0 flex h-full w-full flex-col justify-center overflow-hidden rounded-lg bg-slate-100 p-4 shadow-lg dark:bg-dark-tremor-background"
@@ -75,9 +63,11 @@ export function Flashcard({ question, isCurrent }: FlashcardProps) {
           rotateX: "180deg",
         }}
       >
-        <DisplayFormattedText
-          className="overflow-auto text-3xl max-sm:text-2xl dark:text-white"
-          text={question.answer}
+        <QuestionText
+          question={question}
+          showQuestion={false}
+          subtitleClass="text-xl text-slate-600 max-sm:text-lg dark:text-slate-400"
+          className="text-3xl max-sm:text-2xl dark:text-white"
         />
       </animated.div>
     </div>

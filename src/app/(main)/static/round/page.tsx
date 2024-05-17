@@ -1,4 +1,4 @@
-import RoundCard from "@/components/utils/RoundCard";
+import RoundCard from "@/components/display/RoundCard";
 import { prismaClient } from "@/src/utils/clients";
 import { Flex, Grid, Metric } from "@tremor/react";
 

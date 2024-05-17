@@ -1,8 +1,8 @@
 "use client";
 
-import { Flashcard } from "@/components/utils/Flashcard";
-import QuestionInfoDialog from "@/components/utils/QuestionInfoDialog";
-import QuizFinished from "@/components/utils/QuizFinished";
+import { Flashcard } from "@/components/display/Flashcard";
+import QuestionInfoDialog from "@/components/layout/QuestionInfoDialog";
+import QuizFinished from "@/components/layout/QuizFinished";
 import { updateQuestionStatus } from "@/src/lib/quiz-sessions/update-question-status";
 import { filterNotEmpty } from "@/src/utils/array-utils";
 import { QuizSessionWithQuestions } from "@/src/utils/quiz-session-type-extension";

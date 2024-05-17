@@ -1,6 +1,6 @@
 "use client";
 
-import CategorySelector from "@/components/utils/CategorySelector";
+import CategorySelector from "@/components/inputs/CategorySelector";
 import QuizTypes from "@/src/lib/quiz-sessions/QuizTypes";
 import { Category, QuizType, UserQuizSession } from "@prisma/client";
 import {
@@ -34,7 +34,7 @@ export default function CreateQuizSession({
   const router = useRouter();
   const [isOpen, setIsOpen] = useState(defaultOpen);
   const [quizType, setQuizType] = useState<QuizType>(
-    defaultQuizType ?? "Flashcards"
+    defaultQuizType ?? "Flashcards",
   );
   const [categoryIds, setCategoryIds] = useState<number[]>(defaultCategories);
   const [questionCount, setQuestionCount] = useState(20);
@@ -70,7 +70,7 @@ export default function CreateQuizSession({
     const { quizSession }: { quizSession: UserQuizSession } = await res.json();
 
     router.push(
-      `/study/${quizSession.quizType.toLowerCase()}?id=${quizSession.id}`
+      `/study/${quizSession.quizType.toLowerCase()}?id=${quizSession.id}`,
     );
   }, [categoryIds, questionCount, quizType, router]);
 
@@ -161,7 +161,7 @@ export default function CreateQuizSession({
         </DialogPanel>
       </Dialog>
       <Card
-        className="flex flex-col justify-center items-center gap-4 hover:bg-tremor-background-muted hover:dark:bg-dark-tremor-background-muted"
+        className="flex flex-col items-center justify-center gap-4 hover:bg-tremor-background-muted hover:dark:bg-dark-tremor-background-muted"
         role="button"
         onClick={() => {
           setIsOpen(true);

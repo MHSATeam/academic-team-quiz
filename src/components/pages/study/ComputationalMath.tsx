@@ -6,7 +6,7 @@ import {
 } from "@/src/lib/math/math-types";
 import { generateProblems } from "@/src/lib/math/generateMath";
 import { MathJaxContext } from "better-react-mathjax";
-import MathProblem from "../display/MathProblem";
+import MathProblem from "../../display/MathProblem";
 import { ErrorBoundary } from "react-error-boundary";
 import { MultiSelect, MultiSelectItem } from "@tremor/react";
 

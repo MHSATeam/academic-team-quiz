@@ -1,4 +1,4 @@
-import { StepComponentProps } from "@/components/pages/UploadSet";
+import { StepComponentProps } from "@/components/pages/management/UploadSet";
 import FileDrop from "@/components/upload/FileDrop";
 import { Card, Flex, Subtitle, Text, Title } from "@tremor/react";
 import Link from "next/link";

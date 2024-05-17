@@ -2,7 +2,7 @@ import classNames from "classnames";
 import { useState } from "react";
 import { getTeamColors } from "@/src/lib/buzzers/get-team-colors";
 import { useBuzzerBox } from "@/src/lib/buzzers/use-buzzer-box";
-import ExpandingInput from "../utils/ExpandingInput";
+import ExpandingInput from "../../inputs/ExpandingInput";
 import { RealtimeStatus } from "@/src/lib/buzzers/ably-realtime";
 
 export default function Scorekeeper() {

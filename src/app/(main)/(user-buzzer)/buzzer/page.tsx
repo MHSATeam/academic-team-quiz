@@ -2,13 +2,13 @@
 
 import dynamic from "next/dynamic";
 
-const BuzzerPage = dynamic(
-  () => import("../../../../components/pages/BuzzerPage"),
+const Buzzer = dynamic(
+  () => import("../../../../components/pages/buzzer/Buzzer"),
   {
     ssr: false,
-  }
+  },
 );
 
 export default function Page() {
-  return <BuzzerPage />;
+  return <Buzzer />;
 }

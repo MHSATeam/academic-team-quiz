@@ -1,4 +1,4 @@
-import Writing from "@/components/pages/Writing";
+import Writing from "@/components/pages/study/Writing";
 import { prismaClient } from "@/src/utils/clients";
 import { getSession } from "@auth0/nextjs-auth0";
 import { UserProfile } from "@auth0/nextjs-auth0/client";

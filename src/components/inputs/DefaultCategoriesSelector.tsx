@@ -1,6 +1,6 @@
 "use client";
 
-import CategorySelector from "@/components/utils/CategorySelector";
+import CategorySelector from "@/components/inputs/CategorySelector";
 import { Category } from "@prisma/client";
 import { Button, Card, Title } from "@tremor/react";
 import { useCallback, useState } from "react";
@@ -11,10 +11,10 @@ type DefaultCategoriesSelectorProps = {
 };
 
 export default function DefaultCategoriesSelector(
-  props: DefaultCategoriesSelectorProps
+  props: DefaultCategoriesSelectorProps,
 ) {
   const [selectedCategories, setSelectedCategories] = useState<number[]>(
-    props.currentlySelected
+    props.currentlySelected,
   );
   const [saving, setSaving] = useState(false);
 

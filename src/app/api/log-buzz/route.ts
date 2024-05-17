@@ -1,6 +1,6 @@
 import { google } from "googleapis";
 import { NextRequest, NextResponse } from "next/server";
-import type { BuzzerClickMessage } from "@/src/buzzers/ably-realtime";
+import type { BuzzerClickMessage } from "@/src/lib/buzzers/ably-realtime";
 const private_key = process.env.PRIVATE_KEY?.split(String.raw`\n`).join("\n");
 
 const auth = new google.auth.GoogleAuth({

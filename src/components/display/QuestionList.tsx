@@ -1,5 +1,5 @@
 import DisplayFormattedText from "@/components/utils/DisplayFormattedText";
-import Pagination from "@/components/utils/Pagination";
+import Pagination from "@/components/layout/Pagination";
 import { Question } from "@prisma/client";
 import { Flex, List, ListItem, Subtitle } from "@tremor/react";
 import Link from "next/link";

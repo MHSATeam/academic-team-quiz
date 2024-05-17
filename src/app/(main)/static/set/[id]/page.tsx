@@ -1,8 +1,10 @@
 import QuestionList from "@/components/display/QuestionList";
-import FlashcardList from "@/components/utils/FlashcardList";
+import FlashcardList from "@/components/display/FlashcardList";
 import { prismaClient } from "@/src/utils/clients";
-import { QuestionWithRoundData } from "@/src/utils/quiz-session-type-extension";
-import { Category, Question, Round } from "@prisma/client";
+import {
+  QuestionWithRoundData,
+  addRoundData,
+} from "@/src/utils/quiz-session-type-extension";
 import { Flex, Subtitle, Title } from "@tremor/react";
 import { redirect } from "next/navigation";
 
@@ -96,25 +98,6 @@ export default async function Page({ params }: { params: { id: string } }) {
     return redirect("/404");
   }
 
-  const emptyRound = {
-    themeRound: null,
-    alphabetRound: null,
-    categoryTeamGroup: null,
-  };
-
-  const createFlashcardQuestion = (
-    question: Question & { category: Category },
-    round: Round & Partial<QuestionWithRoundData["round"]>,
-  ): QuestionWithRoundData => {
-    return {
-      ...question,
-      round: {
-        ...emptyRound,
-        ...round,
-      },
-    };
-  };
-
   const flashcardQuestions: QuestionWithRoundData[] = [];
   const categoryRoundQuestionsByCategory: QuestionWithRoundData[][] = [];
 
@@ -136,12 +119,17 @@ export default async function Page({ params }: { params: { id: string } }) {
           j += i % 2 === 0 ? 1 : -1
         ) {
           const round = set.categoryRound.teamGroups[j].round;
+          const question = round.questions[i];
           categoryRoundQuestionsByCategory[i].push(
-            createFlashcardQuestion(round.questions[i], round),
+            addRoundData(question, round, question.category),
           );
         }
         categoryRoundQuestionsByCategory[i].push(
-          createFlashcardQuestion(lastTeamRound.questions[i], lastTeamRound),
+          addRoundData(
+            lastTeamRound.questions[i],
+            lastTeamRound,
+            lastTeamRound.questions[i].category,
+          ),
         );
       }
     }
@@ -152,7 +140,7 @@ export default async function Page({ params }: { params: { id: string } }) {
       flashcardQuestions.push(
         ...set.categoryRound.teamGroups.flatMap((group) =>
           group.round.questions.map((q) =>
-            createFlashcardQuestion(q, group.round),
+            addRoundData(q, group.round, q.category),
           ),
         ),
       );
@@ -164,7 +152,7 @@ export default async function Page({ params }: { params: { id: string } }) {
     const round = set.alphabetRound.round;
     flashcardQuestions.push(
       ...round.questions.map((q) =>
-        createFlashcardQuestion(q, {
+        addRoundData(q, {
           ...round,
           alphabetRound: set.alphabetRound,
         }),
@@ -174,14 +162,14 @@ export default async function Page({ params }: { params: { id: string } }) {
   if (set.lightningRound) {
     const round = set.lightningRound;
     flashcardQuestions.push(
-      ...round.questions.map((q) => createFlashcardQuestion(q, round)),
+      ...round.questions.map((q) => addRoundData(q, round, q.category)),
     );
   }
   if (set.themeRound) {
     const round = set.themeRound.round;
     flashcardQuestions.push(
       ...round.questions.map((q) =>
-        createFlashcardQuestion(q, { ...round, themeRound: set.themeRound }),
+        addRoundData(q, { ...round, themeRound: set.themeRound }, q.category),
       ),
     );
   }

@@ -1,15 +1,30 @@
 "use client";
 
-import DisplayFormattedText from "@/components/utils/DisplayFormattedText";
+import QuestionText from "@/components/display/QuestionText";
+import {
+  QuestionWithRoundData,
+  addRoundData,
+} from "@/src/utils/quiz-session-type-extension";
 import { Question } from "@prisma/client";
 import { useState } from "react";
 
-export default function QuestionDisplay({ question }: { question: Question }) {
+export default function QuestionDisplay({
+  question,
+}: {
+  question: Question | QuestionWithRoundData;
+}) {
   const [answerShown, setAnswerShown] = useState(false);
+
+  let questionWithData: QuestionWithRoundData;
+  if (!("category" in question)) {
+    questionWithData = addRoundData(question);
+  } else {
+    questionWithData = question;
+  }
 
   return (
     <div className="dark:text-slate-200">
-      <DisplayFormattedText text={question.question} />
+      <QuestionText question={questionWithData} />
       <div className="mt-4">
         {!answerShown ? (
           <button
@@ -24,7 +39,7 @@ export default function QuestionDisplay({ question }: { question: Question }) {
           <div className="flex gap-2">
             <div className="flex flex-col">
               <span className="font-bold">Answer: </span>
-              <DisplayFormattedText text={question.answer} />
+              <QuestionText question={questionWithData} showQuestion={false} />
             </div>
           </div>
         )}
