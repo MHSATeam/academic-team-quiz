@@ -1,12 +1,15 @@
+import {
+  BuzzerClickMessage,
+  RealtimeStatus,
+} from "@/src/lib/buzzers/ably-realtime";
 import { useEffect, useRef, useState } from "react";
-import { BuzzerClickMessage, RealtimeStatus } from "./ably-realtime";
 
 export function useBuzzIn(
-  onBuzzIn?: (message: BuzzerClickMessage, isFirst: boolean) => void
+  onBuzzIn?: (message: BuzzerClickMessage, isFirst: boolean) => void,
 ): [BuzzerClickMessage | null, BuzzerClickMessage[], () => void] {
   const [buzzList, setBuzzList] = useState<BuzzerClickMessage[]>([]);
   const [currentBuzz, setCurrentClick] = useState<BuzzerClickMessage | null>(
-    null
+    null,
   );
   const isFirst = useRef(true);
   useEffect(() => {
@@ -15,7 +18,7 @@ export function useBuzzIn(
         setBuzzList((currentList) => {
           if (
             currentList.findIndex(
-              (buzz) => buzz.user.value === buzzerMessage.user.value
+              (buzz) => buzz.user.value === buzzerMessage.user.value,
             ) === -1
           ) {
             return [...currentList, buzzerMessage];
@@ -33,7 +36,7 @@ export function useBuzzIn(
         });
         onBuzzIn?.(buzzerMessage, isFirst.current);
         isFirst.current = false;
-      }
+      },
     );
 
     const unsubscribeBox = RealtimeStatus.boxChannel.subscribe((message) => {

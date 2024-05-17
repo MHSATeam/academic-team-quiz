@@ -11,9 +11,9 @@ import {
   Switch,
 } from "@tremor/react";
 import { Category } from "@prisma/client";
-import useLocalStorage from "@/src/utils/use-local-storage";
 import { QuestionWithRoundData } from "@/src/utils/quiz-session-type-extension";
 import QuestionInfoDialog from "@/components/utils/QuestionInfoDialog";
+import useLocalStorage from "@/src/hooks/use-local-storage";
 
 type QuizQuestion = {
   id: number;

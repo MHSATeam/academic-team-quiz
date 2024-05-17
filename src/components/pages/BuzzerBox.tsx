@@ -2,15 +2,15 @@ import classNames from "classnames";
 import { Lock, Unlock, Volume2, VolumeX } from "lucide-react";
 import { nanoid } from "nanoid";
 import { useCallback, useEffect, useRef, useState } from "react";
+import { useBuzzIn } from "@/src/lib/buzzers/use-buzz-in";
+import { useUserList } from "@/src/lib/buzzers/use-user-list";
+import AblyStatusSymbol from "@/components/utils/AblyStatusSymbol";
 import {
   BuzzerClickMessage,
   RealtimeStatus,
   TeamScore,
-} from "@/src/buzzers/ably-realtime";
-import { getTeamColors } from "@/src/buzzers/get-team-colors";
-import { useBuzzIn } from "@/src/buzzers/useBuzzIn";
-import { useUserList } from "@/src/buzzers/useUserList";
-import AblyStatusSymbol from "@/components/utils/AblyStatusSymbol";
+} from "@/src/lib/buzzers/ably-realtime";
+import { getTeamColors } from "@/src/lib/buzzers/get-team-colors";
 
 const beepSound = new Audio("/beep.mp3");
 const scoresStorageKey = "scores";

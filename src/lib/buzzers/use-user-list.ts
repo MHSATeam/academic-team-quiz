@@ -1,5 +1,8 @@
+import {
+  BuzzerClickPresence,
+  RealtimeStatus,
+} from "@/src/lib/buzzers/ably-realtime";
 import { useEffect, useState } from "react";
-import { BuzzerClickPresence, RealtimeStatus } from "./ably-realtime";
 
 export const useUserList = () => {
   const [otherUsers, setOtherUsers] = useState<{
@@ -24,14 +27,14 @@ export const useUserList = () => {
             setOtherUsers((prev) => {
               return Object.fromEntries(
                 Object.entries(prev).filter(
-                  ([clientId]) => clientId !== event.clientId
-                )
+                  ([clientId]) => clientId !== event.clientId,
+                ),
               );
             });
             break;
           }
         }
-      }
+      },
     );
     return () => {
       unsubscribe();

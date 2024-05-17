@@ -1,5 +1,5 @@
+import { RealtimeStatus, TeamScore } from "@/src/lib/buzzers/ably-realtime";
 import { useEffect, useRef, useState } from "react";
-import { RealtimeStatus, TeamScore } from "./ably-realtime";
 
 export function useBuzzerBox(): [TeamScore[], boolean, boolean] {
   const lastTimeStamp = useRef(0);
@@ -27,7 +27,7 @@ export function useBuzzerBox(): [TeamScore[], boolean, boolean] {
             break;
           }
         }
-      }
+      },
     );
     return () => {
       unsubscribe();

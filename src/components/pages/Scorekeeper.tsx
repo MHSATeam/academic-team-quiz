@@ -1,9 +1,9 @@
 import classNames from "classnames";
 import { useState } from "react";
-import { RealtimeStatus } from "@/src/buzzers/ably-realtime";
-import { getTeamColors } from "@/src/buzzers/get-team-colors";
-import { useBuzzerBox } from "@/src/buzzers/useBuzzerBox";
+import { getTeamColors } from "@/src/lib/buzzers/get-team-colors";
+import { useBuzzerBox } from "@/src/lib/buzzers/use-buzzer-box";
 import ExpandingInput from "../utils/ExpandingInput";
+import { RealtimeStatus } from "@/src/lib/buzzers/ably-realtime";
 
 export default function Scorekeeper() {
   const [teamScores, , isHostConnected] = useBuzzerBox();
@@ -15,14 +15,14 @@ export default function Scorekeeper() {
     });
   };
   const tieBreaker = Math.abs(
-    (teamScores[0]?.score ?? 0) - (teamScores[1]?.score ?? 0)
+    (teamScores[0]?.score ?? 0) - (teamScores[1]?.score ?? 0),
   );
   const [customScoreInputs, setCustomScoreInputs] = useState({ a: 0, b: 0 });
 
   function createScoreButton(
     score: number,
     team: "a" | "b",
-    key?: string | number
+    key?: string | number,
   ) {
     if (score === 0) {
       return null;
@@ -33,7 +33,7 @@ export default function Scorekeeper() {
         onClick={() => {
           addPoints(score, team);
         }}
-        className="p-2 px-4 bg-gray-400 active:bg-gray-300 rounded-md"
+        className="rounded-md bg-gray-400 p-2 px-4 active:bg-gray-300"
       >
         {score > 0 ? "+" : score < 0 ? "-" : ""}
         {Math.abs(score)}
@@ -52,7 +52,7 @@ export default function Scorekeeper() {
           "flex",
           "flex-col",
           "text-center",
-          "dark:text-white"
+          "dark:text-white",
         )}
       >
         <span>Scorekeeper</span>
@@ -61,9 +61,9 @@ export default function Scorekeeper() {
     );
   }
   return (
-    <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 p-2 flex flex-col gap-2">
-      <span className="text-3xl text-center dark:text-white">Scorekeeper</span>
-      <div className="flex gap-4 text-xl flex-wrap">
+    <div className="absolute left-1/2 top-1/2 flex -translate-x-1/2 -translate-y-1/2 flex-col gap-2 p-2">
+      <span className="text-center text-3xl dark:text-white">Scorekeeper</span>
+      <div className="flex flex-wrap gap-4 text-xl">
         {(["a", "b"] as ("a" | "b")[]).map((team) => (
           <div
             key={team}
@@ -74,7 +74,7 @@ export default function Scorekeeper() {
               "rounded-md",
               "gap-2",
               "items-center",
-              getTeamColors(team)
+              getTeamColors(team),
             )}
           >
             <span className="text-2xl">
@@ -86,14 +86,14 @@ export default function Scorekeeper() {
             </span>
             <div className="flex gap-2">
               {[1, 2, -1].map((increment, index) =>
-                createScoreButton(increment, team, index)
+                createScoreButton(increment, team, index),
               )}
             </div>
             <span>Custom Input</span>
             <div className="flex gap-2">
               <ExpandingInput
                 type="text"
-                className="py-1 p-3 rounded-md bg-white"
+                className="rounded-md bg-white p-3 py-1"
                 placeholder=" "
                 value={
                   Number.isNaN(customScoreInputs[team])
@@ -103,7 +103,7 @@ export default function Scorekeeper() {
                 onChange={(e) => {
                   const filteredValue = e.target.value.replaceAll(
                     /\s|[-.]|(?:^[^0-9])/g,
-                    ""
+                    "",
                   );
                   try {
                     const newValue = parseInt(filteredValue);
@@ -124,8 +124,8 @@ export default function Scorekeeper() {
                     ? 0
                     : (isAdding ? 1 : -1) * customScoreInputs[team],
                   team,
-                  isAdding ? "add" : "sub"
-                )
+                  isAdding ? "add" : "sub",
+                ),
               )}
             </div>
             {tieBreaker > 2 && (

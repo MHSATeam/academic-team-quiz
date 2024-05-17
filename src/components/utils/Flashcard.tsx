@@ -3,7 +3,7 @@ import DisplayFormattedText from "@/components/utils/DisplayFormattedText";
 import { QuestionWithRoundData } from "@/src/utils/quiz-session-type-extension";
 import { useCallback, useEffect, useState } from "react";
 import { animated, useSpring } from "@react-spring/web";
-import useKeyboardEvent from "@/src/utils/use-keyboard-event";
+import useKeyboardEvent from "@/src/hooks/use-keyboard-event";
 
 type FlashcardProps = {
   question: QuestionWithRoundData;

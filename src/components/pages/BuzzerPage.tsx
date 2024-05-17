@@ -1,17 +1,21 @@
 import { useCallback, useEffect, useState } from "react";
 import Creatable from "react-select/creatable";
 import Select from "react-select";
-import { RealtimeStatus } from "@/src/buzzers/ably-realtime";
-import { TeamMember, TeamMembers, TeamName } from "@/src/buzzers/team-members";
-import { useUserList } from "@/src/buzzers/useUserList";
-import { useBuzzIn } from "@/src/buzzers/useBuzzIn";
+import {
+  TeamMember,
+  TeamMembers,
+  TeamName,
+} from "@/src/lib/buzzers/team-members";
+import { useUserList } from "@/src/lib/buzzers/use-user-list";
+import { useBuzzIn } from "@/src/lib/buzzers/use-buzz-in";
 import classNames from "classnames";
 import { ArrowLeft } from "lucide-react";
 import AblyStatusSymbol from "../utils/AblyStatusSymbol";
-import { useBuzzerBox } from "@/src/buzzers/useBuzzerBox";
-import { getTeamColors } from "@/src/buzzers/get-team-colors";
-import { useDebounce } from "@/src/buzzers/useDebounce";
+import { useBuzzerBox } from "@/src/lib/buzzers/use-buzzer-box";
+import { getTeamColors } from "@/src/lib/buzzers/get-team-colors";
 import { Button, Card, Title } from "@tremor/react";
+import { useDebounce } from "@/src/hooks/use-debounce";
+import { RealtimeStatus } from "@/src/lib/buzzers/ably-realtime";
 
 type JoinStatus = "joined" | "joining" | "naming";
 
@@ -139,7 +143,7 @@ export default function BuzzerPage() {
         setStatus("naming");
       }
     }, [status, user, isLocked, isHostConnected, team.value]),
-    500
+    500,
   );
 
   useEffect(() => {
@@ -176,11 +180,11 @@ export default function BuzzerPage() {
   }, []);
 
   const unusedMembers = TeamMembers.filter((member) =>
-    otherUsers.map((value) => value.user.value).includes(member.value)
+    otherUsers.map((value) => value.user.value).includes(member.value),
   );
 
   const teamMembers = otherUsers.filter(
-    (connection) => connection.team === team.value
+    (connection) => connection.team === team.value,
   );
 
   const myBuzz = buzzList.find((buzz) => buzz.user.value === user?.value);
@@ -188,7 +192,7 @@ export default function BuzzerPage() {
   if (status === "naming") {
     return (
       <>
-        <Card className="flex flex-col gap-4 justify-center absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-fit">
+        <Card className="absolute left-1/2 top-1/2 flex w-fit -translate-x-1/2 -translate-y-1/2 flex-col justify-center gap-4">
           <Title className="text-center">Choose Your Name</Title>
           <Creatable
             className="min-w-[16em] dark:text-black"
@@ -242,7 +246,7 @@ export default function BuzzerPage() {
     );
   } else if (user !== null) {
     const topBar = (
-      <div className="no-buzz absolute top-0 left-0 p-1 w-full flex gap-4 items-center dark:text-white">
+      <div className="no-buzz absolute left-0 top-0 flex w-full items-center gap-4 p-1 dark:text-white">
         <button
           onClick={(e) => {
             e.stopPropagation();
@@ -250,12 +254,12 @@ export default function BuzzerPage() {
           }}
           className="p-3"
         >
-          <div className="bg-gray-400 p-2 rounded-md">
+          <div className="rounded-md bg-gray-400 p-2">
             <ArrowLeft />
           </div>
         </button>
         <span className="text-lg">Good Luck {user.label.split(" ")[0]}!</span>
-        <div className="ml-auto m-3">
+        <div className="m-3 ml-auto">
           <AblyStatusSymbol />
         </div>
       </div>
@@ -273,7 +277,7 @@ export default function BuzzerPage() {
               "-translate-y-1/2",
               "flex",
               "flex-col",
-              "dark:text-white"
+              "dark:text-white",
             )}
           >
             <span>Waiting for host to connect...</span>
@@ -299,7 +303,7 @@ export default function BuzzerPage() {
             getTeamColors(team.value),
             {
               "shadow-lg": currentlyClicking,
-            }
+            },
           )}
           onMouseDown={(e) => {
             e.preventDefault();
@@ -310,7 +314,7 @@ export default function BuzzerPage() {
             onBuzz();
           }}
         >
-          <span className="text-4xl shrink-0 whitespace-nowrap">
+          <span className="shrink-0 whitespace-nowrap text-4xl">
             {isLocked ? "Locked" : "Buzz"}
           </span>
           <span className="shrink-0">{team.label}:</span>
@@ -320,7 +324,7 @@ export default function BuzzerPage() {
             );
           })}
         </div>
-        <div className="no-buzz absolute bottom-0 left-0 w-full flex flex-col gap-2">
+        <div className="no-buzz absolute bottom-0 left-0 flex w-full flex-col gap-2">
           {currentBuzz && (
             <span className="text-center text-lg">
               {currentBuzz.user.value === user.value ? (
@@ -344,7 +348,7 @@ export default function BuzzerPage() {
               onClick={() => {
                 reset();
               }}
-              className="bg-red-400 m-4 p-2 rounded-md"
+              className="m-4 rounded-md bg-red-400 p-2"
             >
               Clear mistaken buzz
             </button>
@@ -360,7 +364,7 @@ export default function BuzzerPage() {
                     "p-4",
                     "text-3xl",
                     "shrink-0",
-                    getTeamColors(teamScore.team)
+                    getTeamColors(teamScore.team),
                   )}
                 >
                   Team {teamScore.team.toUpperCase()}:{" "}
@@ -376,7 +380,7 @@ export default function BuzzerPage() {
       <span className="flex flex-col">
         Something went wrong!
         <button
-          className="border-2 rounded-md"
+          className="rounded-md border-2"
           onClick={() => {
             setStatus("naming");
           }}

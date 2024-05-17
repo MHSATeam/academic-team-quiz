@@ -1,6 +1,6 @@
 "use client";
 
-import { RealtimeStatus } from "@/src/buzzers/ably-realtime";
+import { RealtimeStatus } from "@/src/lib/buzzers/ably-realtime";
 import React, { useEffect } from "react";
 
 if (typeof window !== "undefined") {
