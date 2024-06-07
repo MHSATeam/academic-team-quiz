@@ -1,7 +1,7 @@
+import { RealtimeClient } from "@/src/lib/buzzers/ably-realtime";
 import { Types } from "ably";
 import { Cloud, CloudCog, CloudOff, LucideProps } from "lucide-react";
 import { useEffect, useState } from "react";
-import { RealtimeStatus } from "@/src/lib/buzzers/ably-realtime";
 
 type StatusSymbol = "server" | "server-off" | "server-cog";
 
@@ -36,12 +36,12 @@ export default function AblyStatusSymbol(
       }
     };
     handleStateChange({
-      current: RealtimeStatus.stateManager.state,
+      current: RealtimeClient.stateManager.state,
       previous: "initialized",
     });
-    RealtimeStatus.stateManager.subscribe(handleStateChange);
+    RealtimeClient.stateManager.subscribe(handleStateChange);
     return () => {
-      RealtimeStatus.stateManager.unsubscribe(handleStateChange);
+      RealtimeClient.stateManager.unsubscribe(handleStateChange);
     };
   }, []);
   let Symbol;
@@ -64,7 +64,7 @@ export default function AblyStatusSymbol(
   const capitalize = (str: string) =>
     str.slice(0, 1).toUpperCase() + str.slice(1);
   const title = `Connection Status: ${capitalize(
-    RealtimeStatus.stateManager.state,
+    RealtimeClient.stateManager.state,
   )}`;
 
   const { buttonClass, ...lucideProps } = props;
@@ -76,10 +76,10 @@ export default function AblyStatusSymbol(
         alert(title);
         if (
           ["suspended", "disconnected"].includes(
-            RealtimeStatus.stateManager.state,
+            RealtimeClient.stateManager.state,
           )
         ) {
-          RealtimeStatus.connect();
+          RealtimeClient.connect();
         }
       }}
       title={title}
