@@ -42,6 +42,7 @@ export default function SettingsDialog(props: SettingsDialogProps) {
               placeholder="Name"
               maxLength={40}
               required
+              autoFocus={false}
               className="has-[>input:invalid]:border-red-500"
               style={{
                 fontSize: "1.125rem",

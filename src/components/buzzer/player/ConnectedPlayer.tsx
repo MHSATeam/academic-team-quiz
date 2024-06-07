@@ -142,7 +142,8 @@ export default function ConnectedPlayer({
           </span>
         </div>
       </div>
-      <div className="absolute right-0 top-0 m-3 flex gap-4 dark:text-white">
+      <div className="absolute left-0 top-0 flex w-full items-center gap-4 p-3 dark:text-white">
+        <Title className="h-fit grow">Good luck {name}!</Title>
         <button onClick={() => setSettingsOpen(true)}>
           <Settings size={36} />
         </button>
