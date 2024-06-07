@@ -8,6 +8,7 @@ import { useState } from "react";
 
 type PlayerPageProps = {
   name?: string;
+  gameId?: number;
 };
 
 export default function PlayerPage(props: PlayerPageProps) {
@@ -16,7 +17,12 @@ export default function PlayerPage(props: PlayerPageProps) {
   if (name.trim().length === 0) {
     return <NameInput onSetName={setName} />;
   } else if (!connected) {
-    return <GameIdInput onSuccessfulJoin={() => setConnected(true)} />;
+    return (
+      <GameIdInput
+        defaultGameId={props.gameId}
+        onSuccessfulJoin={() => setConnected(true)}
+      />
+    );
   } else {
     return (
       <BoxPresenceProvider isBox={false}>

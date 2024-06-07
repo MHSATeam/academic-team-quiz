@@ -3,11 +3,12 @@ import { Button, Card, Flex, NumberInput, Title } from "@tremor/react";
 import { useState } from "react";
 
 type GameIdInputProps = {
+  defaultGameId?: number;
   onSuccessfulJoin: () => void;
 };
 
 export default function GameIdInput(props: GameIdInputProps) {
-  const [gameId, setGameId] = useState<number | "">("");
+  const [gameId, setGameId] = useState<number | "">(props.defaultGameId ?? "");
 
   return (
     <Card className="absolute left-1/2 top-1/2 w-72 -translate-x-1/2 -translate-y-1/2 md:w-96">

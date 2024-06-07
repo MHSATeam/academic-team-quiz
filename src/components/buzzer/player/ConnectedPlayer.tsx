@@ -1,20 +1,25 @@
 import { BoxPresenceContext } from "@/components/buzzer/BoxPresenceProvider";
 import Timer from "@/components/buzzer/Timer";
 import Buzzer from "@/components/buzzer/player/Buzzer";
+import SettingsDialog from "@/components/buzzer/player/SettingsDialog";
+import AblyStatusSymbol from "@/components/utils/AblyStatusSymbol";
 import { RealtimeClient } from "@/src/lib/buzzers/ably-realtime";
 import { getTeamColors } from "@/src/lib/buzzers/get-team-colors";
 import useBuzz from "@/src/lib/buzzers/use-buzz";
 import { usePlayerList } from "@/src/lib/buzzers/use-player-list";
 import { Button, Title } from "@tremor/react";
 import classNames from "classnames";
-import { ArrowLeftRight } from "lucide-react";
+import { ArrowLeftRight, Settings } from "lucide-react";
 import React, { useContext, useEffect, useState } from "react";
 
 type ConnectedPlayerProps = {
   name: string;
   setName: React.Dispatch<React.SetStateAction<string>>;
 };
-export default function ConnectedPlayer({ name }: ConnectedPlayerProps) {
+export default function ConnectedPlayer({
+  name,
+  setName,
+}: ConnectedPlayerProps) {
   const boxPresence = useContext(BoxPresenceContext);
   const [firstBuzz] = useBuzz();
   const [playerList, clientIdList] = usePlayerList();
@@ -26,6 +31,7 @@ export default function ConnectedPlayer({ name }: ConnectedPlayerProps) {
       return "b";
     }
   });
+  const [isSettingsOpen, setSettingsOpen] = useState(false);
 
   useEffect(() => {
     RealtimeClient.player.update({
@@ -136,6 +142,20 @@ export default function ConnectedPlayer({ name }: ConnectedPlayerProps) {
           </span>
         </div>
       </div>
+      <div className="absolute right-0 top-0 m-3 flex gap-4 dark:text-white">
+        <button onClick={() => setSettingsOpen(true)}>
+          <Settings size={36} />
+        </button>
+        <AblyStatusSymbol />
+      </div>
+      <SettingsDialog
+        isOpen={isSettingsOpen}
+        name={name}
+        setName={setName}
+        setOpen={setSettingsOpen}
+        team={team}
+        setTeam={() => setTeam(team === "a" ? "b" : "a")}
+      />
     </div>
   );
 }
