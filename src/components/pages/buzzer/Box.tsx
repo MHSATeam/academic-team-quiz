@@ -2,10 +2,9 @@
 "use client";
 
 import BoxPresenceProvider from "@/components/buzzer/BoxPresenceProvider";
-import BuzzerBox from "@/components/buzzer/BuzzerBox";
-import SetTypePicker from "@/components/buzzer/SetTypePicker";
-import TeamJoin from "@/components/buzzer/TeamJoin";
-import AblyStatusSymbol from "@/components/utils/AblyStatusSymbol";
+import BuzzerBox from "@/components/buzzer/box/BuzzerBox";
+import SetTypePicker from "@/components/buzzer/box/SetTypePicker";
+import TeamJoin from "@/components/buzzer/box/TeamJoin";
 import { RealtimeClient } from "@/src/lib/buzzers/ably-realtime";
 import {
   GamePhase,

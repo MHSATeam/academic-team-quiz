@@ -1,7 +1,7 @@
 "use client";
 
 import BoxPresenceProvider from "@/components/buzzer/BoxPresenceProvider";
-import BuzzerBox from "@/components/buzzer/BuzzerBox";
+import BuzzerBox from "@/components/buzzer/box/BuzzerBox";
 import GameIdInput from "@/components/buzzer/player/GameIdInput";
 import { useState } from "react";
 

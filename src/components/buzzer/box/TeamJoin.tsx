@@ -1,5 +1,5 @@
 import { BoxPresenceContext } from "@/components/buzzer/BoxPresenceProvider";
-import TeamDisplay from "@/components/buzzer/TeamDisplay";
+import TeamDisplay from "@/components/buzzer/box/TeamDisplay";
 import AblyStatusSymbol from "@/components/utils/AblyStatusSymbol";
 import { RealtimeClient } from "@/src/lib/buzzers/ably-realtime";
 import { Button } from "@tremor/react";
