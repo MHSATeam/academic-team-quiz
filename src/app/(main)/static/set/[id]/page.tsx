@@ -4,7 +4,7 @@ import { prismaClient } from "@/src/utils/clients";
 import {
   QuestionWithRoundData,
   addRoundData,
-} from "@/src/utils/quiz-session-type-extension";
+} from "@/src/utils/prisma-extensions";
 import { Flex, Subtitle, Title } from "@tremor/react";
 import { redirect } from "next/navigation";
 

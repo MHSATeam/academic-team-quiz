@@ -2,7 +2,7 @@
 
 import { Flashcard } from "@/components/display/Flashcard";
 import useKeyboardEvent from "@/src/hooks/use-keyboard-event";
-import { QuestionWithRoundData } from "@/src/utils/quiz-session-type-extension";
+import { QuestionWithRoundData } from "@/src/utils/prisma-extensions";
 import { animated, useSprings } from "@react-spring/web";
 import { Title } from "@tremor/react";
 import { ChevronLeft, ChevronRight } from "lucide-react";

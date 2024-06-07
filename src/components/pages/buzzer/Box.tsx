@@ -12,11 +12,11 @@ import {
   TeamScores,
   Timer,
 } from "@/src/lib/buzzers/message-types";
-import { Set } from "@prisma/client";
-import { ReactNode, useCallback, useState } from "react";
+import { CompleteSet } from "@/src/utils/prisma-extensions";
+import { ReactNode, useCallback, useEffect, useState } from "react";
 
 export type BoxPageProps = {
-  sets: Set[];
+  sets: CompleteSet[];
 };
 
 export default function BoxPage(props: BoxPageProps) {

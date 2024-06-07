@@ -1,4 +1,4 @@
-import { QuestionWithRoundData } from "@/src/utils/quiz-session-type-extension";
+import { QuestionWithRoundData } from "@/src/utils/prisma-extensions";
 import {
   Button,
   Dialog,
