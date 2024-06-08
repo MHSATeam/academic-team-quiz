@@ -17,7 +17,7 @@ export default function Pagination({ totalPages }: { totalPages: number }) {
 
       return params.toString();
     },
-    [searchParams]
+    [searchParams],
   );
 
   const pageNumber = Number(searchParams.get("page") ?? "1");
@@ -31,15 +31,15 @@ export default function Pagination({ totalPages }: { totalPages: number }) {
           "?" +
           createQueryString(
             "page",
-            Math.max(1, Math.min(pageNumber + change, totalPages)).toString()
-          )
+            Math.max(1, Math.min(pageNumber + change, totalPages)).toString(),
+          ),
       );
     },
-    [router, pathname, createQueryString, pageNumber, totalPages]
+    [router, pathname, createQueryString, pageNumber, totalPages],
   );
 
   return (
-    <Flex justifyContent="center" className="gap-2 flex-wrap">
+    <Flex justifyContent="center" className="mb-2 mt-4 flex-wrap gap-2">
       <Button
         disabled={isAtFirstPage}
         variant="secondary"

@@ -7,14 +7,17 @@ export default function useBuzz() {
   const boxPresence = useContext(BoxPresenceContext);
   const [rawBuzzList, setRawBuzzList] = useState<BuzzMessage[]>([]);
   useEffect(() => {
-    RealtimeClient.player.subscribe((message) => {
-      if (message.type === "buzz") {
+    const unsubscribe = RealtimeClient.player.subscribe((message) => {
+      if (message.type === "buzz" && !boxPresence?.locked) {
         setRawBuzzList((prev) => {
           return [...prev, message];
         });
       }
     });
-  }, []);
+    return () => {
+      unsubscribe();
+    };
+  }, [boxPresence?.locked]);
 
   const buzzList = useMemo(() => {
     const currentBuzzes = rawBuzzList.filter(

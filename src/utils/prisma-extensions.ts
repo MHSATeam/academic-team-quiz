@@ -93,7 +93,7 @@ export type CompleteSet = NonNullable<
     { include: typeof CompleteSetInclude },
     "findFirst"
   >
->;
+> & { questionList: QuestionWithRoundData[] };
 
 export const CompleteSetInclude = {
   alphabetRound: {
@@ -171,7 +171,13 @@ export const CompleteSetInclude = {
 } as const;
 
 export const createQuestionList = (
-  completeSet: CompleteSet,
+  completeSet: NonNullable<
+    Prisma.Result<
+      PrismaClient["set"],
+      { include: typeof CompleteSetInclude },
+      "findFirst"
+    >
+  >,
 ): QuestionWithRoundData[] => {
   const questionList: QuestionWithRoundData[] = [];
   const categoryRoundQuestionsByCategory: QuestionWithRoundData[][] = [];

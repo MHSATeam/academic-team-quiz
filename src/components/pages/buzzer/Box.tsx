@@ -1,8 +1,8 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 
 import BoxPresenceProvider from "@/components/buzzer/BoxPresenceProvider";
 import BuzzerBox from "@/components/buzzer/box/BuzzerBox";
+import SetPicker from "@/components/buzzer/box/SetPicker";
 import SetTypePicker from "@/components/buzzer/box/SetTypePicker";
 import TeamJoin from "@/components/buzzer/box/TeamJoin";
 import { RealtimeClient } from "@/src/lib/buzzers/ably-realtime";
@@ -13,7 +13,7 @@ import {
   Timer,
 } from "@/src/lib/buzzers/message-types";
 import { CompleteSet } from "@/src/utils/prisma-extensions";
-import { ReactNode, useCallback, useEffect, useState } from "react";
+import { ReactNode, useCallback, useState } from "react";
 
 export type BoxPageProps = {
   sets: CompleteSet[];
@@ -26,7 +26,8 @@ export default function BoxPage(props: BoxPageProps) {
   const [setType, setSetType] = useState<SetType>("online");
   const [gameId, setGameId] = useState(0);
   const [locked, setLocked] = useState(false);
-  const [questionId, setQuestionId] = useState(0);
+  const [questionIndex, setQuestionIndex] = useState(0);
+  const [questionSet, setQuestionSet] = useState<CompleteSet | undefined>();
   const [teamScores, setTeamScores] = useState<TeamScores>({ a: 0, b: 0 });
   const [timer, setTimer] = useState<Timer>({ duration: 10000, startTime: -1 });
   const [lastBuzzerClear, setLastBuzzerClear] = useState(0);
@@ -62,7 +63,15 @@ export default function BoxPage(props: BoxPageProps) {
       );
     }
     case "set-picker": {
-      return null;
+      return (
+        <SetPicker
+          sets={props.sets}
+          selectSet={(set) => {
+            setQuestionSet(set);
+            createNewGame();
+          }}
+        />
+      );
     }
     case "team-picker": {
       Component = (
@@ -70,6 +79,7 @@ export default function BoxPage(props: BoxPageProps) {
           onStartGame={() => {
             setPhase("buzzer");
           }}
+          questionSet={questionSet}
         />
       );
       break;
@@ -78,6 +88,7 @@ export default function BoxPage(props: BoxPageProps) {
       Component = (
         <BuzzerBox
           inDisplayMode={false}
+          questionSet={questionSet}
           onSetLocked={(newValue) => {
             setLocked(newValue);
           }}
@@ -116,6 +127,7 @@ export default function BoxPage(props: BoxPageProps) {
           onClearBuzzer={() => {
             setLastBuzzerClear(Date.now());
           }}
+          onUpdateQuestionIndex={setQuestionIndex}
         />
       );
       break;
@@ -131,7 +143,7 @@ export default function BoxPage(props: BoxPageProps) {
       locked={locked}
       gameId={gameId}
       gamePhase={phase}
-      questionIndex={questionId}
+      questionIndex={questionIndex}
       setType={setType}
       teamScores={teamScores}
       timer={timer}

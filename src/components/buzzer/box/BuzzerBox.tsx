@@ -3,25 +3,29 @@ import TeamDisplay from "@/components/buzzer/box/TeamDisplay";
 import Timer from "@/components/buzzer/Timer";
 import AblyStatusSymbol from "@/components/utils/AblyStatusSymbol";
 import { RealtimeClient } from "@/src/lib/buzzers/ably-realtime";
-import { getTeamColors } from "@/src/lib/buzzers/get-team-colors";
 import useBuzz from "@/src/lib/buzzers/use-buzz";
-import { Button, Metric, Title } from "@tremor/react";
+import { Metric, Title } from "@tremor/react";
+import React, { useCallback, useContext } from "react";
+import { CompleteSet } from "@/src/utils/prisma-extensions";
+import CurrentBuzz from "@/components/buzzer/box/CurrentBuzz";
+import DisplayFormattedText from "@/components/utils/DisplayFormattedText";
 import classNames from "classnames";
-import { useCallback, useContext } from "react";
 
 type BuzzerBoxProps = {
   inDisplayMode: boolean;
+  questionSet?: CompleteSet;
   onUpdateScore?: (changeInScore: number, team: string) => void;
   onSetLocked?: (locked: boolean) => void;
   onSetTimerDuration?: (duration: number) => void;
   onStartTimer?: () => void;
   onStopTimer?: () => void;
   onClearBuzzer?: () => void;
+  onUpdateQuestionIndex?: React.Dispatch<React.SetStateAction<number>>;
 };
 
 export default function BuzzerBox(props: BuzzerBoxProps) {
   const boxPresence = useContext(BoxPresenceContext);
-  const [firstBuzz, buzzList] = useBuzz();
+  const [firstBuzz] = useBuzz();
 
   const movePlayer = useCallback((playerId: string, newTeam: string) => {
     RealtimeClient.box.publish({
@@ -38,6 +42,8 @@ export default function BuzzerBox(props: BuzzerBoxProps) {
       throw new Error("Buzzer box was used outside of context!");
     }
   }
+
+  const question = props.questionSet?.questionList[boxPresence.questionIndex];
   return (
     <div className="flex h-full w-full flex-col gap-2">
       <div className="flex items-center justify-center gap-4 border-b-2 border-tremor-border bg-tremor-background-subtle p-4 dark:bg-dark-tremor-background-subtle">
@@ -66,55 +72,108 @@ export default function BuzzerBox(props: BuzzerBoxProps) {
             onMovePlayer={(playerId) => movePlayer(playerId, "b")}
           />
         </div>
-        <div className="flex shrink-0 grow-[3] basis-0 flex-col items-center">
-          <div className="flex grow flex-col items-center justify-center gap-4">
-            <span className="text-6xl text-tremor-content-emphasis dark:text-dark-tremor-content-emphasis">
-              {firstBuzz === null ? (
-                "Waiting for buzz..."
-              ) : (
-                <>
-                  <span
-                    className={classNames(
-                      "font-bold",
-                      getTeamColors(firstBuzz.team, "text-"),
-                    )}
-                  >
-                    {firstBuzz.name}
-                  </span>{" "}
-                  buzzed in!
-                </>
-              )}
-            </span>
-            {firstBuzz !== null &&
-              buzzList
-                .filter((buzz) => buzz.clientId !== firstBuzz.clientId)
-                .sort((a, b) => a.timestamp - b.timestamp)
-                .map((buzz) => (
-                  <span
-                    key={buzz.clientId}
-                    className="text-tremor-content-emphasis dark:text-dark-tremor-content-emphasis"
-                  >
-                    {buzz.name}: {(buzz.timestamp - firstBuzz.timestamp) / 1000}{" "}
-                    seconds later
-                  </span>
-                ))}
-            {buzzList.length > 0 && (
-              <Button
-                color="red"
-                onClick={() => {
-                  props.onClearBuzzer?.();
-                }}
-              >
-                Clear Buzzer
-              </Button>
-            )}
-          </div>
-          <Timer
-            showControls={!props.inDisplayMode}
-            onStartTimer={props.onStartTimer}
-            onStopTimer={props.onStopTimer}
-            onSetTimerDuration={props.onSetTimerDuration}
+        <div className="flex shrink-0 grow-[3] basis-0 flex-col items-center gap-2">
+          <CurrentBuzz
+            onClearBuzzer={props.onClearBuzzer}
+            isShowingQuestions={question !== undefined}
+            onToggleBuzzerLock={() => props.onSetLocked?.(!boxPresence.locked)}
           />
+          {question && (
+            <div
+              className={classNames(
+                "flex",
+                "flex-col",
+                "justify-center",
+                "gap-2",
+                "transition-[flex-grow]",
+                {
+                  grow: firstBuzz === null,
+                  "grow-0": firstBuzz !== null,
+                },
+              )}
+            >
+              <div className="rounded-md bg-white p-2">
+                <span
+                  className={classNames(
+                    "text-tremor-content-strong",
+                    "transition-[font-size,_line-height]",
+                    {
+                      "text-xl": firstBuzz === null,
+                      "text-sm": firstBuzz !== null,
+                    },
+                  )}
+                >
+                  Question #{boxPresence.questionIndex + 1}:
+                </span>
+                <DisplayFormattedText
+                  text={question.question}
+                  className={classNames(
+                    "font-serif",
+                    "text-tremor-content-strong",
+                    "transition-[font-size,_line-height]",
+                    {
+                      "text-2xl": firstBuzz === null,
+                      "text-md": firstBuzz !== null,
+                    },
+                  )}
+                />
+              </div>
+              <div className="rounded-md bg-white p-2">
+                <span
+                  className={classNames(
+                    "text-tremor-content-strong",
+                    "transition-[font-size,_line-height]",
+                    {
+                      "text-xl": firstBuzz === null,
+                      "text-sm": firstBuzz !== null,
+                    },
+                  )}
+                >
+                  Answer:
+                </span>
+                <DisplayFormattedText
+                  text={question.answer}
+                  className={classNames(
+                    "font-serif",
+                    "text-tremor-content-strong",
+                    "transition-[font-size,_line-height]",
+                    {
+                      "text-2xl": firstBuzz === null,
+                      "text-md": firstBuzz !== null,
+                    },
+                  )}
+                />
+              </div>
+            </div>
+          )}
+          <div className="flex items-end">
+            <button
+              onClick={() => {
+                props.onUpdateQuestionIndex?.((prev) => {
+                  return Math.max(prev - 1, 0);
+                });
+              }}
+              className="rounded-tl-md bg-dark-tremor-background-emphasis p-2 text-lg text-tremor-content-emphasis dark:bg-tremor-background-emphasis dark:text-dark-tremor-content-emphasis"
+            >
+              Previous Question
+            </button>
+            <Timer
+              showControls={!props.inDisplayMode}
+              onStartTimer={props.onStartTimer}
+              onStopTimer={props.onStopTimer}
+              onSetTimerDuration={props.onSetTimerDuration}
+            />
+            <button
+              onClick={() => {
+                props.onUpdateQuestionIndex?.((prev) => {
+                  return prev + 1;
+                });
+              }}
+              className="rounded-tr-md bg-dark-tremor-background-emphasis p-2 text-lg text-tremor-content-emphasis dark:bg-tremor-background-emphasis dark:text-dark-tremor-content-emphasis"
+            >
+              Next Question
+            </button>
+          </div>
         </div>
         <div className="flex shrink-0 grow basis-0 flex-col items-end justify-end">
           <TeamDisplay

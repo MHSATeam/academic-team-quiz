@@ -1,4 +1,5 @@
 import {
+  CompleteSet,
   CompleteSetInclude,
   createQuestionList,
 } from "@/src/utils/prisma-extensions";
@@ -14,13 +15,13 @@ const prismaClientSingleton = () => {
             Prisma.Args<PrismaClient["set"], "findMany">,
             "include" | "select"
           >,
-        ) {
+        ): Promise<CompleteSet[]> {
           const sets = await client.set.findMany({
             ...args,
             include: CompleteSetInclude,
           });
           if (sets.length === 0) {
-            return sets;
+            return [];
           }
           return sets.map((set) => ({
             ...set,
@@ -32,7 +33,7 @@ const prismaClientSingleton = () => {
             Prisma.Args<PrismaClient["set"], "findFirst">,
             "include" | "select"
           >,
-        ) {
+        ): Promise<CompleteSet | null> {
           const set = await client.set.findFirst({
             ...args,
             include: CompleteSetInclude,

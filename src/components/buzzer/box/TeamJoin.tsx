@@ -2,12 +2,14 @@ import { BoxPresenceContext } from "@/components/buzzer/BoxPresenceProvider";
 import TeamDisplay from "@/components/buzzer/box/TeamDisplay";
 import AblyStatusSymbol from "@/components/utils/AblyStatusSymbol";
 import { RealtimeClient } from "@/src/lib/buzzers/ably-realtime";
-import { Button } from "@tremor/react";
+import { CompleteSet } from "@/src/utils/prisma-extensions";
+import { Button, Flex, Metric, Title } from "@tremor/react";
 import { useCallback, useContext } from "react";
 import QRCode from "react-qr-code";
 
 type TeamJoinProps = {
   onStartGame: () => void;
+  questionSet?: CompleteSet;
 };
 
 export default function TeamJoin(props: TeamJoinProps) {
@@ -26,12 +28,20 @@ export default function TeamJoin(props: TeamJoinProps) {
     <>
       <div className="flex h-full w-full flex-col gap-2">
         <div className="flex items-center justify-between border-b-2 border-tremor-border bg-tremor-background-subtle p-4 dark:bg-dark-tremor-background-subtle">
-          <QRCode
-            size={150}
-            level="M"
-            className="rounded-md"
-            value={`${location.origin}/buzzer?id=${boxPresence.gameId}`}
-          />
+          <div className="flex items-center gap-4">
+            <QRCode
+              size={150}
+              level="M"
+              className="shrink-0 rounded-md"
+              value={`${location.origin}/buzzer?id=${boxPresence.gameId}`}
+            />
+            {props.questionSet && (
+              <Flex flexDirection="col" alignItems="start">
+                <Title>Playing Set:</Title>
+                <Metric>{props.questionSet.name}</Metric>
+              </Flex>
+            )}
+          </div>
           <div className="flex flex-col items-center gap-1">
             <span className="h-fit rounded-md bg-tremor-background-muted p-2 text-5xl text-tremor-content-emphasis dark:bg-dark-tremor-background-muted dark:text-dark-tremor-content-emphasis">
               Game ID:{" "}
