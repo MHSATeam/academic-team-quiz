@@ -1,4 +1,5 @@
 import { BoxPresenceContext } from "@/components/buzzer/BoxPresenceProvider";
+import GameIdDisplay from "@/components/buzzer/GameIdDisplay";
 import TeamDisplay from "@/components/buzzer/box/TeamDisplay";
 import AblyStatusSymbol from "@/components/utils/AblyStatusSymbol";
 import { RealtimeClient } from "@/src/lib/buzzers/ably-realtime";
@@ -33,7 +34,7 @@ export default function TeamJoin(props: TeamJoinProps) {
               size={150}
               level="M"
               className="shrink-0 rounded-md"
-              value={`${location.origin}/buzzer?id=${boxPresence.gameId}`}
+              value={`${location.origin === "http://localhost:3000" ? "http://mm.local:3000" : location.origin}/buzzer?id=${boxPresence.gameId}`}
             />
             <Flex flexDirection="col" alignItems="start">
               <Title>Playing Set:</Title>
@@ -46,21 +47,7 @@ export default function TeamJoin(props: TeamJoinProps) {
               </Metric>
             </Flex>
           </div>
-          <div className="flex flex-col items-center gap-1">
-            <span className="h-fit rounded-md bg-tremor-background-muted p-2 text-5xl text-tremor-content-emphasis dark:bg-dark-tremor-background-muted dark:text-dark-tremor-content-emphasis">
-              Game ID:{" "}
-              <b>
-                {boxPresence.gameId
-                  .toString()
-                  .split("")
-                  .toSpliced(3, 0, " ")
-                  .join("")}
-              </b>
-            </span>
-            <span className="text-tremor-content-emphasis dark:text-dark-tremor-content-emphasis">
-              Join at <b>{location.host}/buzzer</b>
-            </span>
-          </div>
+          <GameIdDisplay showLink size="lg" gameId={boxPresence.gameId} />
         </div>
         <div className="mt-6 flex w-full justify-around overflow-hidden">
           <TeamDisplay

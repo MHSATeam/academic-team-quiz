@@ -67,7 +67,7 @@ export default function ConnectedPlayer({
     >
       <div className="w-full grow">
         {boxPresence.gamePhase === "team-picker" && (
-          <div className="flex h-full flex-col justify-center">
+          <div className="flex h-full w-full flex-col items-center justify-center">
             <div
               className={classNames(
                 "p-10",
@@ -76,6 +76,7 @@ export default function ConnectedPlayer({
                 "flex-col",
                 "gap-1",
                 "text-center",
+                "w-fit",
                 getTeamColors(team, "bg-"),
               )}
             >

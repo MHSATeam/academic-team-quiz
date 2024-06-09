@@ -5,14 +5,18 @@ import AblyStatusSymbol from "@/components/utils/AblyStatusSymbol";
 import { RealtimeClient } from "@/src/lib/buzzers/ably-realtime";
 import useBuzz from "@/src/lib/buzzers/use-buzz";
 import { Button, Metric, Title } from "@tremor/react";
-import React, { useCallback, useContext, useRef } from "react";
+import React, { useCallback, useContext, useRef, useState } from "react";
 import { CompleteSet } from "@/src/utils/prisma-extensions";
 import CurrentBuzz from "@/components/buzzer/box/CurrentBuzz";
 import DisplayFormattedText from "@/components/utils/DisplayFormattedText";
 import classNames from "classnames";
 import { BuzzMessage } from "@/src/lib/buzzers/message-types";
+import GameIdDisplay from "@/components/buzzer/GameIdDisplay";
+import GameIdDialog from "@/components/buzzer/GameIdDialog";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
-const beepSound = new Audio("/beep.mp3");
+const beepSound =
+  typeof window === "undefined" ? { play: () => {} } : new Audio("/beep.mp3");
 
 type BuzzerBoxProps = {
   inDisplayMode: boolean;
@@ -51,6 +55,8 @@ export default function BuzzerBox(props: BuzzerBoxProps) {
   );
   const [firstBuzz] = useBuzz(onBuzz);
 
+  const [idDialogOpen, setIdDialogOpen] = useState(false);
+
   const movePlayer = useCallback((playerId: string, newTeam: string) => {
     RealtimeClient.box.publish({
       type: "change-team",
@@ -67,22 +73,45 @@ export default function BuzzerBox(props: BuzzerBoxProps) {
     }
   }
 
-  const question = props.questionSet?.questionList[boxPresence.questionIndex];
+  const question = props.inDisplayMode
+    ? undefined
+    : props.questionSet?.questionList[boxPresence.questionIndex];
   return (
     <div className="flex h-full w-full flex-col gap-2">
       <div className="flex items-center justify-center gap-4 border-b-2 border-tremor-border bg-tremor-background-subtle p-4 dark:bg-dark-tremor-background-subtle">
         <AblyStatusSymbol buttonClass="m-3 dark:text-white" />
         <Metric>Question #{boxPresence.questionIndex + 1}</Metric>
-        <span className="ml-auto h-fit rounded-md bg-tremor-background-muted p-2 text-xl text-tremor-content-emphasis dark:bg-dark-tremor-background-muted dark:text-dark-tremor-content-emphasis">
-          Game ID:{" "}
-          <b>
-            {boxPresence.gameId
-              .toString()
-              .split("")
-              .toSpliced(3, 0, " ")
-              .join("")}
-          </b>
-        </span>
+        {!props.inDisplayMode && (
+          <>
+            <Button
+              onClick={() => {
+                props.onUpdateQuestionIndex?.((prev) => {
+                  return Math.max(0, prev - 1);
+                });
+              }}
+              color="gray"
+              size="lg"
+            >
+              <ChevronLeft />
+            </Button>
+            <Button
+              onClick={() => {
+                props.onUpdateQuestionIndex?.((prev) => {
+                  return prev + 1;
+                });
+              }}
+              color="gray"
+              size="lg"
+            >
+              <ChevronRight />
+            </Button>
+          </>
+        )}
+        <GameIdDisplay
+          onClick={() => setIdDialogOpen(true)}
+          gameId={boxPresence.gameId}
+          className="ml-auto cursor-pointer"
+        />
       </div>
       <div className="flex grow grid-cols-3 justify-between">
         <div className="flex shrink-0 grow basis-0 flex-col justify-end">
@@ -98,6 +127,7 @@ export default function BuzzerBox(props: BuzzerBoxProps) {
         </div>
         <div className="flex shrink-0 grow-[3] basis-0 flex-col items-center gap-2">
           <CurrentBuzz
+            inDisplayMode={props.inDisplayMode}
             onClearBuzzer={props.onClearBuzzer}
             isShowingQuestions={question !== undefined}
             onToggleBuzzerLock={() => props.onSetLocked?.(!boxPresence.locked)}
@@ -188,18 +218,6 @@ export default function BuzzerBox(props: BuzzerBoxProps) {
             </div>
           )}
           <div className="flex items-end">
-            <Button
-              onClick={() => {
-                props.onUpdateQuestionIndex?.((prev) => {
-                  return Math.max(prev - 1, 0);
-                });
-              }}
-              className="rounded-none rounded-tl-md"
-              color="gray"
-              size="xl"
-            >
-              Previous Question
-            </Button>
             <Timer
               showControls={!props.inDisplayMode}
               onStartTimer={props.onStartTimer}
@@ -207,18 +225,6 @@ export default function BuzzerBox(props: BuzzerBoxProps) {
               onTogglePause={props.onTogglePauseTimer}
               onSetTimerDuration={props.onSetTimerDuration}
             />
-            <Button
-              onClick={() => {
-                props.onUpdateQuestionIndex?.((prev) => {
-                  return prev + 1;
-                });
-              }}
-              className="rounded-none rounded-tr-md"
-              color="gray"
-              size="xl"
-            >
-              Next Question
-            </Button>
           </div>
         </div>
         <div className="flex shrink-0 grow basis-0 flex-col items-end justify-end">
@@ -233,6 +239,7 @@ export default function BuzzerBox(props: BuzzerBoxProps) {
           />
         </div>
       </div>
+      <GameIdDialog isOpen={idDialogOpen} setOpen={setIdDialogOpen} />
     </div>
   );
 }

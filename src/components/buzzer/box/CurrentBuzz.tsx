@@ -14,6 +14,7 @@ type CurrentBuzzProps = {
   ) => void;
   onToggleBuzzerLock?: () => void;
   isShowingQuestions: boolean;
+  inDisplayMode: boolean;
 };
 
 export default function CurrentBuzz(props: CurrentBuzzProps) {
@@ -41,51 +42,53 @@ export default function CurrentBuzz(props: CurrentBuzzProps) {
         },
       )}
     >
-      <div className="flex gap-2 rounded-md bg-tremor-background-subtle p-2 dark:bg-dark-tremor-background">
-        <Button
-          size={!isSmall ? "sm" : "xs"}
-          className="transition-[padding,_font-size]"
-          onClick={props.onToggleBuzzerLock}
-          color="gray"
-        >
-          {boxPresence.locked ? "Unlock" : "Lock"}
-        </Button>
-        <Tooltip content="Correct">
+      {!props.inDisplayMode && (
+        <div className="flex gap-2 rounded-md bg-tremor-background-subtle p-2 dark:bg-dark-tremor-background">
           <Button
-            disabled={firstBuzz === null}
             size={!isSmall ? "sm" : "xs"}
             className="transition-[padding,_font-size]"
-            color="green"
-            onClick={() => props.onMarkQuestion?.("correct")}
+            onClick={props.onToggleBuzzerLock}
+            color="gray"
           >
-            <Check />
+            {boxPresence.locked ? "Unlock" : "Lock"}
           </Button>
-        </Tooltip>
-        <Tooltip content="Correct on second attempt">
-          <Button
-            disabled={firstBuzz === null}
-            size={!isSmall ? "sm" : "xs"}
-            className="transition-[padding,_font-size]"
-            color="green"
-            onClick={() => {
-              props.onMarkQuestion?.("correct-2-attempt");
-            }}
-          >
-            <CheckCheck />
-          </Button>
-        </Tooltip>
-        <Tooltip content="Incorrect">
-          <Button
-            disabled={firstBuzz === null}
-            size={!isSmall ? "sm" : "xs"}
-            className="transition-[padding,_font-size]"
-            color="red"
-            onClick={() => props.onMarkQuestion?.("incorrect")}
-          >
-            <X />
-          </Button>
-        </Tooltip>
-      </div>
+          <Tooltip content="Correct">
+            <Button
+              disabled={firstBuzz === null}
+              size={!isSmall ? "sm" : "xs"}
+              className="transition-[padding,_font-size]"
+              color="green"
+              onClick={() => props.onMarkQuestion?.("correct")}
+            >
+              <Check />
+            </Button>
+          </Tooltip>
+          <Tooltip content="Correct on second attempt">
+            <Button
+              disabled={firstBuzz === null}
+              size={!isSmall ? "sm" : "xs"}
+              className="transition-[padding,_font-size]"
+              color="green"
+              onClick={() => {
+                props.onMarkQuestion?.("correct-2-attempt");
+              }}
+            >
+              <CheckCheck />
+            </Button>
+          </Tooltip>
+          <Tooltip content="Incorrect">
+            <Button
+              disabled={firstBuzz === null}
+              size={!isSmall ? "sm" : "xs"}
+              className="transition-[padding,_font-size]"
+              color="red"
+              onClick={() => props.onMarkQuestion?.("incorrect")}
+            >
+              <X />
+            </Button>
+          </Tooltip>
+        </div>
+      )}
       <span
         className={classNames(
           "text-tremor-content-emphasis",
