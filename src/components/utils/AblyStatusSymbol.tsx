@@ -29,7 +29,9 @@ export default function AblyStatusSymbol(
         case "suspended": {
           setStatusSymbol("server-off");
           if (stateChange.current !== "closed") {
-            alert("You are disconnected! You may need to restart the app.");
+            alert(
+              "You are disconnected! If you aren't reconnected within 10 seconds, you may need to restart the app.",
+            );
           }
           break;
         }

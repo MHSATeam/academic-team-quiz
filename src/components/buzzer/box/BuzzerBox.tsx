@@ -4,13 +4,15 @@ import Timer from "@/components/buzzer/Timer";
 import AblyStatusSymbol from "@/components/utils/AblyStatusSymbol";
 import { RealtimeClient } from "@/src/lib/buzzers/ably-realtime";
 import useBuzz from "@/src/lib/buzzers/use-buzz";
-import { Metric, Title } from "@tremor/react";
-import React, { useCallback, useContext } from "react";
+import { Button, Metric, Title } from "@tremor/react";
+import React, { useCallback, useContext, useRef } from "react";
 import { CompleteSet } from "@/src/utils/prisma-extensions";
 import CurrentBuzz from "@/components/buzzer/box/CurrentBuzz";
 import DisplayFormattedText from "@/components/utils/DisplayFormattedText";
 import classNames from "classnames";
 import { BuzzMessage } from "@/src/lib/buzzers/message-types";
+
+const beepSound = new Audio("/beep.mp3");
 
 type BuzzerBoxProps = {
   inDisplayMode: boolean;
@@ -29,6 +31,8 @@ type BuzzerBoxProps = {
 export default function BuzzerBox(props: BuzzerBoxProps) {
   const boxPresence = useContext(BoxPresenceContext);
   const { onPauseTimerAtTime } = props;
+  const lastBuzzSound = useRef(-1);
+
   const onBuzz = useCallback(
     (message: BuzzMessage) => {
       if (
@@ -38,8 +42,12 @@ export default function BuzzerBox(props: BuzzerBoxProps) {
       ) {
         onPauseTimerAtTime?.(message.timestamp);
       }
+      if ((boxPresence?.lastBuzzerClear ?? 0) >= lastBuzzSound.current) {
+        beepSound.play();
+        lastBuzzSound.current = Date.now();
+      }
     },
-    [onPauseTimerAtTime, boxPresence?.timer],
+    [onPauseTimerAtTime, boxPresence?.timer, boxPresence?.lastBuzzerClear],
   );
   const [firstBuzz] = useBuzz(onBuzz);
 
@@ -105,9 +113,9 @@ export default function BuzzerBox(props: BuzzerBoxProps) {
               }
               props.onUpdateScore?.(scoreChange, firstBuzz.team);
               props.onClearBuzzer?.();
-              props.onResetTimer?.();
               if (result !== "incorrect") {
                 props.onUpdateQuestionIndex?.((prev) => prev + 1);
+                props.onResetTimer?.();
               }
             }}
           />
@@ -180,16 +188,18 @@ export default function BuzzerBox(props: BuzzerBoxProps) {
             </div>
           )}
           <div className="flex items-end">
-            <button
+            <Button
               onClick={() => {
                 props.onUpdateQuestionIndex?.((prev) => {
                   return Math.max(prev - 1, 0);
                 });
               }}
-              className="rounded-tl-md bg-dark-tremor-background-emphasis p-2 text-lg text-tremor-content-emphasis dark:bg-tremor-background-emphasis dark:text-dark-tremor-content-emphasis"
+              className="rounded-none rounded-tl-md"
+              color="gray"
+              size="xl"
             >
               Previous Question
-            </button>
+            </Button>
             <Timer
               showControls={!props.inDisplayMode}
               onStartTimer={props.onStartTimer}
@@ -197,16 +207,18 @@ export default function BuzzerBox(props: BuzzerBoxProps) {
               onTogglePause={props.onTogglePauseTimer}
               onSetTimerDuration={props.onSetTimerDuration}
             />
-            <button
+            <Button
               onClick={() => {
                 props.onUpdateQuestionIndex?.((prev) => {
                   return prev + 1;
                 });
               }}
-              className="rounded-tr-md bg-dark-tremor-background-emphasis p-2 text-lg text-tremor-content-emphasis dark:bg-tremor-background-emphasis dark:text-dark-tremor-content-emphasis"
+              className="rounded-none rounded-tr-md"
+              color="gray"
+              size="xl"
             >
               Next Question
-            </button>
+            </Button>
           </div>
         </div>
         <div className="flex shrink-0 grow basis-0 flex-col items-end justify-end">

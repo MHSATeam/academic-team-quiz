@@ -35,12 +35,16 @@ export default function TeamJoin(props: TeamJoinProps) {
               className="shrink-0 rounded-md"
               value={`${location.origin}/buzzer?id=${boxPresence.gameId}`}
             />
-            {props.questionSet && (
-              <Flex flexDirection="col" alignItems="start">
-                <Title>Playing Set:</Title>
-                <Metric>{props.questionSet.name}</Metric>
-              </Flex>
-            )}
+            <Flex flexDirection="col" alignItems="start">
+              <Title>Playing Set:</Title>
+              <Metric>
+                {props.questionSet
+                  ? props.questionSet.name
+                  : boxPresence.setType === "oac-paper"
+                    ? "Paper OAC Set"
+                    : "Other Set"}
+              </Metric>
+            </Flex>
           </div>
           <div className="flex flex-col items-center gap-1">
             <span className="h-fit rounded-md bg-tremor-background-muted p-2 text-5xl text-tremor-content-emphasis dark:bg-dark-tremor-background-muted dark:text-dark-tremor-content-emphasis">

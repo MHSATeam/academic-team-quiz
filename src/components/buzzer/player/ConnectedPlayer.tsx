@@ -65,7 +65,7 @@ export default function ConnectedPlayer({
             : "red",
       }}
     >
-      <div className="grow">
+      <div className="w-full grow">
         {boxPresence.gamePhase === "team-picker" && (
           <div className="flex h-full flex-col justify-center">
             <div
