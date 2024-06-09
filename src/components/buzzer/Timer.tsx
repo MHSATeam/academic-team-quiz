@@ -10,8 +10,8 @@ type TimerProps = {
   className?: string;
   onSetTimerDuration?: (duration: number) => void;
   onStartTimer?: () => void;
-  onStopTimer?: () => void;
-  onStartQuestion?: () => void;
+  onResetTimer?: () => void;
+  onTogglePause?: () => void;
 };
 
 export default function Timer(props: TimerProps) {
@@ -20,8 +20,8 @@ export default function Timer(props: TimerProps) {
     size,
     onSetTimerDuration,
     onStartTimer,
-    onStopTimer,
-    onStartQuestion,
+    onResetTimer,
+    onTogglePause,
   } = Object.assign({ showControls: false, size: "lg" }, props);
   const boxPresence = useContext(BoxPresenceContext);
   if (!boxPresence) {
@@ -30,8 +30,12 @@ export default function Timer(props: TimerProps) {
   const timeLeft = useTimer(
     boxPresence.timer.duration,
     boxPresence.timer.startTime,
+    boxPresence.timer.unpauseTime,
+    boxPresence.timer.pauseLeft,
   );
   const isTimerRunning = boxPresence.timer.startTime !== -1;
+  const isTimerPaused =
+    boxPresence.timer.unpauseTime === -1 && boxPresence.timer.pauseLeft !== -1;
   return (
     <div
       className={classNames(
@@ -50,20 +54,8 @@ export default function Timer(props: TimerProps) {
         props.className,
       )}
     >
-      {showControls && (
-        <div className="flex justify-center gap-2">
-          <Button
-            size="sm"
-            onClick={() => {
-              onStartQuestion?.();
-            }}
-          >
-            Start Question
-          </Button>
-        </div>
-      )}
       <span
-        className={classNames("text-center", "font-semibold", {
+        className={classNames("text-center", "font-semibold", "font-mono", {
           "text-red-500": timeLeft === 0 && isTimerRunning,
           "text-tremor-content-emphasis dark:text-dark-tremor-content-emphasis":
             !isTimerRunning || timeLeft > 0,
@@ -80,13 +72,23 @@ export default function Timer(props: TimerProps) {
             color={isTimerRunning ? "red" : "green"}
             onClick={() => {
               if (isTimerRunning) {
-                onStopTimer?.();
+                onResetTimer?.();
               } else {
                 onStartTimer?.();
               }
             }}
           >
             {isTimerRunning ? "Reset" : "Start"}
+          </Button>
+          <Button
+            disabled={!isTimerRunning}
+            onClick={() => {
+              if (isTimerRunning) {
+                onTogglePause?.();
+              }
+            }}
+          >
+            {isTimerPaused ? "Unpause" : "Pause"}
           </Button>
           <Button
             size="sm"

@@ -42,6 +42,9 @@ export default function Buzzer(props: BuzzerProps) {
       ),
     [playerList, clientIdList, props.team],
   );
+  if (!boxPresence) {
+    return null;
+  }
 
   return (
     <div className="flex h-full flex-col justify-center">
@@ -57,7 +60,10 @@ export default function Buzzer(props: BuzzerProps) {
           getTeamColors(props.team, "bg-"),
         )}
       >
-        <span className="text-3xl font-semibold">Buzz</span>
+        <span className="text-3xl font-semibold">
+          {boxPresence.locked ? "Locked" : "Buzz"}
+        </span>
+        <span>Question #{boxPresence.questionIndex + 1}</span>
         {teammates.length > 0 && (
           <span className="font-semibold">Teammates:</span>
         )}

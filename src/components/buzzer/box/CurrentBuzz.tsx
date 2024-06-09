@@ -1,12 +1,17 @@
 import { BoxPresenceContext } from "@/components/buzzer/BoxPresenceProvider";
+import { Tooltip } from "@/components/utils/Tooltip";
 import { getTeamColors } from "@/src/lib/buzzers/get-team-colors";
 import useBuzz from "@/src/lib/buzzers/use-buzz";
 import { Button } from "@tremor/react";
 import classNames from "classnames";
+import { Check, CheckCheck, X } from "lucide-react";
 import { useContext } from "react";
 
 type CurrentBuzzProps = {
   onClearBuzzer?: () => void;
+  onMarkQuestion?: (
+    result: "correct" | "incorrect" | "correct-2-attempt",
+  ) => void;
   onToggleBuzzerLock?: () => void;
   isShowingQuestions: boolean;
 };
@@ -19,6 +24,8 @@ export default function CurrentBuzz(props: CurrentBuzzProps) {
       "Current buzz must be used within a connected game context!",
     );
   }
+
+  const isSmall = firstBuzz === null && props.isShowingQuestions;
   return (
     <div
       className={classNames(
@@ -29,30 +36,55 @@ export default function CurrentBuzz(props: CurrentBuzzProps) {
         "gap-4",
         "transition-[flex-grow]",
         {
-          "grow-0": firstBuzz === null && props.isShowingQuestions,
-          grow: firstBuzz !== null || !props.isShowingQuestions,
+          "grow-0": isSmall,
+          grow: !isSmall,
         },
       )}
     >
       <div className="flex gap-2 rounded-md bg-tremor-background-subtle p-2 dark:bg-dark-tremor-background">
         <Button
-          size={firstBuzz !== null || !props.isShowingQuestions ? "sm" : "xs"}
+          size={!isSmall ? "sm" : "xs"}
           className="transition-[padding,_font-size]"
           onClick={props.onToggleBuzzerLock}
           color="gray"
         >
           {boxPresence.locked ? "Unlock" : "Lock"}
         </Button>
-        <Button
-          size={firstBuzz !== null || !props.isShowingQuestions ? "sm" : "xs"}
-          className="transition-[padding,_font-size]"
-          onClick={() => {
-            props.onClearBuzzer?.();
-          }}
-          color="red"
-        >
-          Clear Buzzer
-        </Button>
+        <Tooltip content="Correct">
+          <Button
+            disabled={firstBuzz === null}
+            size={!isSmall ? "sm" : "xs"}
+            className="transition-[padding,_font-size]"
+            color="green"
+            onClick={() => props.onMarkQuestion?.("correct")}
+          >
+            <Check />
+          </Button>
+        </Tooltip>
+        <Tooltip content="Correct on second attempt">
+          <Button
+            disabled={firstBuzz === null}
+            size={!isSmall ? "sm" : "xs"}
+            className="transition-[padding,_font-size]"
+            color="green"
+            onClick={() => {
+              props.onMarkQuestion?.("correct-2-attempt");
+            }}
+          >
+            <CheckCheck />
+          </Button>
+        </Tooltip>
+        <Tooltip content="Incorrect">
+          <Button
+            disabled={firstBuzz === null}
+            size={!isSmall ? "sm" : "xs"}
+            className="transition-[padding,_font-size]"
+            color="red"
+            onClick={() => props.onMarkQuestion?.("incorrect")}
+          >
+            <X />
+          </Button>
+        </Tooltip>
       </div>
       <span
         className={classNames(
@@ -60,8 +92,8 @@ export default function CurrentBuzz(props: CurrentBuzzProps) {
           "dark:text-dark-tremor-content-emphasis",
           "transition-[font-size,_line-height]",
           {
-            "text-xl": firstBuzz === null && props.isShowingQuestions,
-            "text-6xl": firstBuzz !== null || !props.isShowingQuestions,
+            "text-xl": isSmall,
+            "text-6xl": !isSmall,
           },
         )}
       >

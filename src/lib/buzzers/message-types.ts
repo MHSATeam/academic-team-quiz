@@ -15,11 +15,29 @@ export type PlayerPresence = {
 };
 
 export type SetType = "online" | "oac-paper" | "unknown";
+
+/**
+ * Paused if unpauseTime == -1 and pauseLeft != -1
+ * Normal if unpauseTime == -1 and pauseLeft == -1
+ * Started after pause if unpauseTime != -1 and pauseLeft != -1
+ *
+ * if(unpauseTime == -1)
+ *  if(pauseLeft == -1)
+ *    Time Left = max(0, duration - (Date.now() - startTime))
+ *  else
+ *    Time Left = pauseLeft
+ * else
+ *  Time Left = max(0, pauseLeft - (Date.now() - unpauseTime))
+ */
 export type Timer = {
   duration: number;
+  unpauseTime: DOMHighResTimeStamp;
+  pauseLeft: number;
   startTime: DOMHighResTimeStamp;
 };
+
 export type GamePhase = "team-picker" | "buzzer" | "alphabet-round";
+
 export type TeamScores = { [key: string]: number; a: number; b: number };
 
 export type BoxMessage = ChangeTeamMessage;

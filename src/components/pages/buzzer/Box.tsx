@@ -29,7 +29,12 @@ export default function BoxPage(props: BoxPageProps) {
   const [questionIndex, setQuestionIndex] = useState(0);
   const [questionSet, setQuestionSet] = useState<CompleteSet | undefined>();
   const [teamScores, setTeamScores] = useState<TeamScores>({ a: 0, b: 0 });
-  const [timer, setTimer] = useState<Timer>({ duration: 10000, startTime: -1 });
+  const [timer, setTimer] = useState<Timer>({
+    duration: 10000,
+    startTime: -1,
+    pauseLeft: -1,
+    unpauseTime: -1,
+  });
   const [lastBuzzerClear, setLastBuzzerClear] = useState(0);
 
   const createNewGame = useCallback(async () => {
@@ -116,12 +121,53 @@ export default function BoxPage(props: BoxPageProps) {
               };
             });
           }}
-          onStopTimer={() => {
+          onResetTimer={() => {
             setTimer((prev) => {
               return {
                 ...prev,
                 startTime: -1,
+                unpauseTime: -1,
+                pauseLeft: -1,
               };
+            });
+          }}
+          onTogglePauseTimer={() => {
+            setTimer((prev) => {
+              const now = Date.now();
+              if (prev.unpauseTime === -1 && prev.pauseLeft === -1) {
+                return {
+                  ...prev,
+                  pauseLeft: prev.duration - (now - prev.startTime),
+                };
+              } else if (prev.unpauseTime === -1 && prev.pauseLeft !== -1) {
+                return {
+                  ...prev,
+                  unpauseTime: Date.now(),
+                };
+              } else {
+                return {
+                  ...prev,
+                  unpauseTime: -1,
+                  pauseLeft: prev.pauseLeft - (now - prev.unpauseTime),
+                };
+              }
+            });
+          }}
+          onPauseTimerAtTime={(timestamp) => {
+            setTimer((prev) => {
+              if (prev.unpauseTime === -1 && prev.pauseLeft === -1) {
+                return {
+                  ...prev,
+                  pauseLeft: prev.duration - (timestamp - prev.startTime),
+                };
+              } else if (prev.unpauseTime !== -1) {
+                return {
+                  ...prev,
+                  unpauseTime: -1,
+                  pauseLeft: prev.pauseLeft - (timestamp - prev.unpauseTime),
+                };
+              }
+              return prev;
             });
           }}
           onClearBuzzer={() => {

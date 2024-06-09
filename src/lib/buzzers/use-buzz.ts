@@ -3,7 +3,7 @@ import { RealtimeClient } from "@/src/lib/buzzers/ably-realtime";
 import { BuzzMessage } from "@/src/lib/buzzers/message-types";
 import { useContext, useEffect, useMemo, useState } from "react";
 
-export default function useBuzz() {
+export default function useBuzz(onBuzz?: (buzz: BuzzMessage) => void) {
   const boxPresence = useContext(BoxPresenceContext);
   const [rawBuzzList, setRawBuzzList] = useState<BuzzMessage[]>([]);
   useEffect(() => {
@@ -12,12 +12,13 @@ export default function useBuzz() {
         setRawBuzzList((prev) => {
           return [...prev, message];
         });
+        onBuzz?.(message);
       }
     });
     return () => {
       unsubscribe();
     };
-  }, [boxPresence?.locked]);
+  }, [boxPresence?.locked, onBuzz]);
 
   const buzzList = useMemo(() => {
     const currentBuzzes = rawBuzzList.filter(

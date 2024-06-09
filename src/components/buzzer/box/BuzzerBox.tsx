@@ -10,6 +10,7 @@ import { CompleteSet } from "@/src/utils/prisma-extensions";
 import CurrentBuzz from "@/components/buzzer/box/CurrentBuzz";
 import DisplayFormattedText from "@/components/utils/DisplayFormattedText";
 import classNames from "classnames";
+import { BuzzMessage } from "@/src/lib/buzzers/message-types";
 
 type BuzzerBoxProps = {
   inDisplayMode: boolean;
@@ -18,14 +19,29 @@ type BuzzerBoxProps = {
   onSetLocked?: (locked: boolean) => void;
   onSetTimerDuration?: (duration: number) => void;
   onStartTimer?: () => void;
-  onStopTimer?: () => void;
+  onResetTimer?: () => void;
+  onTogglePauseTimer?: () => void;
+  onPauseTimerAtTime?: (timestamp: number) => void;
   onClearBuzzer?: () => void;
   onUpdateQuestionIndex?: React.Dispatch<React.SetStateAction<number>>;
 };
 
 export default function BuzzerBox(props: BuzzerBoxProps) {
   const boxPresence = useContext(BoxPresenceContext);
-  const [firstBuzz] = useBuzz();
+  const { onPauseTimerAtTime } = props;
+  const onBuzz = useCallback(
+    (message: BuzzMessage) => {
+      if (
+        boxPresence?.timer.startTime !== -1 &&
+        (boxPresence?.timer.unpauseTime !== -1 ||
+          boxPresence.timer.pauseLeft === -1)
+      ) {
+        onPauseTimerAtTime?.(message.timestamp);
+      }
+    },
+    [onPauseTimerAtTime, boxPresence?.timer],
+  );
+  const [firstBuzz] = useBuzz(onBuzz);
 
   const movePlayer = useCallback((playerId: string, newTeam: string) => {
     RealtimeClient.box.publish({
@@ -77,6 +93,23 @@ export default function BuzzerBox(props: BuzzerBoxProps) {
             onClearBuzzer={props.onClearBuzzer}
             isShowingQuestions={question !== undefined}
             onToggleBuzzerLock={() => props.onSetLocked?.(!boxPresence.locked)}
+            onMarkQuestion={(result) => {
+              if (!firstBuzz) {
+                return;
+              }
+              let scoreChange = 0;
+              if (result === "correct") {
+                scoreChange = 2;
+              } else if (result === "correct-2-attempt") {
+                scoreChange = 1;
+              }
+              props.onUpdateScore?.(scoreChange, firstBuzz.team);
+              props.onClearBuzzer?.();
+              props.onResetTimer?.();
+              if (result !== "incorrect") {
+                props.onUpdateQuestionIndex?.((prev) => prev + 1);
+              }
+            }}
           />
           {question && (
             <div
@@ -160,7 +193,8 @@ export default function BuzzerBox(props: BuzzerBoxProps) {
             <Timer
               showControls={!props.inDisplayMode}
               onStartTimer={props.onStartTimer}
-              onStopTimer={props.onStopTimer}
+              onResetTimer={props.onResetTimer}
+              onTogglePause={props.onTogglePauseTimer}
               onSetTimerDuration={props.onSetTimerDuration}
             />
             <button
