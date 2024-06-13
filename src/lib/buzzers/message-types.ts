@@ -74,3 +74,10 @@ export type TimingMessage =
       offset: number;
       clientId: string;
     };
+
+export type ChunkMessage = {
+  fileId: string;
+  index: number;
+  length: number;
+  blob: string;
+};

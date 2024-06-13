@@ -1,11 +1,18 @@
 import {
+  assembleFile,
+  encodeBlob,
+  splitFile,
+} from "@/src/lib/buzzers/ably-file-transfer";
+import {
   BoxMessage,
   BoxPresence,
+  ChunkMessage,
   PlayerMessage,
   PlayerPresence,
   TimingMessage,
 } from "@/src/lib/buzzers/message-types";
 import { Realtime, Types } from "ably";
+import { nanoid } from "nanoid";
 
 type MessageCallback<Message> = (msg: Message) => void;
 
@@ -24,6 +31,9 @@ class AblyChannelWrapper<Message> {
 
     return () => {
       this.channel.unsubscribe(event, callbackWrapper);
+      if (this.channel.listeners()?.length === 0) {
+        this.channel.detach();
+      }
     };
   }
 
@@ -33,6 +43,9 @@ class AblyChannelWrapper<Message> {
       this.channel.detach();
     } else {
       this.channel.unsubscribe(event);
+      if (this.channel.listeners()?.length === 0) {
+        this.channel.detach();
+      }
     }
   }
 
@@ -130,6 +143,111 @@ class PresenceChannel<Message, Presence> extends AblyChannelWrapper<Message> {
         this.channel.presence.unsubscribe(this.boundOnPresenceEvent);
       }
     };
+  }
+}
+type FileCallback = (file: Blob) => void;
+type PartialFile = {
+  lastChunkTimestamp: number;
+  chunks: ChunkMessage[];
+  length: number;
+};
+
+class FileChannelWrapper extends AblyChannelWrapper<ChunkMessage> {
+  private readonly MAX_CHUNK_WAIT_TIME = 60 * 1000;
+  private readonly CHUNK_SEND_TIMEOUT = 100;
+  private readonly fileListeners: FileCallback[] = [];
+  private readonly partialFiles: Record<string, PartialFile> = {};
+  private unsubscribeChannel: (() => void) | undefined = undefined;
+
+  constructor(channel: Types.RealtimeChannelPromise) {
+    super(channel);
+  }
+
+  private onReceiveChunk(chunk: ChunkMessage) {
+    if (!(chunk.fileId in this.partialFiles)) {
+      this.partialFiles[chunk.fileId] = {
+        lastChunkTimestamp: Date.now(),
+        chunks: [],
+        length: chunk.length,
+      };
+    }
+
+    const partialFile = this.partialFiles[chunk.fileId];
+
+    if (chunk.length !== partialFile.length) {
+      console.warn("There was a mismatch in file lengths between chunks!");
+    }
+
+    partialFile.chunks.push(chunk);
+    partialFile.lastChunkTimestamp = Date.now();
+
+    if (partialFile.chunks.length === partialFile.length) {
+      const file = assembleFile(partialFile.chunks);
+      for (const listener of this.fileListeners) {
+        try {
+          listener(file);
+        } catch (e) {
+          console.error(e);
+        }
+      }
+      delete this.partialFiles[chunk.fileId];
+    }
+
+    Object.entries(this.partialFiles).forEach(([id, partial]) => {
+      if (partial.lastChunkTimestamp + this.MAX_CHUNK_WAIT_TIME < Date.now()) {
+        console.warn(
+          `Clearing partial file because chunks did not arrive in time! (${partial.chunks.length}/${partial.length} chunks arrived)`,
+        );
+        delete this.partialFiles[id];
+      }
+    });
+  }
+
+  private boundOnReceiveChunk = this.onReceiveChunk.bind(this);
+
+  public subscribeFile(callback: FileCallback): () => void {
+    if (this.fileListeners.length === 0) {
+      this.unsubscribeChannel = this.subscribe(
+        this.boundOnReceiveChunk,
+        "chunk",
+      );
+    }
+    this.fileListeners.push(callback);
+
+    return () => {
+      const index = this.fileListeners.indexOf(callback);
+      if (index !== -1) {
+        this.fileListeners.splice(index, 1);
+      }
+      if (this.fileListeners.length === 0) {
+        this.unsubscribeChannel?.();
+      }
+    };
+  }
+
+  public async sendFile(file: File | Blob) {
+    const chunks = splitFile(file);
+    const fileId = nanoid();
+    for (let i = 0; i < chunks.length; i++) {
+      const chunk = chunks[i];
+      if (i !== 0) {
+        await new Promise<void>((resolve) => {
+          setTimeout(() => {
+            resolve();
+          }, this.CHUNK_SEND_TIMEOUT);
+        });
+      }
+      const base64 = await encodeBlob(chunk);
+      await this.publish(
+        {
+          blob: base64,
+          fileId,
+          index: i,
+          length: chunks.length,
+        },
+        "chunk",
+      );
+    }
   }
 }
 
@@ -230,6 +348,7 @@ export class BuzzerClient extends AblyClient {
   private _player: PresenceChannel<PlayerMessage, PlayerPresence> | null = null;
   private _box: PresenceChannel<BoxMessage, BoxPresence> | null = null;
   private _timing: AblyChannelWrapper<TimingMessage> | null = null;
+  private _images: FileChannelWrapper | null = null;
 
   public hasJoinedGame() {
     return this.gameId !== null;
@@ -254,10 +373,17 @@ export class BuzzerClient extends AblyClient {
   }
 
   public get timing() {
-    if (!this._box) {
+    if (!this._timing) {
       throw new Error("Client not connected to a game!");
     }
     return this._timing;
+  }
+
+  public get images() {
+    if (!this.images) {
+      throw new Error("Client not connected to a game!");
+    }
+    return this._images;
   }
 
   public async doesGameExist(gameId: number): Promise<boolean> {
@@ -279,6 +405,9 @@ export class BuzzerClient extends AblyClient {
     this._box = new PresenceChannel(this.client.channels.get(`box:${gameId}`));
     this._timing = new AblyChannelWrapper(
       this.client.channels.get(`timing:${gameId}`),
+    );
+    this._images = new FileChannelWrapper(
+      this.client.channels.get(`images:${gameId}`),
     );
     return true;
   }

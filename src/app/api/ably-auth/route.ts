@@ -24,6 +24,7 @@ async function getAblyToken(
       "player:*": ["subscribe", "publish", "presence"],
       "box:*": ["subscribe", "publish", "presence"],
       "timing:*": ["subscribe", "publish"],
+      "images:*": ["subscribe", "publish"],
     },
     clientId: clientId,
   });
