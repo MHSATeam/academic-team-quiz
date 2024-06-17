@@ -1,5 +1,6 @@
 import { BoxPresenceContext } from "@/components/buzzer/BoxPresenceProvider";
 import Timer from "@/components/buzzer/Timer";
+import AlphabetPlayer from "@/components/buzzer/player/AlphabetPlayer";
 import Buzzer from "@/components/buzzer/player/Buzzer";
 import SettingsDialog from "@/components/buzzer/player/SettingsDialog";
 import AblyStatusSymbol from "@/components/utils/AblyStatusSymbol";
@@ -65,7 +66,14 @@ export default function ConnectedPlayer({
             : "red",
       }}
     >
-      <div className="w-full grow">
+      <div className="flex w-full items-center gap-4 border-b-2 border-tremor-border p-4 dark:text-white">
+        <Title className="h-fit grow">Good luck {name}!</Title>
+        <button onClick={() => setSettingsOpen(true)}>
+          <Settings size={36} />
+        </button>
+        <AblyStatusSymbol />
+      </div>
+      <div className="w-full grow overflow-hidden">
         {boxPresence.gamePhase === "team-picker" && (
           <div className="flex h-full w-full flex-col items-center justify-center">
             <div
@@ -110,6 +118,9 @@ export default function ConnectedPlayer({
         {boxPresence.gamePhase === "buzzer" && (
           <Buzzer name={name} team={team} />
         )}
+        {boxPresence.gamePhase === "alphabet-round" && (
+          <AlphabetPlayer name={name} team={team} />
+        )}
       </div>
       <div className="relative flex w-full items-end justify-between">
         <div
@@ -142,13 +153,6 @@ export default function ConnectedPlayer({
             {boxPresence.teamScores.b}
           </span>
         </div>
-      </div>
-      <div className="absolute left-0 top-0 flex w-full items-center gap-4 p-3 dark:text-white">
-        <Title className="h-fit grow">Good luck {name}!</Title>
-        <button onClick={() => setSettingsOpen(true)}>
-          <Settings size={36} />
-        </button>
-        <AblyStatusSymbol />
       </div>
       <SettingsDialog
         isOpen={isSettingsOpen}

@@ -1,9 +1,13 @@
 "use client";
 
-import BoxPresenceProvider from "@/components/buzzer/BoxPresenceProvider";
-import BuzzerBox from "@/components/buzzer/box/BuzzerBox";
+import BoxPresenceProvider, {
+  BoxPresenceContext,
+} from "@/components/buzzer/BoxPresenceProvider";
+import AlphabetDisplay from "@/components/buzzer/box/AlphabetDisplay";
+import BuzzDisplay from "@/components/buzzer/box/BuzzDisplay";
+import GameBox from "@/components/buzzer/box/GameBox";
 import GameIdInput from "@/components/buzzer/player/GameIdInput";
-import { useState } from "react";
+import { useContext, useState } from "react";
 
 export default function DisplayPage() {
   const [connected, setConnected] = useState(false);
@@ -12,8 +16,18 @@ export default function DisplayPage() {
   } else {
     return (
       <BoxPresenceProvider isBox={false}>
-        <BuzzerBox inDisplayMode />
+        <GameBox inDisplayMode>
+          <PhaseSelector />
+        </GameBox>
       </BoxPresenceProvider>
     );
   }
+}
+
+function PhaseSelector() {
+  const boxPresence = useContext(BoxPresenceContext);
+  if (boxPresence && boxPresence.gamePhase === "alphabet-round") {
+    return <AlphabetDisplay inDisplayMode />;
+  }
+  return <BuzzDisplay inDisplayMode />;
 }

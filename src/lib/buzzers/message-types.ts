@@ -36,6 +36,12 @@ export type Timer = {
   startTime: DOMHighResTimeStamp;
 };
 
+export type AlphabetRound = {
+  isOpen: boolean;
+  letter: string;
+  questions: string[];
+};
+
 export type GamePhase = "team-picker" | "buzzer" | "alphabet-round";
 
 export type TeamScores = { [key: string]: number; a: number; b: number };
@@ -57,6 +63,7 @@ export type BoxPresence = {
   questionIndex: number;
   timer: Timer;
   lastBuzzerClear: DOMHighResTimeStamp;
+  alphabetRound?: AlphabetRound;
 };
 
 export type TimingMessage =
