@@ -118,9 +118,7 @@ export default function ConnectedPlayer({
         {boxPresence.gamePhase === "buzzer" && (
           <Buzzer name={name} team={team} />
         )}
-        {boxPresence.gamePhase === "alphabet-round" && (
-          <AlphabetPlayer name={name} team={team} />
-        )}
+        {boxPresence.gamePhase === "alphabet-round" && <AlphabetPlayer />}
       </div>
       <div className="relative flex w-full items-end justify-between">
         <div

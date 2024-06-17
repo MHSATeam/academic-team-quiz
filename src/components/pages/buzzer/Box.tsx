@@ -139,17 +139,25 @@ export default function BoxPage(props: BoxPageProps) {
   }, []);
 
   const alphabetRound = useMemo((): AlphabetRound | undefined => {
-    if (!questionSet || !questionSet.alphabetRound) {
-      return undefined;
+    if (setType === "online") {
+      if (!questionSet || !questionSet.alphabetRound) {
+        return undefined;
+      }
+      return {
+        type: "online",
+        isOpen: isAlphabetOpen,
+        letter: questionSet.alphabetRound.letter,
+        questions: questionSet.alphabetRound.round.questions.map(
+          (question) => question.question,
+        ),
+      };
+    } else if (setType === "oac-paper") {
+      return {
+        type: "paper",
+        isOpen: isAlphabetOpen,
+      };
     }
-    return {
-      isOpen: isAlphabetOpen,
-      letter: questionSet.alphabetRound.letter,
-      questions: questionSet.alphabetRound.round.questions.map(
-        (question) => question.question,
-      ),
-    };
-  }, [questionSet, isAlphabetOpen]);
+  }, [setType, questionSet, isAlphabetOpen]);
 
   let Component: ReactNode;
   switch (phase) {

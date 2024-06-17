@@ -36,10 +36,18 @@ export type Timer = {
   startTime: DOMHighResTimeStamp;
 };
 
-export type AlphabetRound = {
+export type AlphabetRound = OnlineAlphabetRound | PaperAlphabetRound;
+
+export type OnlineAlphabetRound = {
+  type: "online";
   isOpen: boolean;
   letter: string;
   questions: string[];
+};
+
+export type PaperAlphabetRound = {
+  type: "paper";
+  isOpen: boolean;
 };
 
 export type GamePhase = "team-picker" | "buzzer" | "alphabet-round";
