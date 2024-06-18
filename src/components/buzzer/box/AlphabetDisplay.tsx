@@ -1,6 +1,7 @@
 import { BoxPresenceContext } from "@/components/buzzer/BoxPresenceProvider";
+import DisplayFormattedText from "@/components/utils/DisplayFormattedText";
 import { CompleteSet } from "@/src/utils/prisma-extensions";
-import { Button, Flex, Title } from "@tremor/react";
+import { Button, Dialog, DialogPanel, Flex, Title } from "@tremor/react";
 import { ExternalLink } from "lucide-react";
 import Link from "next/link";
 import { useContext, useState } from "react";
@@ -16,6 +17,7 @@ type AlphabetDisplayProps = {
 export default function AlphabetDisplay(props: AlphabetDisplayProps) {
   const boxPresence = useContext(BoxPresenceContext);
   const [alphabetScores, setAlphabetScores] = useState({ a: 0, b: 0 });
+  const [showAnswers, setShowAnswers] = useState(false);
   if (!boxPresence) {
     return null;
   }
@@ -81,6 +83,19 @@ export default function AlphabetDisplay(props: AlphabetDisplayProps) {
               );
             })}
           </div>
+          {!props.inDisplayMode &&
+            boxPresence.alphabetRound &&
+            boxPresence.alphabetRound.type === "online" &&
+            boxPresence.alphabetRound.isOpen && (
+              <Button
+                className="w-fit"
+                onClick={() => {
+                  setShowAnswers(true);
+                }}
+              >
+                View answers
+              </Button>
+            )}
           <Button
             className="w-fit"
             color="red"
@@ -92,6 +107,34 @@ export default function AlphabetDisplay(props: AlphabetDisplayProps) {
           </Button>
         </>
       )}
+      <Dialog open={showAnswers} onClose={setShowAnswers}>
+        <DialogPanel>
+          {props.questionSet?.alphabetRound?.round && (
+            <div className="flex flex-col gap-4">
+              <Title>
+                Alphabet Round Letter:{" "}
+                {props.questionSet.alphabetRound.letter.toUpperCase()} Answers
+              </Title>
+              <div className="flex flex-col gap-1 rounded-sm bg-white p-2 font-serif text-black">
+                {props.questionSet.alphabetRound.round.questions.map(
+                  (question, index) => (
+                    <span key={index}>
+                      {index + 1}.{" "}
+                      <DisplayFormattedText
+                        element="span"
+                        text={question.answer}
+                      />
+                    </span>
+                  ),
+                )}
+              </div>
+              <Button className="w-fit" onClick={() => setShowAnswers(false)}>
+                Close
+              </Button>
+            </div>
+          )}
+        </DialogPanel>
+      </Dialog>
     </div>
   );
 }
