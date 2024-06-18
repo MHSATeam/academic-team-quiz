@@ -138,10 +138,6 @@ class PresenceChannel<Message, Presence> extends AblyChannelWrapper<Message> {
       this._presenceListeners = this._presenceListeners.filter(
         (c) => c !== callback,
       );
-      if (this._presenceListeners.length === 0 && this._isSubscribed) {
-        this._isSubscribed = false;
-        this.channel.presence.unsubscribe(this.boundOnPresenceEvent);
-      }
     };
   }
 }
