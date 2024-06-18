@@ -52,7 +52,7 @@ export default function CurrentBuzz(props: CurrentBuzzProps) {
           >
             {boxPresence.locked ? "Unlock" : "Lock"}
           </Button>
-          <Tooltip content="Correct">
+          <Tooltip triggerAsChild content="Correct">
             <Button
               disabled={firstBuzz === null}
               size={!isSmall ? "sm" : "xs"}
@@ -63,7 +63,7 @@ export default function CurrentBuzz(props: CurrentBuzzProps) {
               <Check />
             </Button>
           </Tooltip>
-          <Tooltip content="Correct on second attempt">
+          <Tooltip triggerAsChild content="Correct on second attempt">
             <Button
               disabled={firstBuzz === null}
               size={!isSmall ? "sm" : "xs"}
@@ -76,7 +76,7 @@ export default function CurrentBuzz(props: CurrentBuzzProps) {
               <CheckCheck />
             </Button>
           </Tooltip>
-          <Tooltip content="Incorrect">
+          <Tooltip triggerAsChild content="Incorrect">
             <Button
               disabled={firstBuzz === null}
               size={!isSmall ? "sm" : "xs"}
