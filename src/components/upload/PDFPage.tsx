@@ -1,3 +1,4 @@
+import useMouseEvent from "@/src/hooks/use-mouse-event";
 import { drawRoundedRect, getMousePos } from "@/src/utils/canvas-utils";
 import {
   SelectedText,
@@ -8,7 +9,6 @@ import {
   getBboxVectors,
   getOverlappingBoxes,
 } from "@/src/utils/selection-utils";
-import useMouseEvent from "@/src/utils/use-mouse-event";
 import { Vector } from "@/src/utils/vector";
 import { Scan } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";

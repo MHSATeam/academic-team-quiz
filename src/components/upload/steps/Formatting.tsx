@@ -1,4 +1,4 @@
-import { StepComponentProps } from "@/components/pages/UploadSet";
+import { StepComponentProps } from "@/components/pages/management/UploadSet";
 import CanvasImage from "@/components/upload/CanvasImage";
 import QuestionEditor from "@/components/upload/QuestionEditor";
 import { EditorQuestion } from "@/src/utils/set-upload-utils";

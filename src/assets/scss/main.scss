@@ -24,3 +24,9 @@
 .no-scrollbar::-webkit-scrollbar {
   display: none;
 }
+
+.no-spin-button::-webkit-inner-spin-button,
+.no-spin-button::-webkit-outer-spin-button {
+  display: none;
+  margin: 0;
+}

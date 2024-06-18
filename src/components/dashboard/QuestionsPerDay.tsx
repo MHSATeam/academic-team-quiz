@@ -29,15 +29,15 @@ export default function QuestionsPerDay(props: QuestionsPerDayProps) {
         props.timeFrameDays
       );
     },
-    [props.timeFrameDays]
+    [props.timeFrameDays],
   );
 
   const otherUsersSorted = useMemo(
     () =>
       props.otherUsers.sort(
-        (a, b) => averageDayCount(b.days) - averageDayCount(a.days)
+        (a, b) => averageDayCount(b.days) - averageDayCount(a.days),
       ),
-    [props.otherUsers, averageDayCount]
+    [props.otherUsers, averageDayCount],
   );
 
   const categories = useMemo(
@@ -45,7 +45,7 @@ export default function QuestionsPerDay(props: QuestionsPerDayProps) {
       props.showAll
         ? ["You", ...otherUsersSorted.map(({ name }) => name)]
         : ["Answered", "Correct"],
-    [props.showAll, otherUsersSorted]
+    [props.showAll, otherUsersSorted],
   );
   const colors = useMemo(
     () =>
@@ -57,22 +57,22 @@ export default function QuestionsPerDay(props: QuestionsPerDayProps) {
               return !streaks || !streaks.isActive
                 ? "gray"
                 : streaks.hasCompletedToday
-                ? "emerald"
-                : "yellow";
+                  ? "emerald"
+                  : "yellow";
             }),
           ]
         : ["blue", "green"],
-    [props.showAll, props.streaks, otherUsersSorted]
+    [props.showAll, props.streaks, otherUsersSorted],
   );
 
   return (
     <AreaChart
       className="h-72"
       data={new Array(props.timeFrameDays).fill(0).map((_, i) => {
-        const date = new Date();
+        const date = newDateInTimeZone();
         date.setDate(date.getDate() - (props.timeFrameDays - 1) + i);
         const activeDay = props.currentUserDays.find((activeDay) =>
-          compareDateWithoutTime(activeDay.date, date, false)
+          compareDateWithoutTime(activeDay.date, date, false),
         );
         const Answered = Number(activeDay?.question_count ?? 0);
         const Correct = Number(activeDay?.correct_count ?? 0);
@@ -87,8 +87,8 @@ export default function QuestionsPerDay(props: QuestionsPerDayProps) {
           for (const user of props.otherUsers) {
             day[user.name] = Number(
               user.days.find((activeDay) =>
-                compareDateWithoutTime(activeDay.date, date, false)
-              )?.question_count ?? 0
+                compareDateWithoutTime(activeDay.date, date, false),
+              )?.question_count ?? 0,
             );
           }
           return day;

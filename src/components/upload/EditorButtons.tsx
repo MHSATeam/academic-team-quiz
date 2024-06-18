@@ -10,11 +10,7 @@ export default function EditorButtons(props: EditorButtonsProps) {
     <div className="flex gap-1">
       {props.buttons.map((button) => {
         return (
-          <EditorButton
-            key={button.name}
-            button={button}
-            editor={props.editor}
-          />
+          <EButton key={button.name} button={button} editor={props.editor} />
         );
       })}
     </div>
@@ -25,7 +21,7 @@ type EditorButtonProps = {
   editor: Editor;
   button: EditorButton;
 };
-function EditorButton(props: EditorButtonProps) {
+function EButton(props: EditorButtonProps) {
   const { Icon, ...button } = props.button;
   return (
     <button

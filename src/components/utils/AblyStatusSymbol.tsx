@@ -1,11 +1,13 @@
+import { RealtimeClient } from "@/src/lib/buzzers/ably-realtime";
 import { Types } from "ably";
-import { Cloud, CloudCog, CloudOff } from "lucide-react";
+import { Cloud, CloudCog, CloudOff, LucideProps } from "lucide-react";
 import { useEffect, useState } from "react";
-import { RealtimeStatus } from "@/src/buzzers/ably-realtime";
 
 type StatusSymbol = "server" | "server-off" | "server-cog";
 
-export default function AblyStatusSymbol() {
+export default function AblyStatusSymbol(
+  props: LucideProps & { buttonClass?: string },
+) {
   const [statusSymbol, setStatusSymbol] = useState<StatusSymbol>("server-off");
 
   useEffect(() => {
@@ -26,17 +28,22 @@ export default function AblyStatusSymbol() {
         case "failed":
         case "suspended": {
           setStatusSymbol("server-off");
+          if (stateChange.current !== "closed") {
+            alert(
+              "You are disconnected! If you aren't reconnected within 10 seconds, you may need to restart the app.",
+            );
+          }
           break;
         }
       }
     };
     handleStateChange({
-      current: RealtimeStatus.stateManager.state,
+      current: RealtimeClient.stateManager.state,
       previous: "initialized",
     });
-    RealtimeStatus.stateManager.subscribe(handleStateChange);
+    RealtimeClient.stateManager.subscribe(handleStateChange);
     return () => {
-      RealtimeStatus.stateManager.unsubscribe(handleStateChange);
+      RealtimeClient.stateManager.unsubscribe(handleStateChange);
     };
   }, []);
   let Symbol;
@@ -59,18 +66,28 @@ export default function AblyStatusSymbol() {
   const capitalize = (str: string) =>
     str.slice(0, 1).toUpperCase() + str.slice(1);
   const title = `Connection Status: ${capitalize(
-    RealtimeStatus.stateManager.state
+    RealtimeClient.stateManager.state,
   )}`;
+
+  const { buttonClass, ...lucideProps } = props;
 
   return (
     <button
       onClick={(e) => {
         e.stopPropagation();
         alert(title);
+        if (
+          ["suspended", "disconnected"].includes(
+            RealtimeClient.stateManager.state,
+          )
+        ) {
+          RealtimeClient.connect();
+        }
       }}
       title={title}
+      className={buttonClass}
     >
-      <Symbol size={36} />
+      <Symbol size={36} {...lucideProps} />
     </button>
   );
 }

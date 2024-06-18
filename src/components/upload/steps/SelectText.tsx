@@ -1,7 +1,7 @@
 import {
   StepComponentProps,
   TesseractScheduler,
-} from "@/components/pages/UploadSet";
+} from "@/components/pages/management/UploadSet";
 import PDFPage from "@/components/upload/PDFPage";
 import {
   SelectedText,
@@ -11,7 +11,6 @@ import {
 } from "@/src/utils/selection-utils";
 import { createQuestion } from "@/src/utils/set-upload-utils";
 import { damerauLevSimilarity } from "@/src/utils/string-utils";
-import useKeyboardEvent from "@/src/utils/use-keyboard-event";
 import { Category } from "@prisma/client";
 import {
   Accordion,
@@ -47,6 +46,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Document } from "react-pdf";
 import DisplayFormattedText from "@/components/utils/DisplayFormattedText";
 import classNames from "classnames";
+import useKeyboardEvent from "@/src/hooks/use-keyboard-event";
 
 type SelectionTool = "question" | "answer" | "category";
 

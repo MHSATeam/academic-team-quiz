@@ -1,7 +1,7 @@
 // Adapated from https://github.com/clauderic/dnd-kit/blob/master/stories/2%20-%20Presets/Sortable/MultipleContainers.tsx
 // Accessed: 4/6/24
 
-import { StepComponentProps } from "@/components/pages/UploadSet";
+import { StepComponentProps } from "@/components/pages/management/UploadSet";
 import QuestionDisplay from "@/components/upload/uploading/QuestionDisplay";
 import { QuestionList } from "@/src/utils/set-upload-utils";
 import {

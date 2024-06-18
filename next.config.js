@@ -17,6 +17,7 @@ const nextConfig = {
   experimental: {
     outputFileTracingIgnores: ["**canvas**"],
   },
+  reactStrictMode: false,
 };
 
 export default withModernizr(nextConfig);

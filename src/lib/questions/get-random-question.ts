@@ -1,5 +1,5 @@
 import { prismaClient } from "@/src/utils/clients";
-import { QuestionWithRoundData } from "@/src/utils/quiz-session-type-extension";
+import { QuestionWithRoundData } from "@/src/utils/prisma-extensions";
 import "server-only";
 
 export async function getRandomQuestion(

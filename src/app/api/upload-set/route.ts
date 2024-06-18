@@ -1,5 +1,5 @@
 import { sanitize } from "@/src/lib/questions/dom-purify";
-import { TeamNameMapping } from "@/src/lib/round/teamMapping";
+import { TeamNameMapping } from "@/src/lib/round/team-mapping";
 import { UploadableSet } from "@/src/lib/upload/build-set";
 import { prismaClient } from "@/src/utils/clients";
 import { Round } from "@prisma/client";

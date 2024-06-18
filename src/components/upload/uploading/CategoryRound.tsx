@@ -1,5 +1,5 @@
 import QuestionContainer from "@/components/upload/uploading/QuestionContainer";
-import { TeamNameMapping } from "@/src/lib/round/teamMapping";
+import { TeamNameMapping } from "@/src/lib/round/team-mapping";
 import {
   CategoryRound as CategoryData,
   EditorQuestion,

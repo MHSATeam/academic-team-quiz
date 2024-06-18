@@ -1,4 +1,4 @@
-import { StepComponent } from "@/components/pages/UploadSet";
+import { StepComponent } from "@/components/pages/management/UploadSet";
 import Finalize from "@/components/upload/steps/Finalize";
 import Formatting from "@/components/upload/steps/Formatting";
 import SelectFile from "@/components/upload/steps/SelectFile";

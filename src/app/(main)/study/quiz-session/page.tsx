@@ -1,6 +1,6 @@
-import CreateQuizSession from "@/components/utils/CreateQuizSession";
-import DeleteSession from "@/components/utils/DeleteSession";
-import QuizTypes from "@/src/lib/quiz-sessions/QuizTypes";
+import CreateQuizSession from "@/components/inputs/CreateQuizSession";
+import DeleteSession from "@/components/inputs/DeleteSession";
+import QuizTypes from "@/src/lib/quiz-sessions/quiz-types";
 import getDefaultCategories from "@/src/lib/users/get-default-categories";
 import { prismaClient } from "@/src/utils/clients";
 import { getSession } from "@auth0/nextjs-auth0";
@@ -73,16 +73,16 @@ export default async function Page({
   const categories = await prismaClient.category.findMany();
 
   return (
-    <main className="px-6 py-12 flex flex-col gap-4">
+    <main className="flex flex-col gap-4 px-6 py-12">
       <Metric>In Progress Sessions</Metric>
       <Grid
         numItems={1}
         numItemsMd={3}
-        className="gap-4 justify-normal items-stretch"
+        className="items-stretch justify-normal gap-4"
       >
         <CreateQuizSession
           defaultOpen={quizSessions.every(
-            (quizSession) => quizSession.completedOn !== null
+            (quizSession) => quizSession.completedOn !== null,
           )}
           defaultQuizType={
             QuizTypes.includes(searchParams.type as QuizType)
@@ -136,7 +136,7 @@ export default async function Page({
           return (
             <Card className="overflow-hidden" key={quizSession.id}>
               {quizSession.completedOn !== null && (
-                <div className="absolute top-0 left-0 w-full h-full z-10 bg-opacity-50 bg-gray-500 flex flex-col justify-center items-center">
+                <div className="absolute left-0 top-0 z-10 flex h-full w-full flex-col items-center justify-center bg-gray-500 bg-opacity-50">
                   <Title>Completed</Title>
                   <Subtitle color="blue">
                     On {quizSession.completedOn.toLocaleDateString()}

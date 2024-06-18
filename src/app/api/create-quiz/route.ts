@@ -1,4 +1,4 @@
-import QuizTypes from "@/src/lib/quiz-sessions/QuizTypes";
+import QuizTypes from "@/src/lib/quiz-sessions/quiz-types";
 import { prismaClient } from "@/src/utils/clients";
 import { getSession } from "@auth0/nextjs-auth0";
 import { UserProfile } from "@auth0/nextjs-auth0/client";
