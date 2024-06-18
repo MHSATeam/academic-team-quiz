@@ -9,7 +9,6 @@ import { CompleteSet } from "@/src/utils/prisma-extensions";
 import GameIdDisplay from "@/components/buzzer/GameIdDisplay";
 import GameIdDialog from "@/components/buzzer/GameIdDialog";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { GamePhase } from "@/src/lib/buzzers/message-types";
 
 type GameBoxProps = {
   children?: ReactNode;
@@ -20,9 +19,9 @@ type GameBoxProps = {
   onStartTimer?: () => void;
   onResetTimer?: () => void;
   onTogglePauseTimer?: () => void;
-  onUpdatePhase?: (gamePhase: GamePhase) => void;
   onUpdateQuestionIndex?: React.Dispatch<React.SetStateAction<number>>;
-  onToggleAlphabetQuestions?: (show: boolean) => void;
+  onStartAlphabetRound?: () => void;
+  onEndAlphabetRound?: (scores: { a: number; b: number }) => void;
 };
 
 export default function GameBox(props: GameBoxProps) {
@@ -75,21 +74,27 @@ export default function GameBox(props: GameBoxProps) {
               <ChevronRight />
             </Button>
             <Button
+              disabled={
+                boxPresence.gamePhase === "alphabet-round" &&
+                boxPresence.alphabetRound?.isOpen
+              }
+              title={
+                boxPresence.gamePhase === "alphabet-round" &&
+                boxPresence.alphabetRound?.isOpen
+                  ? "Use add points button instead"
+                  : ""
+              }
               color={boxPresence.gamePhase === "buzzer" ? "gray" : "red"}
               size="lg"
               onClick={() => {
                 if (boxPresence.gamePhase === "buzzer") {
-                  props.onUpdatePhase?.("alphabet-round");
-                  props.onSetTimerDuration?.(4 * 60 * 1000);
+                  props.onStartAlphabetRound?.();
                 } else {
-                  props.onUpdatePhase?.("buzzer");
-                  props.onSetTimerDuration?.(10 * 1000);
+                  props.onEndAlphabetRound?.({ a: 0, b: 0 });
                 }
-                props.onToggleAlphabetQuestions?.(false);
-                props.onResetTimer?.();
               }}
             >
-              {boxPresence.gamePhase === "buzzer" ? "Go to" : "End"} Alphabet
+              {boxPresence.gamePhase === "buzzer" ? "Go to" : "Exit"} Alphabet
               Round
             </Button>
           </>

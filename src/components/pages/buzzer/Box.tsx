@@ -134,6 +134,42 @@ export default function BoxPage(props: BoxPageProps) {
     });
   }, []);
 
+  const startAlphabetRound = useCallback(() => {
+    setPhase("alphabet-round");
+    updateTimerDuration(4 * 60 * 1000);
+    setAlphabetOpen(false);
+    resetTimer();
+  }, [resetTimer, updateTimerDuration]);
+
+  const endAlphabetRound = useCallback(
+    (scores: { a: number; b: number }) => {
+      for (const [team, score] of Object.entries(scores)) {
+        if (score && !isNaN(score)) {
+          updateScore(score, team);
+        }
+      }
+      setPhase("buzzer");
+      if (
+        questionSet &&
+        questionSet.alphabetRound &&
+        questionSet.categoryRound
+      ) {
+        const categoryQuestions = questionSet.categoryRound.teamGroups.reduce(
+          (count, team) => count + team.round._count.questions,
+          0,
+        );
+        const alphabetQuestions =
+          questionSet.alphabetRound.round._count.questions;
+        setQuestionIndex(categoryQuestions + alphabetQuestions);
+      } else {
+        setQuestionIndex((prev) => prev + 20);
+      }
+      updateTimerDuration(10 * 1000);
+      resetTimer();
+    },
+    [updateScore, questionSet, updateTimerDuration, resetTimer],
+  );
+
   const clearBuzzer = useCallback(() => {
     setLastBuzzerClear(Date.now());
   }, []);
@@ -208,9 +244,9 @@ export default function BoxPage(props: BoxPageProps) {
           onStartTimer={startTimer}
           onResetTimer={resetTimer}
           onTogglePauseTimer={toggleTimerPause}
-          onUpdatePhase={setPhase}
           onUpdateQuestionIndex={setQuestionIndex}
-          onToggleAlphabetQuestions={setAlphabetOpen}
+          onStartAlphabetRound={startAlphabetRound}
+          onEndAlphabetRound={endAlphabetRound}
         >
           {phase === "buzzer" && (
             <BuzzDisplay
@@ -230,6 +266,7 @@ export default function BoxPage(props: BoxPageProps) {
               questionSet={questionSet}
               onStartTimer={startTimer}
               onToggleQuestions={setAlphabetOpen}
+              onEndAlphabetRound={endAlphabetRound}
             />
           )}
         </GameBox>
