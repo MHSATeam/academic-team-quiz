@@ -112,7 +112,13 @@ export default function BuzzDisplay(props: BuzzDisplayProps) {
           {isAlphabetRoundQuestion && (
             <div className="flex flex-col items-center gap-2">
               <Title>This question is part of the alphabet round</Title>
-              <Button onClick={() => {}}>Start Alphabet Round</Button>
+              <Button
+                onClick={() => {
+                  props.onStartAlphabetRound?.();
+                }}
+              >
+                Start Alphabet Round
+              </Button>
             </div>
           )}
           <div className="rounded-md bg-white p-2">
