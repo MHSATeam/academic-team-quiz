@@ -73,30 +73,32 @@ export default function GameBox(props: GameBoxProps) {
             >
               <ChevronRight />
             </Button>
-            <Button
-              disabled={
-                boxPresence.gamePhase === "alphabet-round" &&
-                boxPresence.alphabetRound?.isOpen
-              }
-              title={
-                boxPresence.gamePhase === "alphabet-round" &&
-                boxPresence.alphabetRound?.isOpen
-                  ? "Use add points button instead"
-                  : ""
-              }
-              color={boxPresence.gamePhase === "buzzer" ? "gray" : "red"}
-              size="lg"
-              onClick={() => {
-                if (boxPresence.gamePhase === "buzzer") {
-                  props.onStartAlphabetRound?.();
-                } else {
-                  props.onEndAlphabetRound?.({ a: 0, b: 0 });
+            {boxPresence.setType !== "unknown" && (
+              <Button
+                disabled={
+                  boxPresence.gamePhase === "alphabet-round" &&
+                  boxPresence.alphabetRound?.isOpen
                 }
-              }}
-            >
-              {boxPresence.gamePhase === "buzzer" ? "Go to" : "Exit"} Alphabet
-              Round
-            </Button>
+                title={
+                  boxPresence.gamePhase === "alphabet-round" &&
+                  boxPresence.alphabetRound?.isOpen
+                    ? "Use add points button instead"
+                    : ""
+                }
+                color={boxPresence.gamePhase === "buzzer" ? "gray" : "red"}
+                size="lg"
+                onClick={() => {
+                  if (boxPresence.gamePhase === "buzzer") {
+                    props.onStartAlphabetRound?.();
+                  } else {
+                    props.onEndAlphabetRound?.({ a: 0, b: 0 });
+                  }
+                }}
+              >
+                {boxPresence.gamePhase === "buzzer" ? "Go to" : "Exit"} Alphabet
+                Round
+              </Button>
+            )}
           </>
         )}
         <GameIdDisplay

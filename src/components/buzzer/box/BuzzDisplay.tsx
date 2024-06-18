@@ -1,7 +1,7 @@
 import { BoxPresenceContext } from "@/components/buzzer/BoxPresenceProvider";
 import useBuzz from "@/src/lib/buzzers/use-buzz";
-import { Title } from "@tremor/react";
-import React, { useCallback, useContext, useRef } from "react";
+import { Button, Title } from "@tremor/react";
+import React, { useCallback, useContext, useMemo, useRef } from "react";
 import { CompleteSet } from "@/src/utils/prisma-extensions";
 import CurrentBuzz from "@/components/buzzer/box/CurrentBuzz";
 import DisplayFormattedText from "@/components/utils/DisplayFormattedText";
@@ -20,6 +20,7 @@ type BuzzDisplayProps = {
   onPauseTimerAtTime?: (timestamp: number) => void;
   onClearBuzzer?: () => void;
   onUpdateQuestionIndex?: React.Dispatch<React.SetStateAction<number>>;
+  onStartAlphabetRound?: () => void;
 };
 
 export default function BuzzDisplay(props: BuzzDisplayProps) {
@@ -45,6 +46,22 @@ export default function BuzzDisplay(props: BuzzDisplayProps) {
   );
   const [firstBuzz] = useBuzz(onBuzz);
 
+  const question = useMemo(
+    () =>
+      props.inDisplayMode || boxPresence?.questionIndex === undefined
+        ? undefined
+        : props.questionSet?.questionList[boxPresence.questionIndex],
+    [props.inDisplayMode, props.questionSet, boxPresence?.questionIndex],
+  );
+
+  const isAlphabetRoundQuestion = useMemo(() => {
+    return (
+      props.questionSet?.alphabetRound?.round.questions.findIndex(
+        (q) => q.id === question?.id,
+      ) !== -1
+    );
+  }, [question, props.questionSet]);
+
   if (!boxPresence) {
     if (props.inDisplayMode) {
       return <Title>Host has disconnected!</Title>;
@@ -53,9 +70,6 @@ export default function BuzzDisplay(props: BuzzDisplayProps) {
     }
   }
 
-  const question = props.inDisplayMode
-    ? undefined
-    : props.questionSet?.questionList[boxPresence.questionIndex];
   return (
     <>
       <CurrentBuzz
@@ -95,6 +109,12 @@ export default function BuzzDisplay(props: BuzzDisplayProps) {
             },
           )}
         >
+          {isAlphabetRoundQuestion && (
+            <div className="flex flex-col items-center gap-2">
+              <Title>This question is part of the alphabet round</Title>
+              <Button onClick={() => {}}>Start Alphabet Round</Button>
+            </div>
+          )}
           <div className="rounded-md bg-white p-2">
             <span
               className={classNames(
@@ -108,6 +128,7 @@ export default function BuzzDisplay(props: BuzzDisplayProps) {
             >
               Question #{boxPresence.questionIndex + 1}:
             </span>
+
             <DisplayFormattedText
               text={question.question}
               className={classNames(

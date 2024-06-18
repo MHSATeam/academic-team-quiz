@@ -137,9 +137,16 @@ export default function BoxPage(props: BoxPageProps) {
   const startAlphabetRound = useCallback(() => {
     setPhase("alphabet-round");
     updateTimerDuration(4 * 60 * 1000);
+    if (questionSet && questionSet.categoryRound) {
+      const categoryQuestions = questionSet.categoryRound.teamGroups.reduce(
+        (count, team) => count + team.round._count.questions,
+        0,
+      );
+      setQuestionIndex(categoryQuestions);
+    }
     setAlphabetOpen(false);
     resetTimer();
-  }, [resetTimer, updateTimerDuration]);
+  }, [resetTimer, updateTimerDuration, questionSet]);
 
   const endAlphabetRound = useCallback(
     (scores: { a: number; b: number }) => {
@@ -258,6 +265,7 @@ export default function BoxPage(props: BoxPageProps) {
               onPauseTimerAtTime={pauseTimerAtTime}
               onClearBuzzer={clearBuzzer}
               onUpdateQuestionIndex={setQuestionIndex}
+              onStartAlphabetRound={startAlphabetRound}
             />
           )}
           {phase === "alphabet-round" && (
