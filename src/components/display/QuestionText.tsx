@@ -1,5 +1,5 @@
 import DisplayFormattedText from "@/components/utils/DisplayFormattedText";
-import { QuestionWithRoundData } from "@/src/utils/quiz-session-type-extension";
+import { QuestionWithRoundData } from "@/src/utils/prisma-extensions";
 import { HTMLAttributes } from "react";
 
 type QuestionTextProps = {

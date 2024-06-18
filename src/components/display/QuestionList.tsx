@@ -29,7 +29,7 @@ export default function QuestionList(props: QuestionListProps) {
           <Subtitle className="w-1/2">Answers</Subtitle>
         </Flex>
       )}
-      <List className="mb-4">
+      <List>
         {props.questions.map((question) => {
           return (
             <ListItem key={question.id}>

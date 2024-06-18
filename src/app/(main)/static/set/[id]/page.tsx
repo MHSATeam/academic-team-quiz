@@ -4,7 +4,7 @@ import { prismaClient } from "@/src/utils/clients";
 import {
   QuestionWithRoundData,
   addRoundData,
-} from "@/src/utils/quiz-session-type-extension";
+} from "@/src/utils/prisma-extensions";
 import { Flex, Subtitle, Title } from "@tremor/react";
 import { redirect } from "next/navigation";
 
@@ -14,81 +14,7 @@ export default async function Page({ params }: { params: { id: string } }) {
     return redirect("/404");
   }
 
-  const set = await prismaClient.set.findFirst({
-    include: {
-      alphabetRound: {
-        include: {
-          round: {
-            include: {
-              _count: {
-                select: {
-                  questions: true,
-                },
-              },
-              questions: {
-                include: {
-                  category: true,
-                },
-              },
-            },
-          },
-        },
-      },
-      categoryRound: {
-        include: {
-          teamGroups: {
-            include: {
-              round: {
-                include: {
-                  _count: {
-                    select: {
-                      questions: true,
-                    },
-                  },
-                  questions: {
-                    include: {
-                      category: true,
-                    },
-                  },
-                },
-              },
-            },
-          },
-        },
-      },
-      lightningRound: {
-        include: {
-          _count: {
-            select: {
-              questions: true,
-            },
-          },
-          questions: {
-            include: {
-              category: true,
-            },
-          },
-        },
-      },
-      themeRound: {
-        include: {
-          round: {
-            include: {
-              _count: {
-                select: {
-                  questions: true,
-                },
-              },
-              questions: {
-                include: {
-                  category: true,
-                },
-              },
-            },
-          },
-        },
-      },
-    },
+  const set = await prismaClient.set.findCompleteSet({
     where: {
       id: numberId,
     },
@@ -98,7 +24,6 @@ export default async function Page({ params }: { params: { id: string } }) {
     return redirect("/404");
   }
 
-  const flashcardQuestions: QuestionWithRoundData[] = [];
   const categoryRoundQuestionsByCategory: QuestionWithRoundData[][] = [];
 
   if (set.categoryRound) {
@@ -135,45 +60,6 @@ export default async function Page({ params }: { params: { id: string } }) {
     }
   }
 
-  if (set.categoryRound) {
-    if (categoryRoundQuestionsByCategory.length === 0) {
-      flashcardQuestions.push(
-        ...set.categoryRound.teamGroups.flatMap((group) =>
-          group.round.questions.map((q) =>
-            addRoundData(q, group.round, q.category),
-          ),
-        ),
-      );
-    } else {
-      flashcardQuestions.push(...categoryRoundQuestionsByCategory.flat());
-    }
-  }
-  if (set.alphabetRound) {
-    const round = set.alphabetRound.round;
-    flashcardQuestions.push(
-      ...round.questions.map((q) =>
-        addRoundData(q, {
-          ...round,
-          alphabetRound: set.alphabetRound,
-        }),
-      ),
-    );
-  }
-  if (set.lightningRound) {
-    const round = set.lightningRound;
-    flashcardQuestions.push(
-      ...round.questions.map((q) => addRoundData(q, round, q.category)),
-    );
-  }
-  if (set.themeRound) {
-    const round = set.themeRound.round;
-    flashcardQuestions.push(
-      ...round.questions.map((q) =>
-        addRoundData(q, { ...round, themeRound: set.themeRound }, q.category),
-      ),
-    );
-  }
-
   return (
     <Flex
       flexDirection="col"
@@ -186,7 +72,7 @@ export default async function Page({ params }: { params: { id: string } }) {
       <Subtitle>Author(s): {set.author}</Subtitle>
       <hr className="my-2 w-full" />
       <div className="h-full">
-        <FlashcardList questions={flashcardQuestions} />
+        <FlashcardList questions={set.questionList} />
       </div>
       <hr className="my-2 w-full" />
       {categoryRoundQuestionsByCategory.length > 0 && (

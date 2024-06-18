@@ -4,7 +4,7 @@ import QuestionText from "@/components/display/QuestionText";
 import {
   QuestionWithRoundData,
   addRoundData,
-} from "@/src/utils/quiz-session-type-extension";
+} from "@/src/utils/prisma-extensions";
 import { Question } from "@prisma/client";
 import { useState } from "react";
 

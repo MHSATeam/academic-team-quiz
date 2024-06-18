@@ -10,7 +10,7 @@ import {
   Switch,
 } from "@tremor/react";
 import { Category } from "@prisma/client";
-import { QuestionWithRoundData } from "@/src/utils/quiz-session-type-extension";
+import { QuestionWithRoundData } from "@/src/utils/prisma-extensions";
 import QuestionInfoDialog from "@/components/layout/QuestionInfoDialog";
 import useLocalStorage from "@/src/hooks/use-local-storage";
 import DisplayFormattedText from "@/components/utils/DisplayFormattedText";

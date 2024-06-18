@@ -5,7 +5,7 @@ import QuestionInfoDialog from "@/components/layout/QuestionInfoDialog";
 import QuizFinished from "@/components/layout/QuizFinished";
 import { updateQuestionStatus } from "@/src/lib/quiz-sessions/update-question-status";
 import { filterNotEmpty } from "@/src/utils/array-utils";
-import { QuizSessionWithQuestions } from "@/src/utils/quiz-session-type-extension";
+import { QuizSessionWithQuestions } from "@/src/utils/prisma-extensions";
 import { useSprings, animated } from "@react-spring/web";
 import { CategoryBar, Flex, Title } from "@tremor/react";
 import { Check, HelpCircle, Undo2, X } from "lucide-react";

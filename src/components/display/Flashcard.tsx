@@ -1,5 +1,5 @@
 "use client";
-import { QuestionWithRoundData } from "@/src/utils/quiz-session-type-extension";
+import { QuestionWithRoundData } from "@/src/utils/prisma-extensions";
 import { useCallback, useEffect, useState } from "react";
 import { animated, useSpring } from "@react-spring/web";
 import useKeyboardEvent from "@/src/hooks/use-keyboard-event";
