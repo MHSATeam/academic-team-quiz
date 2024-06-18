@@ -29,6 +29,8 @@ import getDefaultCategories from "@/src/lib/users/get-default-categories";
 import UpdateNotice from "@/components/dashboard/UpdateNotice";
 import { getMissedQuestions } from "@/src/lib/questions/get-missed-questions";
 import MostMissedQuestions from "@/components/dashboard/MostMissedQuestions";
+import { getCategoryBreakdown } from "@/src/lib/questions/get-category-breakdown";
+import CategoriesAnsweredDonut from "@/components/dashboard/CategoriesAnsweredDonut";
 
 export type UserStreaks = {
   [key: string]: {
@@ -99,6 +101,7 @@ export default async function Page() {
   const firstName = formatUserName(user.name).split(" ")[0];
 
   const mostMissedQuestions = await getMissedQuestions(user.sub, 8);
+  const categoryBreakdown = await getCategoryBreakdown(user.sub);
 
   return (
     <>
@@ -115,7 +118,7 @@ export default async function Page() {
         </Flex>
         <Grid numItems={1} numItemsMd={2} numItemsLg={3} className="mt-4 gap-4">
           <Col numColSpan={1} numColSpanSm={2}>
-            <Card>
+            <Card className="h-full">
               <Title>
                 {questionOfTheDay ? (
                   <Link
@@ -172,6 +175,11 @@ export default async function Page() {
               otherUsers={otherUserDays}
             />
           </Card>
+          <Card>
+            <CategoriesAnsweredDonut categories={categoryBreakdown} />
+          </Card>
+          <Card></Card>
+          <Card></Card>
         </Grid>
       </main>
       <UpdateNotice />

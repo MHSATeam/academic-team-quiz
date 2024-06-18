@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 
 const LOCAL_STORAGE_KEY = "seen-update";
 const UPDATE_ID = "new-question-search";
-const UPDATE_ENABLED = true;
+const UPDATE_ENABLED = false;
 const isServer = typeof window === "undefined";
 
 export default function UpdateNotice() {
