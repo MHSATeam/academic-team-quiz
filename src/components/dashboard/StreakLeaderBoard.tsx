@@ -5,7 +5,7 @@ import getQuestionsPerDay, {
 import formatUserName from "@/src/lib/users/format-user-name";
 import getUserList from "@/src/lib/users/get-user-ids";
 import { newDateInTimeZone } from "@/src/utils/date-utils";
-import { Tracker } from "@tremor/react";
+import { Title, Tracker } from "@tremor/react";
 
 export default async function StreakLeaderBoard({
   streaks,
@@ -51,6 +51,9 @@ export default async function StreakLeaderBoard({
   const activeUsers = topUsers.filter((user) => {
     return isUserActive(user.user_id);
   });
+  if (activeUsers.length === 0) {
+    return <Title>No active streaks!</Title>;
+  }
 
   return (
     <Tracker
@@ -62,8 +65,8 @@ export default async function StreakLeaderBoard({
           color: streak.hasCompletedToday
             ? "emerald"
             : streak.isActive
-            ? "yellow"
-            : "gray",
+              ? "yellow"
+              : "gray",
           tooltip: `${formatUserName(user.name)}: ${currentStreak.day_count}`,
         };
       })}

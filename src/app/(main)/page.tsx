@@ -31,6 +31,8 @@ import { getMissedQuestions } from "@/src/lib/questions/get-missed-questions";
 import MostMissedQuestions from "@/components/dashboard/MostMissedQuestions";
 import { getCategoryBreakdown } from "@/src/lib/questions/get-category-breakdown";
 import CategoriesAnsweredDonut from "@/components/dashboard/CategoriesAnsweredDonut";
+import QuestionsAnsweredLeaderboard from "@/components/dashboard/QuestionsAnsweredLeaderboard";
+import { getAnswerCount } from "@/src/lib/questions/get-answer-count";
 
 export type UserStreaks = {
   [key: string]: {
@@ -46,7 +48,7 @@ export default async function Page() {
   if (!session) {
     user = {
       name: "Test User",
-      sub: "google-oauth2|113895089668351284797",
+      sub: "google-oauth2|448529395684503072105",
       email: "test@example.com",
       email_verified: true,
       nickname: "Test",
@@ -102,6 +104,14 @@ export default async function Page() {
 
   const mostMissedQuestions = await getMissedQuestions(user.sub, 8);
   const categoryBreakdown = await getCategoryBreakdown(user.sub);
+  const totalQuestionsByUser = await getAnswerCount(5);
+  const totalQuestionsByName = totalQuestionsByUser.map((count) => {
+    const user = users.find((u) => u.user_id === count.userId);
+    return {
+      ...count,
+      name: user ? formatUserName(user.name) : undefined,
+    };
+  });
 
   return (
     <>
@@ -178,8 +188,12 @@ export default async function Page() {
           <Card>
             <CategoriesAnsweredDonut categories={categoryBreakdown} />
           </Card>
-          <Card></Card>
-          <Card></Card>
+          <Card>
+            <Title>Total Questions Answered Leaderboard</Title>
+            <QuestionsAnsweredLeaderboard
+              userQuestionData={totalQuestionsByName}
+            />
+          </Card>
         </Grid>
       </main>
       <UpdateNotice />

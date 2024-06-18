@@ -42,7 +42,7 @@ export default function CategoriesAnsweredDonut(
   return (
     <div className="flex flex-col gap-2">
       <Flex>
-        <Title>Questions Answered by Category</Title>
+        <Title>Questions Answered By Category</Title>
         <TabGroup
           className="w-fit"
           onIndexChange={(index) =>
@@ -56,6 +56,9 @@ export default function CategoriesAnsweredDonut(
           </TabList>
         </TabGroup>
       </Flex>
+      {barData.length === 0 && (
+        <Title>You haven&apos;t answered any questions!</Title>
+      )}
       <BarList data={barData} showAnimation />
     </div>
   );
