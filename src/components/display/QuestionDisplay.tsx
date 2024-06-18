@@ -6,6 +6,7 @@ import {
   addRoundData,
 } from "@/src/utils/prisma-extensions";
 import { Question } from "@prisma/client";
+import { Button } from "@tremor/react";
 import { useState } from "react";
 
 export default function QuestionDisplay({
@@ -23,21 +24,24 @@ export default function QuestionDisplay({
   }
 
   return (
-    <div className="dark:text-slate-200">
-      <QuestionText question={questionWithData} />
+    <div>
+      <QuestionText
+        className="text-tremor-content-emphasis dark:text-dark-tremor-content-emphasis"
+        question={questionWithData}
+      />
       <div className="mt-4">
         {!answerShown ? (
-          <button
+          <Button
+            size="xs"
             onClick={() => {
               setAnswerShown(true);
             }}
-            className="rounded-md bg-blue-400 px-3 py-1 active:bg-blue-500"
           >
             Show Answer
-          </button>
+          </Button>
         ) : (
           <div className="flex gap-2">
-            <div className="flex flex-col">
+            <div className="flex flex-col text-tremor-content-emphasis dark:text-dark-tremor-content-emphasis">
               <span className="font-bold">Answer: </span>
               <QuestionText question={questionWithData} showQuestion={false} />
             </div>

@@ -10,7 +10,6 @@ import {
   Flex,
   Grid,
   Metric,
-  ProgressBar,
   Subtitle,
   Text,
   Title,
@@ -28,6 +27,8 @@ import {
 } from "@/src/utils/date-utils";
 import getDefaultCategories from "@/src/lib/users/get-default-categories";
 import UpdateNotice from "@/components/dashboard/UpdateNotice";
+import { getMissedQuestions } from "@/src/lib/questions/get-missed-questions";
+import MostMissedQuestions from "@/components/dashboard/MostMissedQuestions";
 
 export type UserStreaks = {
   [key: string]: {
@@ -43,7 +44,7 @@ export default async function Page() {
   if (!session) {
     user = {
       name: "Test User",
-      sub: "google-oauth2|448529395684503072105",
+      sub: "google-oauth2|113895089668351284797",
       email: "test@example.com",
       email_verified: true,
       nickname: "Test",
@@ -64,8 +65,6 @@ export default async function Page() {
   );
   const { streaks, isActive: isStreakActive } = await getStreaks(user.sub);
   const activeStreak = isStreakActive ? streaks[0] : undefined;
-  const goalPercent =
-    Math.round(Number(activeStreak?.day_count ?? 0) * (100 / 0.6)) / 100;
 
   const currentUserDaysActive = await getQuestionsPerDay(user.sub);
   const numDaysInTimeFrame = 8;
@@ -98,6 +97,8 @@ export default async function Page() {
   }
 
   const firstName = formatUserName(user.name).split(" ")[0];
+
+  const mostMissedQuestions = await getMissedQuestions(user.sub, 8);
 
   return (
     <>
@@ -144,16 +145,8 @@ export default async function Page() {
             </Metric>
             <StreakTracker user={user} isStreakActive={isStreakActive} />
           </Card>
-          <Card>
-            <Flex>
-              <Title>Streak Goal</Title>
-              <Subtitle color="blue">Keep Going!</Subtitle>
-            </Flex>
-            <Flex className="mb-1 mt-2">
-              <Text>Goal: 2 Month</Text>
-              <Text>{goalPercent}%</Text>
-            </Flex>
-            <ProgressBar value={goalPercent} />
+          <Card className="grow">
+            <MostMissedQuestions questions={mostMissedQuestions} />
           </Card>
           <Card>
             <Title>Questions Studied Per Day</Title>
