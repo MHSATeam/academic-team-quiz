@@ -35,7 +35,8 @@ export default function CategoriesAnsweredDonut(
       toBar(showMode === "all" ? "questionCount" : "correctCount")(
         props.categories
           .slice()
-          .sort((a, b) => b.questionCount - a.questionCount),
+          .sort((a, b) => b.questionCount - a.questionCount)
+          .slice(0, 5),
       ),
     [showMode, props.categories],
   );

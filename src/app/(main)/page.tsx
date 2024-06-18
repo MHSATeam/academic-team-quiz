@@ -30,7 +30,7 @@ import UpdateNotice from "@/components/dashboard/UpdateNotice";
 import { getMissedQuestions } from "@/src/lib/questions/get-missed-questions";
 import MostMissedQuestions from "@/components/dashboard/MostMissedQuestions";
 import { getCategoryBreakdown } from "@/src/lib/questions/get-category-breakdown";
-import CategoriesAnsweredDonut from "@/components/dashboard/CategoriesAnsweredDonut";
+import CategoriesAnsweredList from "@/components/dashboard/CategoriesAnsweredList";
 import QuestionsAnsweredLeaderboard from "@/components/dashboard/QuestionsAnsweredLeaderboard";
 import { getAnswerCount } from "@/src/lib/questions/get-answer-count";
 
@@ -186,7 +186,7 @@ export default async function Page() {
             />
           </Card>
           <Card>
-            <CategoriesAnsweredDonut categories={categoryBreakdown} />
+            <CategoriesAnsweredList categories={categoryBreakdown} />
           </Card>
           <Card>
             <Title>Total Questions Answered Leaderboard</Title>
