@@ -40,14 +40,18 @@ export function Flashcard({ question, isCurrent }: FlashcardProps) {
   return (
     <div
       data-question-id={question.id}
-      className="absolute left-0 h-full w-full cursor-pointer rounded-lg text-center"
+      className="relative h-full cursor-pointer overflow-auto text-center"
       onClick={() => {
         setFlipped(!flipped);
       }}
     >
       <animated.div
-        className="front absolute left-0 top-0 flex h-full w-full flex-col justify-center overflow-hidden rounded-lg bg-slate-100 p-4 shadow-lg dark:bg-dark-tremor-background"
-        style={{ opacity: opacity.to((o) => 1 - o), transform }}
+        className="absolute left-0 top-0 flex h-full w-full flex-col justify-center overflow-hidden rounded-lg bg-slate-100 p-4 shadow-lg dark:bg-dark-tremor-background"
+        style={{
+          opacity: opacity.to((o) => 1 - o),
+          transform,
+          pointerEvents: !flipped ? "initial" : "none",
+        }}
       >
         <QuestionText
           question={question}
@@ -56,11 +60,12 @@ export function Flashcard({ question, isCurrent }: FlashcardProps) {
         />
       </animated.div>
       <animated.div
-        className="back absolute left-0 top-0 flex h-full w-full flex-col justify-center overflow-hidden rounded-lg bg-slate-100 p-4 shadow-lg dark:bg-dark-tremor-background"
+        className="absolute left-0 top-0 flex h-full w-full flex-col justify-center overflow-hidden rounded-lg bg-slate-100 p-4 shadow-lg dark:bg-dark-tremor-background"
         style={{
           opacity,
           transform,
           rotateX: "180deg",
+          pointerEvents: flipped ? "initial" : "none",
         }}
       >
         <QuestionText

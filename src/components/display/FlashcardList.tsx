@@ -70,14 +70,14 @@ export default function FlashcardList(props: FlashcardListProps) {
   }, "keydown");
 
   return (
-    <div className="mx-auto flex aspect-video flex-col gap-2 md:w-2/3">
+    <div className="mx-auto flex min-h-96 flex-col gap-2 md:aspect-video md:w-2/3">
       <div className="relative grow">
         {springs.map(({ x, y, scale }, item) => {
           const question = props.questions[item];
           return (
             <animated.div
               key={item}
-              className="absolute h-full w-full"
+              className="absolute h-full w-full overflow-hidden"
               style={{ x, y, scale }}
             >
               <Flashcard
