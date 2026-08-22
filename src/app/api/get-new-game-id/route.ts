@@ -11,7 +11,7 @@ const ablyRest =
 export const revalidate = 0;
 
 function generateUniqueId(channelList: string[]): number {
-  const ID_LENGTH = 7;
+  const ID_LENGTH = 5;
   let id = 0;
   for (let i = 0; i < ID_LENGTH; i++) {
     id += Math.ceil(Math.random() * 9) * 10 ** i;
