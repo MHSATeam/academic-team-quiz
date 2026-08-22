@@ -1,3 +1,6 @@
+// Sourced from https://foundations.significa.co/utils/compose-refs
+// Accessed 08/22/2026
+
 import type { RefCallback, RefObject } from "react";
 
 type Ref<T> = RefCallback<T> | RefObject<T> | null;

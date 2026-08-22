@@ -1,3 +1,6 @@
+// Sourced from https://foundations.significa.co/ui/color-picker
+// Accessed 08/22/2026
+
 import chroma from "chroma-js";
 import React, { createContext, useContext, useMemo, useRef } from "react";
 import classNames from "classnames";
