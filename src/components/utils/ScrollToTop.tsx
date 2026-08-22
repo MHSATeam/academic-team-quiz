@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 
 type ScrollToTopProps = {
   top?: number;
-  scrollParent?: React.RefObject<HTMLElement>;
+  scrollParent?: React.RefObject<HTMLElement | null>;
 };
 
 export default function ScrollToTop(props: ScrollToTopProps) {

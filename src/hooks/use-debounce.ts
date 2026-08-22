@@ -6,7 +6,7 @@ export function useDebounce<Func extends (...args: unknown[]) => void>(
   func: Func,
   delay = 1000
 ) {
-  const timer = useRef<Timer>();
+  const timer = useRef<Timer>(undefined);
   const hasBeenCalled = useRef<boolean>(false);
 
   useEffect(() => {

@@ -50,7 +50,9 @@ export default function TeamDisplay(props: TeamDisplayProps) {
             Change color
           </Button>
           <ColorPickerDialog
+            team={team}
             isOpen={isColorPickerOpen}
+            currentColor={teamColors[team]}
             setIsOpen={setIsColorPickerOpen}
             setTeamColor={onSetColor}
           />

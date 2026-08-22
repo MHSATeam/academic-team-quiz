@@ -3,7 +3,6 @@ import React from "react";
 import { Analytics } from "@vercel/analytics/react";
 import { UserProvider } from "@auth0/nextjs-auth0/client";
 import "../assets/scss/main.scss";
-import "react-beautiful-color/dist/react-beautiful-color.css";
 
 export const metadata: Metadata = {
   title: "Academic Quiz",

@@ -45,7 +45,7 @@ type RoundListProps = {
 };
 
 export default function RoundList(props: RoundListProps) {
-  const minisearch = useRef<MiniSearch>();
+  const minisearch = useRef<MiniSearch>(undefined);
   const [searchInput, setSearchInput] = useState("");
   const [search, setSearch] = useState("");
 
