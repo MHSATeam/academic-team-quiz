@@ -4,6 +4,7 @@ import { RealtimeClient } from "@/src/lib/buzzers/ably-realtime";
 import { getTeamColors } from "@/src/lib/buzzers/get-team-colors";
 import useBuzz from "@/src/lib/buzzers/use-buzz";
 import { usePlayerList } from "@/src/lib/buzzers/use-player-list";
+import { getLuma } from "@/src/utils/color-utils";
 import classNames from "classnames";
 import { useCallback, useContext, useMemo } from "react";
 
@@ -53,6 +54,12 @@ export default function Buzzer(props: BuzzerProps) {
     return null;
   }
 
+  const teamColorLuma = getLuma(boxPresence.teamColors[props.team]);
+  const textColorClasses = {
+          "text-white": teamColorLuma <= 128,
+          "text-black": teamColorLuma > 128
+        };
+
   return (
     <div className="relative flex h-full w-full flex-col items-center justify-center">
       <div
@@ -66,6 +73,7 @@ export default function Buzzer(props: BuzzerProps) {
           "gap-1",
           "w-fit",
           "text-center",
+          textColorClasses
         )}
       >
         <span className="text-3xl font-semibold">

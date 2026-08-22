@@ -1,11 +1,11 @@
 import { getTeamColors } from "@/src/lib/buzzers/get-team-colors";
 import { TeamColors } from "@/src/lib/buzzers/message-types";
 import { usePlayerList } from "@/src/lib/buzzers/use-player-list";
-import { Button } from "@tremor/react";
 import classNames from "classnames";
-import { ChevronLeft, ChevronRight, Minus, Plus } from "lucide-react";
+import { ChevronLeft, ChevronRight, Minus, Palette, Plus } from "lucide-react";
 import { useMemo, useState } from "react";
 import ColorPickerDialog from "./ColorPickerDialog";
+import { getLuma } from "@/src/utils/color-utils";
 
 type TeamDisplayProps = {
   team: string;
@@ -42,22 +42,14 @@ export default function TeamDisplay(props: TeamDisplayProps) {
     [team, players, clientIds],
   );
 
+  const teamColorLuma = getLuma(teamColors[team]);
+  const textColorClasses = {
+    "text-white": teamColorLuma <= 128,
+    "text-black": teamColorLuma > 128,
+  };
+
   return (
-    <div className="flex flex-col justify-center gap-2">
-      {onSetColor && (
-        <>
-          <Button onClick={() => setIsColorPickerOpen(true)}>
-            Change color
-          </Button>
-          <ColorPickerDialog
-            team={team}
-            isOpen={isColorPickerOpen}
-            currentColor={teamColors[team]}
-            setIsOpen={setIsColorPickerOpen}
-            setTeamColor={onSetColor}
-          />
-        </>
-      )}
+    <>
       <div
         style={getTeamColors(team, teamColors, "bg")}
         className={classNames(
@@ -73,11 +65,29 @@ export default function TeamDisplay(props: TeamDisplayProps) {
           },
         )}
       >
-        <span className="m-4 mx-8 text-tremor-metric">
-          Team {team.toUpperCase()}
+        <span
+          className={classNames(
+            "m-4 mx-8 text-tremor-metric",
+            textColorClasses,
+          )}
+        >
+          Team {team.toUpperCase()}{" "}
+          {onSetColor && (
+            <button
+              className="ml-2 p-1"
+              onClick={() => setIsColorPickerOpen(true)}
+            >
+              <Palette />
+            </button>
+          )}
         </span>
         <hr />
-        <div className="min-h-8 overflow-auto p-4 text-lg">
+        <div
+          className={classNames(
+            "min-h-8 overflow-auto p-4 text-lg",
+            textColorClasses,
+          )}
+        >
           {teamMembers.length === 0 && (
             <div className="flex justify-between">
               <span className="grow p-2">Waiting for players</span>
@@ -130,6 +140,15 @@ export default function TeamDisplay(props: TeamDisplayProps) {
           </>
         )}
       </div>
-    </div>
+      {onSetColor && (
+        <ColorPickerDialog
+          team={team}
+          isOpen={isColorPickerOpen}
+          currentColor={teamColors[team]}
+          setIsOpen={setIsColorPickerOpen}
+          setTeamColor={onSetColor}
+        />
+      )}
+    </>
   );
 }

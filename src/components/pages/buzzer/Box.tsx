@@ -260,6 +260,7 @@ export default function BoxPage(props: BoxPageProps) {
           onUpdateQuestionIndex={setQuestionIndex}
           onStartAlphabetRound={startAlphabetRound}
           onEndAlphabetRound={endAlphabetRound}
+          setTeamColors={setTeamColors}
         >
           {phase === "buzzer" && (
             <BuzzDisplay
