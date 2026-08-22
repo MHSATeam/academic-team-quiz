@@ -3,14 +3,16 @@ import GameIdDisplay from "@/components/buzzer/GameIdDisplay";
 import TeamDisplay from "@/components/buzzer/box/TeamDisplay";
 import AblyStatusSymbol from "@/components/utils/AblyStatusSymbol";
 import { RealtimeClient } from "@/src/lib/buzzers/ably-realtime";
+import { TeamColors } from "@/src/lib/buzzers/message-types";
 import { CompleteSet } from "@/src/utils/prisma-extensions";
 import { Button, Flex, Metric, Title } from "@tremor/react";
-import { useCallback, useContext } from "react";
+import { Dispatch, SetStateAction, useCallback, useContext } from "react";
 import QRCode from "react-qr-code";
 
 type TeamJoinProps = {
   onStartGame: () => void;
   questionSet?: CompleteSet;
+  setTeamColors: Dispatch<SetStateAction<TeamColors>>;
 };
 
 export default function TeamJoin(props: TeamJoinProps) {
@@ -25,6 +27,14 @@ export default function TeamJoin(props: TeamJoinProps) {
       newTeam: newTeam,
     });
   }, []);
+  const setTeamColor = (newColor: string, team: string) => {
+    props.setTeamColors((prev) => {
+      return {
+        ...prev,
+        [team]: newColor,
+      };
+    });
+  };
   return (
     <>
       <div className="flex h-full w-full flex-col gap-2">
@@ -53,15 +63,23 @@ export default function TeamJoin(props: TeamJoinProps) {
           <TeamDisplay
             team="a"
             canMovePlayers
+            teamColors={boxPresence.teamColors}
             onMovePlayer={(playerId) => {
               movePlayer(playerId, "b");
+            }}
+            onSetColor={(newColor) => {
+              setTeamColor(newColor, "a");
             }}
           />
           <TeamDisplay
             team="b"
             canMovePlayers
+            teamColors={boxPresence.teamColors}
             onMovePlayer={(playerId) => {
               movePlayer(playerId, "a");
+            }}
+            onSetColor={(newColor) => {
+              setTeamColor(newColor, "b");
             }}
           />
         </div>

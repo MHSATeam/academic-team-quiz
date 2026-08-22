@@ -3,6 +3,7 @@ import React from "react";
 import { Analytics } from "@vercel/analytics/react";
 import { UserProvider } from "@auth0/nextjs-auth0/client";
 import "../assets/scss/main.scss";
+import "react-beautiful-color/dist/react-beautiful-color.css";
 
 export const metadata: Metadata = {
   title: "Academic Quiz",
@@ -24,7 +25,7 @@ export default function RootLayout({
         />
       </head>
       <UserProvider>
-        <body className="h-full flex flex-col dark:bg-slate-800">
+        <body className="flex h-full flex-col dark:bg-slate-800">
           {children}
           <Analytics />
         </body>

@@ -82,6 +82,7 @@ export default function ConnectedPlayer({
         {boxPresence.gamePhase === "team-picker" && (
           <div className="flex h-full w-full flex-col items-center justify-center">
             <div
+              style={getTeamColors(team, boxPresence.teamColors, "bg")}
               className={classNames(
                 "p-10",
                 "rounded-full",
@@ -90,7 +91,6 @@ export default function ConnectedPlayer({
                 "gap-1",
                 "text-center",
                 "w-fit",
-                getTeamColors(team, "bg-"),
               )}
             >
               <span>Waiting for host...</span>
@@ -127,12 +127,12 @@ export default function ConnectedPlayer({
       </div>
       <div className="relative flex w-full items-end justify-between">
         <div
+          style={getTeamColors(team, boxPresence.teamColors, "bg")}
           className={classNames(
             "text-center",
             "overflow-hidden",
             "rounded-tr-md",
             "p-2",
-            getTeamColors("a", "bg-"),
           )}
         >
           <span className="my-2 text-center text-5xl text-red-400">
@@ -144,12 +144,12 @@ export default function ConnectedPlayer({
           className="absolute bottom-0 left-1/2 -translate-x-1/2"
         />
         <div
+          style={getTeamColors("b", boxPresence.teamColors, "bg")}
           className={classNames(
             "text-center",
             "overflow-hidden",
             "rounded-tl-md",
             "p-2",
-            getTeamColors("b", "bg-"),
           )}
         >
           <span className="my-2 text-center text-5xl text-red-400">

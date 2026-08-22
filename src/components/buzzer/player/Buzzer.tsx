@@ -56,6 +56,7 @@ export default function Buzzer(props: BuzzerProps) {
   return (
     <div className="relative flex h-full w-full flex-col items-center justify-center">
       <div
+        style={getTeamColors(props.team, boxPresence.teamColors, "bg")}
         onClick={onBuzz}
         className={classNames(
           "p-10",
@@ -65,7 +66,6 @@ export default function Buzzer(props: BuzzerProps) {
           "gap-1",
           "w-fit",
           "text-center",
-          getTeamColors(props.team, "bg-"),
         )}
       >
         <span className="text-3xl font-semibold">

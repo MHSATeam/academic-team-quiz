@@ -53,6 +53,7 @@ export type PaperAlphabetRound = {
 export type GamePhase = "team-picker" | "buzzer" | "alphabet-round";
 
 export type TeamScores = { [key: string]: number; a: number; b: number };
+export type TeamColors = { [key: string]: string; a: string; b: string };
 
 export type BoxMessage = ChangeTeamMessage;
 
@@ -71,6 +72,7 @@ export type BoxPresence = {
   questionIndex: number;
   timer: Timer;
   lastBuzzerClear: DOMHighResTimeStamp;
+  teamColors: TeamColors;
   alphabetRound?: AlphabetRound;
 };
 

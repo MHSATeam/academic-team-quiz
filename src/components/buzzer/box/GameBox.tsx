@@ -114,9 +114,10 @@ export default function GameBox(props: GameBoxProps) {
             roundingCorner="left"
             score={boxPresence.teamScores.a}
             showScore
-            onUpdateScore={props.onUpdateScore}
             canMovePlayers
+            teamColors={boxPresence.teamColors}
             onMovePlayer={(playerId) => movePlayer(playerId, "b")}
+            onUpdateScore={props.onUpdateScore}
           />
         </div>
         <div className="flex shrink-0 grow-[3] basis-0 flex-col items-center gap-2">
@@ -137,9 +138,10 @@ export default function GameBox(props: GameBoxProps) {
             roundingCorner="right"
             score={boxPresence.teamScores.b}
             showScore
-            onUpdateScore={props.onUpdateScore}
             canMovePlayers
+            teamColors={boxPresence.teamColors}
             onMovePlayer={(playerId) => movePlayer(playerId, "a")}
+            onUpdateScore={props.onUpdateScore}
           />
         </div>
       </div>

@@ -109,10 +109,12 @@ export default function CurrentBuzz(props: CurrentBuzzProps) {
         ) : (
           <>
             <span
-              className={classNames(
-                "font-bold",
-                getTeamColors(firstBuzz.team, "text-"),
+              style={getTeamColors(
+                firstBuzz.team,
+                boxPresence.teamColors,
+                "text",
               )}
+              className={classNames("font-bold")}
             >
               {firstBuzz.name}
             </span>{" "}
