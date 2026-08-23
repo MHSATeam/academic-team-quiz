@@ -4,7 +4,14 @@ import Timer from "@/components/buzzer/Timer";
 import AblyStatusSymbol from "@/components/utils/AblyStatusSymbol";
 import { RealtimeClient } from "@/src/lib/buzzers/ably-realtime";
 import { Button, Metric, Title } from "@tremor/react";
-import React, { Dispatch, ReactNode, SetStateAction, useCallback, useContext, useState } from "react";
+import React, {
+  Dispatch,
+  ReactNode,
+  SetStateAction,
+  useCallback,
+  useContext,
+  useState,
+} from "react";
 import { CompleteSet } from "@/src/utils/prisma-extensions";
 import GameIdDisplay from "@/components/buzzer/GameIdDisplay";
 import GameIdDialog from "@/components/buzzer/GameIdDialog";
@@ -23,7 +30,7 @@ type GameBoxProps = {
   onUpdateQuestionIndex?: React.Dispatch<React.SetStateAction<number>>;
   onStartAlphabetRound?: () => void;
   onEndAlphabetRound?: (scores: { a: number; b: number }) => void;
-  setTeamColors: Dispatch<SetStateAction<TeamColors>>;
+  setTeamColors?: Dispatch<SetStateAction<TeamColors>>;
 };
 
 export default function GameBox(props: GameBoxProps) {
@@ -48,7 +55,7 @@ export default function GameBox(props: GameBoxProps) {
   }
 
   const setTeamColor = (newColor: string, team: string) => {
-    props.setTeamColors((prev) => {
+    props.setTeamColors?.((prev) => {
       return {
         ...prev,
         [team]: newColor,
@@ -129,9 +136,12 @@ export default function GameBox(props: GameBoxProps) {
             teamColors={boxPresence.teamColors}
             onMovePlayer={(playerId) => movePlayer(playerId, "b")}
             onUpdateScore={props.onUpdateScore}
-            onSetColor={(newColor) => {
-              setTeamColor(newColor, "a");
-            }}
+            onSetColor={
+              props.setTeamColors &&
+              ((newColor) => {
+                setTeamColor(newColor, "a");
+              })
+            }
           />
         </div>
         <div className="flex shrink-0 grow-[3] basis-0 flex-col items-center gap-2">
@@ -156,9 +166,12 @@ export default function GameBox(props: GameBoxProps) {
             teamColors={boxPresence.teamColors}
             onMovePlayer={(playerId) => movePlayer(playerId, "a")}
             onUpdateScore={props.onUpdateScore}
-            onSetColor={(newColor) => {
-              setTeamColor(newColor, "b");
-            }}
+            onSetColor={
+              props.setTeamColors &&
+              ((newColor) => {
+                setTeamColor(newColor, "b");
+              })
+            }
           />
         </div>
       </div>
