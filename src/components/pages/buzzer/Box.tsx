@@ -12,6 +12,7 @@ import {
   AlphabetRound,
   GamePhase,
   SetType,
+  TeamColors,
   TeamScores,
   Timer,
 } from "@/src/lib/buzzers/message-types";
@@ -32,6 +33,10 @@ export default function BoxPage(props: BoxPageProps) {
   const [questionIndex, setQuestionIndex] = useState(0);
   const [questionSet, setQuestionSet] = useState<CompleteSet | undefined>();
   const [teamScores, setTeamScores] = useState<TeamScores>({ a: 0, b: 0 });
+  const [teamColors, setTeamColors] = useState<TeamColors>({
+    a: "#ffdf20",
+    b: "#51a2ff",
+  });
   const [timer, setTimer] = useState<Timer>({
     duration: 10000,
     startTime: -1,
@@ -236,6 +241,7 @@ export default function BoxPage(props: BoxPageProps) {
             setPhase("buzzer");
           }}
           questionSet={questionSet}
+          setTeamColors={setTeamColors}
         />
       );
       break;
@@ -254,6 +260,7 @@ export default function BoxPage(props: BoxPageProps) {
           onUpdateQuestionIndex={setQuestionIndex}
           onStartAlphabetRound={startAlphabetRound}
           onEndAlphabetRound={endAlphabetRound}
+          setTeamColors={setTeamColors}
         >
           {phase === "buzzer" && (
             <BuzzDisplay
@@ -298,6 +305,7 @@ export default function BoxPage(props: BoxPageProps) {
       timer={timer}
       lastBuzzerClear={lastBuzzerClear}
       alphabetRound={alphabetRound}
+      teamColors={teamColors}
     >
       {Component}
     </BoxPresenceProvider>

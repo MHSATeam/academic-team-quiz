@@ -1,6 +1,8 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+// @layer colorpicker;
+// @import "react-beautiful-color/dist/react-beautiful-color.css" layer(colorpicker);
 
 @mixin print() {
   @media print {

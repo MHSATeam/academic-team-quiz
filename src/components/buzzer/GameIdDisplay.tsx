@@ -32,8 +32,7 @@ export default function GameIdDisplay(props: GameIdDisplayProps) {
           },
         )}
       >
-        Game ID:{" "}
-        <b>{gameId.toString().split("").toSpliced(3, 0, " ").join("")}</b>
+        Game ID: <b>{gameId.toString()}</b>
       </span>
       {showLink && (
         <span className="text-tremor-content-emphasis dark:text-dark-tremor-content-emphasis">

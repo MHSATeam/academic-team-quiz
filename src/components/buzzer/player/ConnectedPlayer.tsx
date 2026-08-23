@@ -10,8 +10,9 @@ import useBuzz from "@/src/lib/buzzers/use-buzz";
 import { usePlayerList } from "@/src/lib/buzzers/use-player-list";
 import { Button, Title } from "@tremor/react";
 import classNames from "classnames";
-import { ArrowLeftRight, Settings } from "lucide-react";
+import { ArrowLeftRight, RectangleEllipsis, Settings } from "lucide-react";
 import React, { useContext, useEffect, useState } from "react";
+import GameIdDialog from "../GameIdDialog";
 
 type ConnectedPlayerProps = {
   name: string;
@@ -33,6 +34,7 @@ export default function ConnectedPlayer({
     }
   });
   const [isSettingsOpen, setSettingsOpen] = useState(false);
+  const [isCodeDialogOpen, setCodeDialogOpen] = useState(false);
 
   useEffect(() => {
     RealtimeClient.player.update({
@@ -68,6 +70,9 @@ export default function ConnectedPlayer({
     >
       <div className="flex w-full items-center gap-4 border-b-2 border-tremor-border p-4 dark:text-white">
         <Title className="h-fit grow">Good luck {name}!</Title>
+        <button title="Show join code" onClick={() => setCodeDialogOpen(true)}>
+          <RectangleEllipsis size={36} />
+        </button>
         <button onClick={() => setSettingsOpen(true)}>
           <Settings size={36} />
         </button>
@@ -77,6 +82,7 @@ export default function ConnectedPlayer({
         {boxPresence.gamePhase === "team-picker" && (
           <div className="flex h-full w-full flex-col items-center justify-center">
             <div
+              style={getTeamColors(team, boxPresence.teamColors, "bg")}
               className={classNames(
                 "p-10",
                 "rounded-full",
@@ -85,7 +91,6 @@ export default function ConnectedPlayer({
                 "gap-1",
                 "text-center",
                 "w-fit",
-                getTeamColors(team, "bg-"),
               )}
             >
               <span>Waiting for host...</span>
@@ -122,12 +127,12 @@ export default function ConnectedPlayer({
       </div>
       <div className="relative flex w-full items-end justify-between">
         <div
+          style={getTeamColors(team, boxPresence.teamColors, "bg")}
           className={classNames(
             "text-center",
             "overflow-hidden",
             "rounded-tr-md",
             "p-2",
-            getTeamColors("a", "bg-"),
           )}
         >
           <span className="my-2 text-center text-5xl text-red-400">
@@ -139,12 +144,12 @@ export default function ConnectedPlayer({
           className="absolute bottom-0 left-1/2 -translate-x-1/2"
         />
         <div
+          style={getTeamColors("b", boxPresence.teamColors, "bg")}
           className={classNames(
             "text-center",
             "overflow-hidden",
             "rounded-tl-md",
             "p-2",
-            getTeamColors("b", "bg-"),
           )}
         >
           <span className="my-2 text-center text-5xl text-red-400">
@@ -160,6 +165,7 @@ export default function ConnectedPlayer({
         team={team}
         setTeam={() => setTeam(team === "a" ? "b" : "a")}
       />
+      <GameIdDialog isOpen={isCodeDialogOpen} setOpen={setCodeDialogOpen} />
     </div>
   );
 }

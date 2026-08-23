@@ -185,7 +185,7 @@ function StateMachine(props: StateMachineProps) {
   const [state, send, actor] = useMachine(uploadSetMachine, {
     snapshot: props.snapshot,
   });
-  const saveTimeout = useRef<number>();
+  const saveTimeout = useRef<number>(undefined);
 
   useEffect(() => {
     actor.subscribe((snapshot) => {

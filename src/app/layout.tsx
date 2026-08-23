@@ -24,7 +24,7 @@ export default function RootLayout({
         />
       </head>
       <UserProvider>
-        <body className="h-full flex flex-col dark:bg-slate-800">
+        <body className="flex h-full flex-col dark:bg-slate-800">
           {children}
           <Analytics />
         </body>
